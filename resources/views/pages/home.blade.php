@@ -95,14 +95,14 @@
                              class="absolute inset-0 h-full w-full object-cover opacity-80 transition-transform duration-700 group-hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
                         
-                        <div class="absolute bottom-0 p-6 md:p-10 lg:p-12 max-w-2xl">
-                            <span class="inline-block px-3 py-1 mb-4 text-[10px] font-black uppercase tracking-[0.2em] text-burgundy-900 bg-gold-400 rounded-md">
+                        <div class="absolute bottom-0 p-5 md:p-10 lg:p-12 max-w-2xl">
+                            <span class="inline-block px-3 py-1 mb-3 md:mb-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-burgundy-900 bg-gold-400 rounded-md">
                                 UTAMA • {{ $featuredArticle->category_name }}
                             </span>
-                            <h2 class="text-2xl md:text-4xl font-black text-white mb-4 leading-tight group-hover:text-gold-100 transition-colors">
+                            <h2 class="text-xl sm:text-2xl md:text-4xl font-black text-white mb-3 md:mb-4 leading-tight group-hover:text-gold-100 transition-colors">
                                 {{ $featuredArticle->title }}
                             </h2>
-                            <p class="text-gray-300 text-sm md:text-base line-clamp-2 font-medium opacity-90 hidden md:block">
+                            <p class="text-gray-300 text-sm md:text-base line-clamp-2 font-medium opacity-90 hidden sm:block">
                                 {{ $featuredArticle->excerpt }}
                             </p>
                         </div>
@@ -157,39 +157,39 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
                 @foreach($articles as $article)
                 <article class="group bg-white rounded-xl overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col h-full">
                     <a href="/artikel/{{ $article->slug }}" class="relative aspect-[16/10] overflow-hidden block">
                         <img src="{{ $article->image }}" alt="{{ $article->title }}" 
                              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                              loading="lazy">
-                        <div class="absolute top-3 left-3">
-                            <span class="px-2 py-0.5 bg-white/90 backdrop-blur-sm text-[9px] font-black uppercase tracking-wider text-burgundy-800 rounded shadow-sm">
+                        <div class="absolute top-2 left-2 md:top-3 md:left-3">
+                            <span class="px-1.5 py-0.5 md:px-2 md:py-0.5 bg-white/90 backdrop-blur-sm text-[7px] md:text-[9px] font-black uppercase tracking-wider text-burgundy-800 rounded shadow-sm">
                                 {{ $article->category_name }}
                             </span>
                         </div>
                     </a>
                     
-                    <div class="p-5 flex-grow flex flex-col">
-                        <div class="flex items-center text-gray-400 text-[9px] font-bold uppercase tracking-widest mb-3">
-                            <span>{{ $article->published_at->format('d M Y') }}</span>
-                            <span class="mx-1.5 text-gold-400">•</span>
-                            <span>{{ ceil(str_word_count(strip_tags($article->content)) / 200) }} Menit</span>
+                    <div class="p-3 md:p-5 flex-grow flex flex-col">
+                        <div class="flex items-center text-gray-400 text-[7px] md:text-[9px] font-bold uppercase tracking-widest mb-2 md:mb-3">
+                            <span>{{ $article->published_at->format('d M y') }}</span>
+                            <span class="mx-1 text-gold-400">•</span>
+                            <span>{{ ceil(str_word_count(strip_tags($article->content)) / 200) }} Min</span>
                         </div>
                         
-                        <h3 class="text-lg font-bold text-burgundy-900 mb-2 leading-snug group-hover:text-burgundy-600 transition-colors line-clamp-2">
+                        <h3 class="text-xs md:text-lg font-bold text-burgundy-900 mb-1 md:mb-2 leading-snug group-hover:text-burgundy-600 transition-colors line-clamp-2">
                             <a href="/artikel/{{ $article->slug }}">{{ $article->title }}</a>
                         </h3>
                         
-                        <p class="text-gray-500 text-xs leading-relaxed line-clamp-2 mb-4">
+                        <p class="text-gray-500 text-[10px] md:text-xs leading-relaxed line-clamp-2 mb-3 hidden md:block">
                             {{ $article->excerpt }}
                         </p>
 
-                        <div class="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between">
-                            <a href="/artikel/{{ $article->slug }}" class="inline-flex items-center text-[10px] font-black text-burgundy-600 uppercase tracking-widest hover:text-burgundy-800 transition-colors">
+                        <div class="mt-auto pt-3 md:pt-4 border-t border-gray-50 flex items-center justify-between">
+                            <a href="/artikel/{{ $article->slug }}" class="inline-flex items-center text-[8px] md:text-[10px] font-black text-burgundy-600 uppercase tracking-widest hover:text-burgundy-800 transition-colors">
                                 Baca
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-2.5 w-2.5 md:h-3 md:w-3 ml-1 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                                 </svg>
                             </a>

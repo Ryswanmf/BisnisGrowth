@@ -10,10 +10,48 @@ class ArticleController extends Controller
     /**
      * Display a listing of the articles.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $articles = Article::published()->latest('published_at')->paginate(12);
-        return view('pages.articles.index', compact('articles'));
+        $query = Article::published();
+
+        // Ambil kategori dengan jumlah artikel secara efisien (Cache selama 30 menit)
+        $categoriesData = \Illuminate\Support\Facades\Cache::remember('article_categories_count_v2', 1800, function() {
+            return Article::published()
+                ->select('category_name', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
+                ->groupBy('category_name')
+                ->get()
+                ->toArray(); // Simpan sebagai array agar aman di cache
+        });
+
+        $categoriesWithCount = collect($categoriesData);
+        $totalArticles = $categoriesWithCount->sum('total');
+
+        // Filter berdasarkan pencarian...
+        if ($request->has('q')) {
+            $search = $request->get('q');
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'LIKE', "%{$search}%")
+                  ->orWhere('content', 'LIKE', "%{$search}%")
+                  ->orWhere('excerpt', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Filter berdasarkan kategori
+        if ($request->has('category')) {
+            $query->where('category_name', $request->get('category'));
+        }
+
+        // Urutan (default terbaru)
+        $sort = $request->get('sort', 'latest');
+        if ($sort === 'popular') {
+            $query->orderBy('view_count', 'desc');
+        } else {
+            $query->latest('published_at');
+        }
+
+        $articles = $query->paginate(12)->withQueryString();
+        
+        return view('pages.articles.index', compact('articles', 'categoriesWithCount', 'totalArticles'));
     }
 
     /**

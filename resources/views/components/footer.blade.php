@@ -1,19 +1,19 @@
 <!-- Footer -->
-<footer class="bg-burgundy-600 text-[#FFF8E7] py-16 mt-auto">
+<footer class="bg-burgundy-600 text-[#FFF8E7] py-12 md:py-16 mt-auto">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12">
             <!-- Brand Column -->
-            <div class="col-span-1 md:col-span-1">
-                <a href="/" class="flex items-center gap-3 text-2xl font-bold text-white group">
-                    <div class="bg-white p-1.5 rounded-full shadow-lg transition-transform group-hover:scale-110 duration-300">
-                        <img src="{{ asset('images/Logo_Bisnis_Growth.png') }}" alt="Logo BisnisGrowth" class="h-10 w-10 object-contain">
+            <div class="col-span-1 md:col-span-2 lg:col-span-1">
+                <a href="/" class="flex items-center gap-3 text-xl md:text-2xl font-bold text-white group">
+                    <div class="bg-white p-1.5 rounded-full shadow-lg transition-transform group-hover:scale-110 duration-300 shrink-0">
+                        <img src="{{ asset('images/Logo_Bisnis_Growth.png') }}" alt="Logo BisnisGrowth" class="h-8 w-8 md:h-10 md:w-10 object-contain">
                     </div>
                     <span>Bisnis<span class="text-gold-400">Growth</span></span>
                 </a>
-                <p class="mt-6 text-sm text-burgundy-100 leading-relaxed opacity-90">
+                <p class="mt-4 md:mt-6 text-sm text-burgundy-100 leading-relaxed opacity-90">
                     Satu Link untuk Semua Bisnismu. Solusi direktori & link-in-bio modern untuk UMKM Indonesia agar lebih dikenal dan mudah dihubungi.
                 </p>
-                <div class="mt-8 flex gap-4">
+                <div class="mt-6 md:mt-8 flex gap-4">
                     <!-- Social Media Placeholder Icons -->
                     <a href="#" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-gold-400 hover:text-burgundy-900 transition-all">
                         <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
