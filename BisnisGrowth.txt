@@ -1,0 +1,389 @@
+Buatkan aplikasi web direktori bisnis & link-in-bio bernama "BisnisGrowth"
+menggunakan stack:
+- Laravel 12 (PHP 8.3+)
+- Blade templating (SSR — wajib untuk SEO)
+- Tailwind CSS 3 via Vite
+- MySQL 8
+- Vite sebagai asset bundler
+
+=== IDENTITAS BRAND ===
+
+Nama aplikasi : BisnisGrowth
+Tagline       : "Satu Link untuk Semua Bisnismu"
+Domain contoh : bisnisgrowth.id
+
+Palet warna (tambahkan ke tailwind.config.js di bagian extend.colors):
+  burgundy: {
+    50:  '#F5E8EA',
+    100: '#E8C4CA',
+    200: '#CF8A96',
+    400: '#A32840',
+    600: '#7B1F2E',   ← primary brand color
+    800: '#5C1520',
+    900: '#3D0D16',
+  },
+  gold: {
+    50:  '#FDF3D0',
+    100: '#FAE390',
+    200: '#F0C840',
+    400: '#D4A017',   ← primary accent / CTA color
+    600: '#9A7210',
+    800: '#6B4D08',
+    900: '#3D2B02',
+  }
+
+Penggunaan warna:
+- Navbar, hero background, sidebar admin  → burgundy-600 (#7B1F2E)
+- Tombol CTA utama, badge verifikasi      → gold-400 (#D4A017) + teks burgundy-800
+- Hover state tombol CTA                  → gold-600 (#9A7210)
+- Teks di atas bg burgundy               → #FFF8E7 (warm white)
+- Border accent card, garis dekoratif    → burgundy-600
+- Background halaman profil publik       → burgundy-600 (solid, bukan gradient)
+- Link buttons pada profil               → burgundy-50 bg + burgundy-600 teks
+- Link CTA utama (WhatsApp)              → gold-400 bg + burgundy-800 teks
+- Label kategori/badge kecil             → gold-50 bg + gold-800 teks
+
+Font: Inter dari Google Fonts
+(preconnect di <head>, load: wght@400;500;600)
+
+=== STRUKTUR DATABASE ===
+
+Tabel: users
+- id, name, email, password, role (user|admin)
+- email_verified_at, remember_token, timestamps
+
+Tabel: categories
+- id, name, slug (unik), icon (emoji/string), description
+- is_active (default true), order (int), timestamps
+
+Tabel: businesses
+- id, user_id (FK → users)
+- name, slug (unik, SEO-friendly, index)
+- tagline (varchar 160), description (text)
+- category_id (FK → categories, index)
+- logo (nullable), cover_image (nullable)
+- phone, whatsapp, email, website
+- address, city, province
+- instagram, facebook, tiktok, youtube
+- theme_color (default: '#7B1F2E')
+- is_verified (bool default 0), is_active (bool default 1)
+- view_count (int default 0), click_count (int default 0)
+- meta_title (nullable), meta_description (nullable)
+- timestamps
+
+Tabel: links
+- id, business_id (FK), title, url
+- icon (varchar — nama icon Heroicons/string emoji)
+- order (int default 0), is_active (bool default 1)
+- click_count (int default 0), timestamps
+
+Tabel: page_views
+- id, business_id (FK, index)
+- ip_address, user_agent, referrer
+- created_at
+
+Tambahkan index pada: businesses.slug, businesses.category_id,
+businesses.is_active, page_views.business_id, page_views.created_at
+
+=== FITUR APLIKASI ===
+
+--- 1. LANDING PAGE (GET /) ---
+Sections berurutan:
+a) Hero: bg burgundy-600, judul "Satu Link untuk Semua Bisnismu",
+   sub-heading, 2 tombol: "Daftar Gratis" (gold CTA) + "Lihat Contoh"
+b) Stats bar: total bisnis terdaftar, total kategori, total kunjungan
+c) Cara kerja: 3 langkah (Daftar → Isi Profil → Bagikan)
+d) Featured businesses: 6 bisnis terbaru/terverifikasi, card grid 3 kolom
+e) Kategori populer: grid icon + nama kategori, link ke /kategori/{slug}
+f) Testimonial: 3 quote dummy
+g) CTA bottom: bg burgundy-600, tombol gold "Mulai Sekarang"
+h) Footer: logo, kolom navigasi, kategori, sosmed, copyright
+
+SEO landing page:
+<title>BisnisGrowth — Direktori Bisnis & Link-in-Bio untuk UMKM Indonesia</title>
+<meta name="description" content="Daftarkan bisnis Anda di BisnisGrowth...">
+JSON-LD: WebSite + Organization schema
+
+--- 2. HALAMAN PROFIL PUBLIK (GET /{slug}) ---
+Layout centered, max-w-sm, mobile-first:
+- Cover image (jika ada) — rasio 3:1
+- Logo bulat di tengah, overlap cover
+- Nama bisnis (font-size xl, font-weight 500, burgundy-900 atau sesuai theme_color)
+- Tagline (muted)
+- Kota · Kategori (badge kecil)
+- Tombol link full-width, urut by `order`:
+  * WhatsApp (jika ada) → gold-400 bg, teks burgundy-800, icon WA
+  * Link lainnya → burgundy-50 bg, burgundy-600 teks
+- Ikon sosial media (Instagram, Facebook, TikTok, YouTube) jika diisi
+- Footer mini: "Powered by BisnisGrowth" → link ke /
+
+Tracking: setiap hit GET /{slug} → insert ke page_views
+(cukup middleware atau di controller, throttle per IP per jam)
+
+SEO halaman profil (WAJIB):
+<title>{meta_title ?? $business->name} — {$business->tagline} | BisnisGrowth</title>
+<meta name="description" content="{meta_description ?? Str::limit($business->description, 155)}">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://bisnisgrowth.id/{$business->slug}">
+<meta property="og:title" content="...">
+<meta property="og:description" content="...">
+<meta property="og:image" content="{logo url atau default}">
+<meta property="og:url" content="https://bisnisgrowth.id/{slug}">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+
+JSON-LD LocalBusiness:
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "{name}",
+  "description": "{description}",
+  "telephone": "{phone}",
+  "email": "{email}",
+  "url": "https://bisnisgrowth.id/{slug}",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "{city}",
+    "addressRegion": "{province}",
+    "addressCountry": "ID"
+  },
+  "sameAs": [ array instagram/facebook/etc yang diisi ]
+}
+
+--- 3. DIREKTORI BISNIS (GET /direktori) ---
+- Grid card 3 kolom (md), 2 kolom (sm), 1 kolom (xs)
+- Filter: kategori (select), kota (input), search nama
+- Filter dikirim via GET query string (?kategori=kuliner&kota=bandung&q=kopi)
+- Pagination 15 per halaman (Laravel paginator, retain query string)
+- Card: logo, nama, tagline, kota, badge kategori, tombol "Lihat Profil"
+- Urutan: verified dulu, lalu view_count DESC
+
+SEO:
+<title>Direktori Bisnis UMKM Indonesia — BisnisGrowth</title>
+JSON-LD ItemList dari hasil halaman pertama
+
+--- 4. HALAMAN KATEGORI (GET /kategori/{slug}) ---
+- Heading: "Bisnis {nama kategori}" + deskripsi kategori
+- Grid bisnis dalam kategori, pagination 15
+- Breadcrumb: Beranda > Direktori > {Kategori}
+SEO: title = "Bisnis {kategori} Terbaik Indonesia — BisnisGrowth"
+JSON-LD: BreadcrumbList + ItemList
+
+--- 5. AUTH ---
+Register: name, email, password, password_confirmation
+→ auto-create businesses record kosong dengan slug dari name
+→ kirim email verifikasi (Laravel built-in)
+
+Login, Logout, Forgot Password, Reset Password
+→ setelah login redirect ke /dashboard
+
+--- 6. DASHBOARD (auth middleware) ---
+Layout: sidebar kiri burgundy-600, konten kanan
+
+a) Ringkasan: total kunjungan 30 hari, total klik link, persentase naik/turun
+b) Grafik kunjungan 30 hari (Chart.js, warna burgundy + gold)
+c) Daftar link paling banyak diklik (top 5)
+
+--- 7. PENGATURAN BISNIS (/dashboard/profil) ---
+Form edit:
+- Informasi dasar: nama, slug (editable, validate unik), tagline, deskripsi
+- Upload logo (max 1MB, JPG/PNG, simpan di storage/app/public/logos)
+- Upload cover image (max 2MB, rasio 3:1 disarankan)
+- Kategori (select dari tabel categories)
+- Kontak: phone, whatsapp, email, website, address, city, province
+- Sosial media: instagram, facebook, tiktok, youtube
+- SEO override: meta_title, meta_description
+- Preview tombol: "Lihat Halaman Publik ↗"
+
+--- 8. KELOLA LINK (/dashboard/links) ---
+- List link dengan nomor urut, title, url, status, klik count
+- Tambah link (title, url, icon, order)
+- Edit link inline atau modal
+- Hapus link (confirm)
+- Aktif/nonaktif toggle
+- Urutkan drag & drop (gunakan Sortable.js via CDN, update via fetch POST)
+
+--- 9. ADMIN PANEL (/admin) ---
+Middleware: role=admin (tambahkan kolom role di users)
+
+Halaman admin:
+- Dashboard: statistik total bisnis, user, kunjungan hari ini
+- Bisnis: tabel semua bisnis, tombol Aktifkan/Nonaktifkan, Verifikasi, Hapus
+- Kategori: CRUD (nama, slug, icon, deskripsi, urutan)
+- Users: list user, ganti role
+
+=== SEO TEKNIS ===
+
+1. Buat Blade component: resources/views/components/seo-head.blade.php
+   Props: $title, $description, $canonical, $ogImage = null,
+          $robots = 'index, follow', $jsonLd = null
+   Isi semua meta tag + OG + Twitter Card + JSON-LD
+
+2. Gunakan @component('components.seo-head', [...]) di setiap halaman
+
+3. Sitemap XML (GET /sitemap.xml):
+   Controller: App\Http\Controllers\SitemapController
+   Isi: halaman statis + semua /{slug} bisnis aktif + /kategori/{slug}
+   Format: <?xml version="1.0"?>...<urlset>...<url>...<loc>...<lastmod>
+   Response header: Content-Type: application/xml
+
+4. robots.txt (GET /robots.txt):
+   User-agent: *
+   Allow: /
+   Disallow: /admin
+   Disallow: /dashboard
+   Sitemap: https://bisnisgrowth.id/sitemap.xml
+
+5. Slug generation (saat register/simpan):
+   $slug = Str::slug($nama);
+   Cek unik di tabel businesses, jika sudah ada tambah -2, -3, dst.
+
+6. Redirect klik link:
+   GET /go/{linkId} → increment link.click_count → redirect($link->url)
+
+=== PERFORMA & ASSET ===
+
+vite.config.js:
+- Input: resources/css/app.css + resources/js/app.js
+- @vitejs/plugin-laravel
+
+tailwind.config.js:
+- content: ['./resources/**/*.blade.php', './resources/**/*.js']
+- extend.colors: burgundy + gold (sesuai palet di atas)
+- extend.fontFamily: { sans: ['Inter', 'sans-serif'] }
+
+resources/css/app.css:
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+@tailwind base; @tailwind components; @tailwind utilities;
+
+Tambahkan custom component class di @layer components:
+.btn-primary   { @apply bg-gold-400 text-burgundy-800 font-medium px-5 py-2.5 rounded-lg hover:bg-gold-600 transition-colors; }
+.btn-secondary { @apply bg-burgundy-50 text-burgundy-600 font-medium px-5 py-2.5 rounded-lg hover:bg-burgundy-100 transition-colors; }
+.card          { @apply bg-white border border-gray-100 rounded-xl p-4; }
+.badge-verified{ @apply bg-gold-50 text-gold-800 text-xs font-medium px-2.5 py-1 rounded-full; }
+
+Gambar:
+- Semua <img> gunakan loading="lazy" width="..." height="..."
+- Logo bisnis di direktori: ukuran 64x64, rounded-full, object-cover
+
+=== STRUKTUR ROUTE (routes/web.php) ===
+
+// Public
+Route::get('/', [HomeController::class, 'index']);
+Route::get('/direktori', [DirectoryController::class, 'index']);
+Route::get('/kategori/{slug}', [CategoryController::class, 'show']);
+Route::get('/sitemap.xml', [SitemapController::class, 'index']);
+Route::get('/robots.txt', [SitemapController::class, 'robots']);
+Route::get('/go/{link}', [LinkRedirectController::class, 'redirect']);
+Route::get('/{slug}', [BusinessProfileController::class, 'show'])
+     ->where('slug', '[a-z0-9\-]+');  // harus PALING BAWAH
+
+// Auth
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/register', [AuthController::class, 'showRegister']);
+    Route::post('/register', [AuthController::class, 'register']);
+});
+Route::post('/logout', [AuthController::class, 'logout'])
+     ->middleware('auth');
+
+// Dashboard
+Route::middleware(['auth', 'verified'])->prefix('dashboard')
+     ->name('dashboard.')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('index');
+    Route::get('/profil', [BusinessSettingController::class, 'edit'])->name('profil');
+    Route::put('/profil', [BusinessSettingController::class, 'update'])->name('profil.update');
+    Route::get('/links', [LinkController::class, 'index'])->name('links');
+    Route::post('/links', [LinkController::class, 'store']);
+    Route::put('/links/{link}', [LinkController::class, 'update']);
+    Route::delete('/links/{link}', [LinkController::class, 'destroy']);
+    Route::post('/links/reorder', [LinkController::class, 'reorder']);
+    Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics');
+});
+
+// Admin
+Route::middleware(['auth', 'role:admin'])->prefix('admin')
+     ->name('admin.')->group(function () {
+    Route::get('/', [AdminDashboardController::class, 'index']);
+    Route::resource('businesses', AdminBusinessController::class);
+    Route::resource('categories', AdminCategoryController::class);
+    Route::resource('users', AdminUserController::class);
+});
+
+=== STRUKTUR FILE ===
+
+app/Http/Controllers/
+  HomeController.php
+  DirectoryController.php
+  CategoryController.php
+  BusinessProfileController.php
+  LinkRedirectController.php
+  SitemapController.php
+  Auth/AuthController.php
+  Dashboard/DashboardController.php
+  Dashboard/BusinessSettingController.php
+  Dashboard/LinkController.php
+  Dashboard/AnalyticsController.php
+  Admin/AdminDashboardController.php
+  Admin/AdminBusinessController.php
+  Admin/AdminCategoryController.php
+
+app/Http/Middleware/
+  RoleMiddleware.php  (cek $user->role === $role)
+
+app/Models/
+  User.php, Business.php, Category.php, Link.php, PageView.php
+
+resources/views/
+  layouts/
+    app.blade.php       (navbar + footer)
+    dashboard.blade.php (sidebar burgundy + konten)
+    admin.blade.php
+  components/
+    seo-head.blade.php
+    business-card.blade.php
+    link-button.blade.php
+  pages/
+    home.blade.php
+    directory.blade.php
+    category.blade.php
+  profile/
+    show.blade.php
+  dashboard/
+    index.blade.php
+    profil.blade.php
+    links.blade.php
+    analytics.blade.php
+  admin/
+    dashboard.blade.php
+    businesses/index.blade.php
+    categories/index.blade.php
+  auth/
+    login.blade.php, register.blade.php
+
+=== SEEDER ===
+
+CategorySeeder — 10 kategori UMKM Indonesia:
+Kuliner, Fashion & Batik, Kecantikan & Perawatan,
+Pendidikan & Kursus, Teknologi & Digital, Pertanian & Agribisnis,
+Kerajinan & Souvenir, Properti & Interior, Kesehatan & Wellness,
+Otomotif & Bengkel
+
+BusinessSeeder — 6 dummy bisnis dengan links dan page_views
+AdminSeeder — 1 user admin (admin@bisnisgrowth.id / password: Admin@123!)
+
+=== PERINTAH SETUP ===
+
+Sertakan instruksi lengkap:
+php artisan migrate --seed
+php artisan storage:link
+npm install && npm run dev
+php artisan key:generate
+
+Prioritas output:
+1. Kode bersih PSR-12, komentar hanya pada logika kompleks
+2. SEO on-page wajib di semua halaman publik
+3. Mobile-first Tailwind, tampilan elegan burgundy + gold
+4. Tidak menggunakan paket selain yang disebutkan (kecuali
+   simplesoftwareio/simple-qrcode untuk QR Code)
