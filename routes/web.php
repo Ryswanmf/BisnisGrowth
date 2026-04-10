@@ -19,6 +19,15 @@ Route::get('/kategori/{slug}', function ($slug) {
 
 Route::get('/go/{link}', [LinkRedirectController::class, 'redirect'])->name('link.redirect');
 
+// Articles
+Route::get('/artikel', [App\Http\Controllers\ArticleController::class, 'index'])->name('article.index');
+Route::get('/artikel/{article:slug}', [App\Http\Controllers\ArticleController::class, 'show'])->name('article.show');
+
+// Contact
+Route::get('/kontak', function () {
+    return view('pages.contact');
+})->name('contact');
+
 // Business Profile (MUST BE AT THE BOTTOM)
 Route::get('/{slug}', [BusinessProfileController::class, 'show'])
     ->where('slug', '[a-z0-9\-]+')

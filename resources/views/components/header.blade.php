@@ -26,9 +26,8 @@
             <!-- Kanan: Menu Navigasi -->
             <div class="flex items-center space-x-6 text-sm font-semibold text-gray-600">
                 <a href="/" class="hover:text-burgundy-600 transition-colors">Beranda</a>
-                <a href="/artikel" class="hover:text-burgundy-600 transition-colors">Artikel</a>
-                <a href="/kontak" class="hover:text-burgundy-600 transition-colors">Kontak</a>
-                
+                <a href="{{ route('article.index') }}" class="hover:text-burgundy-600 transition-colors">Artikel</a>
+                <a href="{{ route('contact') }}" class="hover:text-burgundy-600 transition-colors">Kontak</a>                
                 @auth
                     <div class="h-6 w-px bg-gray-200 mx-2 hidden sm:block"></div>
                     <a href="{{ route('dashboard.index') }}" class="btn-primary !py-2 !px-4 text-xs lg:text-sm text-white">Dashboard</a>

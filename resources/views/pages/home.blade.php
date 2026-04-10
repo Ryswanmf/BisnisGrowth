@@ -206,19 +206,4 @@
         </div>
     </section>
 
-    <!-- Newsletter Section -->
-    <section class="py-24 px-4 bg-white border-t border-gray-100">
-        <div class="max-w-4xl mx-auto bg-logo-gradient rounded-[2.5rem] p-10 md:p-16 text-center relative overflow-hidden shadow-2xl">
-            <div class="absolute top-0 left-0 w-32 h-32 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
-            <div class="relative z-10">
-                <h2 class="text-2xl md:text-3xl font-bold text-white mb-4 uppercase tracking-tighter">Wawasan Langsung ke Inbox</h2>
-                <p class="text-burgundy-100 mb-10 max-w-xl mx-auto opacity-90 font-medium text-sm md:text-base">Dapatkan strategi bisnis pilihan setiap minggu. Gratis dan berkualitas.</p>
-                <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                    <input type="email" placeholder="Email Anda" 
-                           class="flex-grow px-6 py-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-gold-400 transition-all text-sm">
-                    <button type="submit" class="btn-primary !py-4 px-8 uppercase tracking-widest text-[10px] shadow-none">Gabung</button>
-                </form>
-            </div>
-        </div>
-    </section>
 </x-app-layout>
