@@ -33,6 +33,11 @@ Route::get('/login', [App\Http\Controllers\AuthController::class, 'showLogin'])-
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
 Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
+// Admin Dashboard
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard.index');
+});
+
 // Business Profile (MUST BE AT THE BOTTOM)
 Route::get('/{slug}', [BusinessProfileController::class, 'show'])
     ->where('slug', '[a-z0-9\-]+')

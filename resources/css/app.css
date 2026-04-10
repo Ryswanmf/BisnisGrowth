@@ -17,6 +17,7 @@
     --color-burgundy-200: #FECACA;
     --color-burgundy-400: #F87171;
     --color-burgundy-600: #B91C1C; /* Main Logo Red */
+    --color-burgundy-700: #991B1B;
     --color-burgundy-800: #7F1D1D;
     --color-burgundy-900: #450A0A; /* Dark Red/Black from Logo background */
 
@@ -26,6 +27,7 @@
     --color-gold-200: #FDE68A;
     --color-gold-400: #F59E0B;
     --color-gold-600: #D97706;
+    --color-gold-700: #B45309;
     --color-gold-800: #92400E;
     --color-gold-900: #78350F;
 }
