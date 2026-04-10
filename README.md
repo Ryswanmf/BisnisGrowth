@@ -1,58 +1,94 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🚀 BisnisGrowth — Direktori Bisnis & Link-in-Bio UMKM
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
+[![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com)
 
-## About Laravel
+**BisnisGrowth** adalah platform direktori bisnis modern dan penyedia halaman *link-in-bio* yang dirancang khusus untuk membantu UMKM Indonesia melakukan digitalisasi dengan cepat dan elegan.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## ✨ Fitur Unggulan
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **🎨 Desain Premium:** Antarmuka mewah dengan palet warna *Burgundy* & *Gold*.
+- **📱 Mobile-First:** Optimalisasi tampilan mobile dengan grid 2-kolom yang padat dan responsif.
+- **📰 Portal Wawasan:** Sistem manajemen artikel edukasi bisnis dengan fitur pencarian dan filter kategori dinamis.
+- **🖼️ High-End Gallery:** Detail artikel yang mendukung galeri 4 foto dengan layout profesional.
+- **⚡ Performa Maksimal:** Implementasi *Server-side Caching* dan optimasi aset gambar secara otomatis.
+- **🔐 Admin Central:** Panel login administrator yang aman dengan desain minimalis.
+- **🚀 Elegant Preloader:** Transisi antar halaman yang halus dengan animasi logo pulsasi.
+- **🔍 SEO Ready:** Metadata otomatis, Open Graph tags, dan struktur JSON-LD untuk optimasi Google.
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🛠️ Tech Stack
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Framework:** Laravel 13.x (PHP 8.3+)
+- **Frontend:** Tailwind CSS 4.0 via Vite
+- **Database:** MySQL 8.0
+- **UI Components:** Blade Templating & Alpine.js (coming soon)
+- **Analytics:** Internal Visitor & Link Click Tracking
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+---
 
-## Agentic Development
+## 📦 Instalasi
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Ikuti langkah-langkah di bawah untuk menjalankan proyek ini secara lokal:
 
-```bash
-composer require laravel/boost --dev
+1. **Clone repositori:**
+   ```bash
+   git clone https://github.com/username/bisnisgrowth.git
+   cd bisnisgrowth
+   ```
 
-php artisan boost:install
-```
+2. **Instal dependensi PHP:**
+   ```bash
+   composer install
+   ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+3. **Instal dependensi JavaScript:**
+   ```bash
+   npm install
+   ```
 
-## Contributing
+4. **Konfigurasi Environment:**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+   *Sesuaikan pengaturan database di file `.env` Anda.*
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+5. **Jalankan Migrasi & Seeder:**
+   ```bash
+   php artisan migrate
+   php artisan db:seed --class=AdminSeeder
+   php artisan db:seed --class=ArticleSeeder
+   ```
 
-## Code of Conduct
+6. **Jalankan Aplikasi:**
+   ```bash
+   php artisan serve
+   # Di terminal lain jalankan asset compiler
+   npm run dev
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 🔑 Akses Default (Development)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- **Landing Page:** `http://localhost:8000`
+- **Admin Login:** `http://localhost:8000/login`
+- **Admin Email:** `admin@bisnisgrowth.id`
+- **Admin Password:** `Admin@123!`
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🛡️ Lisensi
+
+Proyek ini berada di bawah lisensi **MIT**. Silakan gunakan dan modifikasi untuk mendukung pertumbuhan UMKM Indonesia.
+
+---
+
+Developed with ❤️ by **BisnisGrowth Team**

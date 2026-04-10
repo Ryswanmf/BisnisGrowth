@@ -28,6 +28,11 @@ Route::get('/kontak', function () {
     return view('pages.contact');
 })->name('contact');
 
+// Auth
+Route::get('/login', [App\Http\Controllers\AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
+Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
+
 // Business Profile (MUST BE AT THE BOTTOM)
 Route::get('/{slug}', [BusinessProfileController::class, 'show'])
     ->where('slug', '[a-z0-9\-]+')
