@@ -1,110 +1,168 @@
-@extends('layouts.admin')
+<x-app-layout>
+    <x-slot name="title">Artikel & Edukasi Bisnis — BisnisGrowth</x-slot>
 
-@section('title', 'Kelola Artikel')
-@section('header', 'Manajemen Artikel')
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-[1600px] mx-auto px-6">
+            <!-- Header -->
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-amber-600 text-[10px] font-black uppercase tracking-[0.3em] mb-4 block text-center">Wawasan Bisnis</span>
+                <h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6 leading-tight">
+                    Edukasi & <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-amber-700">Strategi Pertumbuhan</span>
+                </h1>
+            </div>
 
-@section('content')
-<div class="space-y-6">
-    <!-- Action Header -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-            <h2 class="text-xl font-black text-slate-900 tracking-tight">Daftar Artikel</h2>
-            <p class="text-gray-500 text-sm font-medium">Kelola semua konten edukasi dan berita bisnis Anda.</p>
-        </div>
-        <button class="bg-amber-500 text-slate-900 px-6 py-3 rounded-2xl text-sm font-black flex items-center gap-2 hover:bg-amber-400 transition-all shadow-lg shadow-amber-500/20">
-            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
-            </svg>
-            Tulis Artikel Baru
-        </button>
-    </div>
-
-    <!-- Table Card -->
-    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-gray-50/50 border-b border-gray-100">
-                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Artikel</th>
-                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Kategori</th>
-                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Status</th>
-                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Tanggal</th>
-                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] text-right">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-50">
-                    @forelse($articles as $article)
-                    <tr class="hover:bg-gray-50/50 transition-colors group">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-4">
-                                @if($article->image)
-                                    <img src="{{ asset('storage/' . $article->image) }}" class="h-12 w-16 object-cover rounded-xl border border-gray-100 shadow-sm" alt="">
-                                @else
-                                    <div class="h-12 w-16 bg-gray-100 rounded-xl flex items-center justify-center text-gray-300">
-                                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                        </svg>
-                                    </div>
-                                @endif
-                                <div class="min-w-0">
-                                    <p class="text-sm font-bold text-slate-900 truncate group-hover:text-amber-600 transition-colors">{{ $article->title }}</p>
-                                    <p class="text-[11px] text-gray-400 font-medium truncate italic">/artikel/{{ $article->slug }}</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-slate-100 text-slate-600 text-[10px] font-black rounded-full uppercase tracking-widest">
-                                {{ $article->category->name ?? 'Uncategorized' }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="flex items-center gap-1.5 text-green-600 text-[11px] font-bold uppercase tracking-widest">
-                                <span class="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                                Published
-                            </span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="text-xs font-bold text-gray-500 tracking-tight">{{ $article->created_at->format('d M Y') }}</p>
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            <div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <a href="{{ route('article.show', $article->slug) }}" class="p-2 bg-white border border-gray-100 rounded-lg text-gray-400 hover:text-blue-500 hover:shadow-sm transition-all">
-                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                    </svg>
-                                </a>
-                                <button class="p-2 bg-white border border-gray-100 rounded-lg text-gray-400 hover:text-amber-500 hover:shadow-sm transition-all">
-                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                    </svg>
+            <div class="flex flex-col lg:flex-row gap-10">
+                <!-- SIDEBAR FILTER -->
+                <aside class="w-full lg:w-80 shrink-0">
+                    <div class="sticky top-24 space-y-8">
+                        
+                        <!-- Search Box -->
+                        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100">
+                            <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">Cari Artikel</h4>
+                            <form action="{{ route('article.index') }}" method="GET" class="relative">
+                                @if(request('category')) <input type="hidden" name="category" value="{{ request('category') }}"> @endif
+                                @if(request('sort')) <input type="hidden" name="sort" value="{{ request('sort') }}"> @endif
+                                
+                                <input type="text" name="q" value="{{ request('q') }}" placeholder="Ketik kata kunci..." 
+                                       class="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-amber-500 font-medium">
+                                <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-amber-600">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                                 </button>
-                            </div>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5" class="px-6 py-12 text-center">
-                            <div class="flex flex-col items-center">
-                                <div class="h-16 w-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
-                                    <svg class="h-8 w-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l4 4v10a2 2 0 01-2 2z"/>
-                                    </svg>
+                            </form>
+                        </div>
+
+                        <!-- Category Dropdown -->
+                        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100">
+                            <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">Kategori Bisnis</h4>
+                            <div class="relative group">
+                                <select onchange="window.location.href = this.value" 
+                                        class="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-amber-500 appearance-none cursor-pointer">
+                                    <option value="{{ request()->fullUrlWithQuery(['category' => null, 'page' => null]) }}">Semua Kategori</option>
+                                    @foreach($categoriesWithCount as $cat)
+                                        <option value="{{ request()->fullUrlWithQuery(['category' => $cat['category_name'], 'page' => null]) }}" 
+                                                {{ request('category') == $cat['category_name'] ? 'selected' : '' }}>
+                                            {{ $cat['category_name'] }} ({{ $cat['total'] }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-amber-600">
+                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                                 </div>
-                                <h4 class="text-slate-900 font-bold">Belum Ada Artikel</h4>
-                                <p class="text-gray-400 text-sm mt-1 font-medium">Mulai buat konten pertama Anda untuk menarik pengunjung.</p>
                             </div>
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                        </div>
+
+                        <!-- Sort Dropdown -->
+                        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100">
+                            <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">Urutkan Berdasarkan</h4>
+                            <div class="relative group">
+                                <select onchange="window.location.href = this.value" 
+                                        class="w-full bg-slate-900 text-white border-none rounded-2xl px-5 py-4 text-xs font-black uppercase tracking-widest focus:ring-2 focus:ring-amber-500 appearance-none cursor-pointer">
+                                    <option value="{{ request()->fullUrlWithQuery(['sort' => 'latest', 'page' => null]) }}" {{ request('sort') == 'latest' ? 'selected' : '' }}>Terbaru</option>
+                                    <option value="{{ request()->fullUrlWithQuery(['sort' => 'popular', 'page' => null]) }}" {{ request('sort') == 'popular' ? 'selected' : '' }}>Terpopuler</option>
+                                    <option value="{{ request()->fullUrlWithQuery(['sort' => 'oldest', 'page' => null]) }}" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Terlama</option>
+                                </select>
+                                <div class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-amber-500">
+                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if(request('q') || request('category'))
+                            <a href="{{ route('article.index') }}" class="flex items-center justify-center gap-2 w-full py-4 text-[10px] font-black uppercase tracking-widest text-red-500 bg-red-50 rounded-2xl hover:bg-red-100 transition-all">
+                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                                Bersihkan Filter
+                            </a>
+                        @endif
+
+                    </div>
+                </aside>
+
+                <!-- MAIN CONTENT (ARTICLE GRID) -->
+                <div class="flex-1">
+                    @if(request('q') || request('category'))
+                        <div class="mb-8 flex items-center gap-2">
+                            <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Hasil Filter:</span>
+                            @if(request('category'))
+                                <span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest">{{ request('category') }}</span>
+                            @endif
+                            @if(request('q'))
+                                <span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest">"{{ request('q') }}"</span>
+                            @endif
+                        </div>
+                    @endif
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        @forelse($articles as $article)
+                            <article class="group bg-white rounded-[2rem] overflow-hidden border border-gray-100 hover:shadow-2xl hover:shadow-slate-200 transition-all duration-500 flex flex-col h-full">
+                                <div class="relative aspect-video overflow-hidden">
+                                    @if($article->image)
+                                        <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->image_alt ?: $article->title }}" 
+                                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                                    @else
+                                        <div class="w-full h-full bg-slate-50 flex items-center justify-center text-slate-200 font-black text-3xl">BG</div>
+                                    @endif
+                                    
+                                    @if($article->category_name)
+                                    <div class="absolute top-4 left-4">
+                                        <span class="bg-white/90 backdrop-blur-md text-slate-900 text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg shadow-sm border border-white/20">
+                                            {{ $article->category_name }}
+                                        </span>
+                                    </div>
+                                    @endif
+                                </div>
+
+                                <div class="p-6 flex flex-col flex-1">
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <span class="text-[9px] font-black text-amber-600 uppercase tracking-widest">{{ ($article->published_at ?: $article->created_at)->translatedFormat('d M Y') }}</span>
+                                    </div>
+                                    
+                                    <h2 class="text-base font-black text-slate-900 leading-tight mb-3 group-hover:text-amber-600 transition-colors line-clamp-2">
+                                        <a href="javascript:void(0)" onclick="trackArticleClick({{ $article->id }}, '{{ route('article.show', $article->slug) }}')">{{ $article->title }}</a>
+                                    </h2>
+                                    
+                                    <p class="text-gray-500 text-xs font-medium line-clamp-2 mb-6 leading-relaxed">
+                                        {{ $article->excerpt ?: Str::limit(strip_tags($article->content), 100) }}
+                                    </p>
+
+                                    <div class="mt-auto pt-4 border-t border-gray-50 flex justify-between items-center">
+                                        <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest">{{ number_format($article->click_count) }} Clicks</span>
+                                        <a href="javascript:void(0)" onclick="trackArticleClick({{ $article->id }}, '{{ route('article.show', $article->slug) }}')" class="text-amber-600 hover:text-amber-700 transition-colors">
+                                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </article>
+                        @empty
+                            <div class="col-span-full py-24 text-center bg-white rounded-[3rem] border border-dashed border-gray-200">
+                                <div class="h-20 w-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-300">
+                                    <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l4 4v10a2 2 0 01-2 2zM14 4v4h4m-4 7h.01M9 15h.01M9 11h.01M12 11h.01M12 15h.01M15 11h.01M15 15h.01"/></svg>
+                                </div>
+                                <h3 class="text-xl font-black text-slate-900 mb-2">Tidak Ada Artikel</h3>
+                                <p class="text-gray-500 text-sm font-medium">Coba gunakan kata kunci atau kategori yang lain.</p>
+                            </div>
+                        @endforelse
+                    </div>
+
+                    <div class="mt-16">
+                        {{ $articles->links() }}
+                    </div>
+                </div>
+            </div>
         </div>
-        @if($articles->hasPages())
-        <div class="px-6 py-4 bg-gray-50/50 border-t border-gray-100">
-            {{ $articles->links() }}
-        </div>
-        @endif
-    </div>
-</div>
-@endsection
+    </section>
+
+    <script>
+        function trackArticleClick(id, url) {
+            fetch('/artikel/' + id + '/track-click', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ type: 'article' })
+            }).finally(() => {
+                window.location.href = url;
+            });
+        }
+    </script>
+</x-app-layout>

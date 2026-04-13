@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['business_id', 'ip_address', 'user_agent', 'referrer', 'created_at'])]
 class PageView extends Model
 {
+    protected $fillable = [
+        'business_id', 'type', 'url', 'ip_address', 'user_agent', 
+        'device', 'browser', 'os', 'referrer', 'created_at'
+    ];
+
     /**
      * The name of the "updated at" column.
      *

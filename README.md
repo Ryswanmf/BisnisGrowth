@@ -1,94 +1,51 @@
-# 🚀 BisnisGrowth — Direktori Bisnis & Link-in-Bio UMKM
+# BisnisGrowth - Platform Direktori & Edukasi UMKM
 
-[![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
-[![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
-[![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
-[![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com)
+![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=flat-square)
+![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat-square)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat-square)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=flat-square)
+![AlpineJS](https://img.shields.io/badge/AlpineJS-3.x-8BC0D0?style=flat-square)
 
-**BisnisGrowth** adalah platform direktori bisnis modern dan penyedia halaman *link-in-bio* yang dirancang khusus untuk membantu UMKM Indonesia melakukan digitalisasi dengan cepat dan elegan.
+## Deskripsi Proyek
+BisnisGrowth adalah platform digital yang dirancang khusus untuk mempercepat pertumbuhan ekosistem UMKM (Usaha Mikro, Kecil, dan Menengah) di Indonesia. Website ini berfungsi sebagai jembatan antara pelaku usaha dan konsumen melalui sistem direktori bisnis yang terorganisir, sekaligus menjadi pusat wawasan strategi bisnis melalui portal edukasi editorial yang profesional.
 
----
+Tujuan utama platform ini adalah memberikan kepastian legalitas, visibilitas pemasaran digital, dan panduan manajemen bagi pemilik bisnis lokal agar dapat bersaing di pasar modern.
 
-## ✨ Fitur Unggulan
-
-- **🎨 Desain Premium:** Antarmuka mewah dengan palet warna *Burgundy* & *Gold*.
-- **📱 Mobile-First:** Optimalisasi tampilan mobile dengan grid 2-kolom yang padat dan responsif.
-- **📰 Portal Wawasan:** Sistem manajemen artikel edukasi bisnis dengan fitur pencarian dan filter kategori dinamis.
-- **🖼️ High-End Gallery:** Detail artikel yang mendukung galeri 4 foto dengan layout profesional.
-- **⚡ Performa Maksimal:** Implementasi *Server-side Caching* dan optimasi aset gambar secara otomatis.
-- **🔐 Admin Central:** Panel login administrator yang aman dengan desain minimalis.
-- **🚀 Elegant Preloader:** Transisi antar halaman yang halus dengan animasi logo pulsasi.
-- **🔍 SEO Ready:** Metadata otomatis, Open Graph tags, dan struktur JSON-LD untuk optimasi Google.
+## Fitur Utama
+*   **Direktori Bisnis UMKM**: Daftar profil bisnis lokal yang dilengkapi dengan tautan interaksi langsung.
+*   **Portal Wawasan Bisnis**: Sistem manajemen konten edukasi dengan optimasi SEO dan gaya editorial premium.
+*   **Dashboard Analisis Konversi**: Pemantauan traffic dan interaksi pengunjung (Klik WA/Telepon) secara real-time.
+*   **Manajemen Pengaturan Dinamis**: Konfigurasi identitas website dan kontak resmi melalui panel admin yang terpusat.
 
 ---
 
-## 🛠️ Tech Stack
+## Dokumentasi Pembaruan (13 April 2026)
 
-- **Framework:** Laravel 13.x (PHP 8.3+)
-- **Frontend:** Tailwind CSS 4.0 via Vite
-- **Database:** MySQL 8.0
-- **UI Components:** Blade Templating & Alpine.js (coming soon)
-- **Analytics:** Internal Visitor & Link Click Tracking
+### 1. Sistem Analisis Traffic & Konversi
+*   **Tren Aktivitas Interaktif**: Grafik garis dengan 4 dataset (Hits Website, Klik Artikel, Klik WhatsApp, Klik Telepon).
+*   **Filter Rentang Waktu**: Beralih tampilan grafik secara dinamis antara Harian (7 hari), Mingguan (8 minggu), dan Tahunan (12 bulan).
+*   **Pelacakan Konversi**: Pencatatan otomatis setiap kali user mengklik tombol WhatsApp atau Telepon di artikel.
+*   **Statistik Perangkat & Halaman**: Visualisasi distribusi pengunjung (Mobile vs Desktop) dan daftar halaman paling populer.
 
----
+### 2. Manajemen Konten Editorial (Artikel)
+*   **Sistem Multi-Gambar**: Mendukung hingga 4 gambar per artikel (1 Utama + 3 Galeri).
+*   **Integrasi Kategori**: Pemilihan kategori artikel kini menggunakan dropdown dinamis yang terhubung langsung dengan Manajemen Kategori.
+*   **Word Counter Real-time**: Fitur penghitung kata otomatis di formulir admin dengan indikator kelayakan konten (minimal 300 kata untuk tampilan ideal).
+*   **Statistik Interaksi per Artikel**: Tabel admin kini menampilkan jumlah Klik WA, Klik Telepon, dan Total Klik Artikel untuk setiap baris data.
 
-## 📦 Instalasi
+### 3. Perombakan UI/UX Frontend (Wawasan Bisnis)
+*   **Sidebar Filter**: Navigasi kategori dan pencarian dipindahkan ke sidebar samping yang bersifat sticky.
+*   **Grid 4 Kolom**: Tampilan daftar artikel dioptimalkan menjadi 4 kolom untuk memaksimalkan ruang layar.
+*   **Editorial Show Page**: Implementasi efek Drop Cap, galeri 3 gambar sejajar, dan sidebar kanan sticky berisi Artikel Populer serta Rekomendasi.
 
-Ikuti langkah-langkah di bawah untuk menjalankan proyek ini secara lokal:
+### 4. Konfigurasi Sistem Dinamis
+*   **Pengaturan Footer**: CRUD terpusat untuk mengelola Logo, Deskripsi Bisnis, Kontak (Email/HP/Alamat), dan Link Media Sosial.
+*   **Singleton Settings**: Data footer dibagikan secara global menggunakan View Composer dan sistem Cache versi terbaru (v3).
 
-1. **Clone repositori:**
-   ```bash
-   git clone https://github.com/username/bisnisgrowth.git
-   cd bisnisgrowth
-   ```
-
-2. **Instal dependensi PHP:**
-   ```bash
-   composer install
-   ```
-
-3. **Instal dependensi JavaScript:**
-   ```bash
-   npm install
-   ```
-
-4. **Konfigurasi Environment:**
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   ```
-   *Sesuaikan pengaturan database di file `.env` Anda.*
-
-5. **Jalankan Migrasi & Seeder:**
-   ```bash
-   php artisan migrate
-   php artisan db:seed --class=AdminSeeder
-   php artisan db:seed --class=ArticleSeeder
-   ```
-
-6. **Jalankan Aplikasi:**
-   ```bash
-   php artisan serve
-   # Di terminal lain jalankan asset compiler
-   npm run dev
-   ```
+## Teknis & Keamanan
+*   **Optimasi Cache**: Validasi tipe objek (instanceof) untuk mencegah error Incomplete PHP Object.
+*   **Fixed Sidebar Admin**: Navigasi panel admin terkunci (sticky) dengan area scroll mandiri.
+*   **Traffic Middleware**: Pencatatan traffic global untuk akurasi data kunjungan.
 
 ---
-
-## 🔑 Akses Default (Development)
-
-- **Landing Page:** `http://localhost:8000`
-- **Admin Login:** `http://localhost:8000/login`
-- **Admin Email:** `admin@bisnisgrowth.id`
-- **Admin Password:** `Admin@123!`
-
----
-
-## 🛡️ Lisensi
-
-Proyek ini berada di bawah lisensi **MIT**. Silakan gunakan dan modifikasi untuk mendukung pertumbuhan UMKM Indonesia.
-
----
-
-Developed with ❤️ by **BisnisGrowth Team**
+*Dokumentasi ini dikelola sebagai bagian dari standar pengembangan BisnisGrowth.*

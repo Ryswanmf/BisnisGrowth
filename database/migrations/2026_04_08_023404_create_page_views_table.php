@@ -13,9 +13,13 @@ return new class extends Migration
     {
         Schema::create('page_views', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('business_id')->index()->constrained()->onDelete('cascade');
+            $table->foreignId('business_id')->nullable()->index()->constrained()->onDelete('cascade');
+            $table->string('url')->nullable()->index(); // Halaman yang dikunjungi
             $table->string('ip_address')->nullable();
             $table->string('user_agent')->nullable();
+            $table->string('device')->nullable()->index(); // Mobile/Desktop
+            $table->string('browser')->nullable();
+            $table->string('os')->nullable();
             $table->string('referrer')->nullable();
             $table->timestamp('created_at')->index();
         });

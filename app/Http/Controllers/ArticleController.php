@@ -45,6 +45,8 @@ class ArticleController extends Controller
         $sort = $request->get('sort', 'latest');
         if ($sort === 'popular') {
             $query->orderBy('view_count', 'desc');
+        } elseif ($sort === 'oldest') {
+            $query->orderBy('published_at', 'asc');
         } else {
             $query->latest('published_at');
         }
@@ -82,6 +84,51 @@ class ArticleController extends Controller
             $relatedArticles = $relatedArticles->merge($extraArticles);
         }
 
-        return view('pages.articles.show', compact('article', 'relatedArticles'));
+        // Get popular articles (by view_count)
+        $popularArticles = Article::published()
+            ->where('id', '!=', $article->id)
+            ->orderBy('view_count', 'desc')
+            ->take(5)
+            ->get();
+
+        // Hitung estimasi waktu baca (rata-rata 200 kata per menit)
+        $wordCount = str_word_count(strip_tags($article->content));
+        $readingTime = max(1, ceil($wordCount / 200));
+
+        return view('pages.articles.show', compact('article', 'relatedArticles', 'popularArticles', 'readingTime'));
+    }
+
+    public function trackClick(Request $request, Article $article)
+    {
+        $type = $request->input('type');
+        
+        if (in_array($type, ['whatsapp', 'phone', 'article'])) {
+            // 1. Tetap increment total di tabel articles untuk kemudahan akses
+            if ($type === 'whatsapp') {
+                $article->increment('whatsapp_clicks');
+            } elseif ($type === 'phone') {
+                $article->increment('phone_clicks');
+            } elseif ($type === 'article') {
+                $article->increment('click_count');
+            }
+
+            // 2. Catat log waktu di tabel page_views untuk data trend
+            $userAgent = $request->userAgent();
+            $device = 'Desktop';
+            if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i', $userAgent)) {
+                $device = 'Mobile';
+            }
+
+            \App\Models\PageView::create([
+                'type' => $type,
+                'url' => $request->header('referer') ?: $request->path(),
+                'ip_address' => $request->ip(),
+                'user_agent' => $userAgent,
+                'device' => $device,
+                'created_at' => now()
+            ]);
+        }
+
+        return response()->json(['success' => true]);
     }
 }
