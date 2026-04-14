@@ -2,7 +2,8 @@
     <x-slot name="seo">
         <x-seo-head 
             title="Wawasan Bisnis & Strategi UMKM Indonesia"
-            description="Temukan artikel terbaru seputar strategi pemasaran, pengelolaan keuangan, dan tren teknologi untuk mengembangkan bisnis Anda."
+            description="BisnisGrowth — Solusi direktori UMKM dan portal edukasi bisnis terpercaya di Indonesia. Temukan strategi pemasaran, manajemen keuangan, dan tips sukses bisnis lokal."
+            :ogImage="asset('images/Logo_Bisnis_Growth.png')"
         />
     </x-slot>
 
@@ -14,10 +15,11 @@
                 <!-- Main Featured (Left) -->
                 @if($featuredArticle)
                 <div class="lg:col-span-8">
-                    <a href="javascript:void(0)" onclick="trackArticleClick({{ $featuredArticle->id }}, '{{ route('article.show', $featuredArticle->slug) }}')" class="group relative block overflow-hidden rounded-3xl bg-gray-900 h-[300px] md:h-[500px] shadow-xl">
+                    <a href="javascript:void(0)" onclick="trackArticleClick({{ $featuredArticle->id }}, '{{ route('article.show', $featuredArticle->slug) }}')" class="group relative block overflow-hidden rounded-3xl bg-slate-100 h-[300px] md:h-[500px] shadow-xl">
                         @if($featuredArticle->image)
                             <img src="{{ asset('storage/' . $featuredArticle->image) }}" alt="{{ $featuredArticle->title }}" 
-                                 class="absolute inset-0 h-full w-full object-cover opacity-80 transition-transform duration-700 group-hover:scale-105">
+                                 class="absolute inset-0 h-full w-full object-cover opacity-80 transition-transform duration-700 group-hover:scale-105"
+                                 loading="eager" fetchpriority="high" decoding="async">
                         @endif
                         <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
                         
@@ -25,9 +27,9 @@
                             <span class="inline-block px-3 py-1 mb-3 md:mb-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-burgundy-900 bg-amber-400 rounded-md">
                                 UTAMA • {{ $featuredArticle->category_name }}
                             </span>
-                            <h2 class="text-xl sm:text-2xl md:text-4xl font-black text-white mb-3 md:mb-4 leading-tight group-hover:text-amber-100 transition-colors">
+                            <h1 class="text-xl sm:text-2xl md:text-4xl font-black text-white mb-3 md:mb-4 leading-tight group-hover:text-amber-100 transition-colors">
                                 {{ $featuredArticle->title }}
-                            </h2>
+                            </h1>
                             <p class="text-gray-300 text-sm md:text-base line-clamp-2 font-medium opacity-90 hidden sm:block">
                                 {{ $featuredArticle->excerpt }}
                             </p>
@@ -45,9 +47,11 @@
                     
                     @foreach($sidebarArticles as $sideArticle)
                     <a href="javascript:void(0)" onclick="trackArticleClick({{ $sideArticle->id }}, '{{ route('article.show', $sideArticle->slug) }}')" class="group flex gap-4 items-center">
-                        <div class="shrink-0 w-24 h-24 rounded-2xl overflow-hidden shadow-sm bg-gray-100">
+                        <div class="shrink-0 w-24 h-24 rounded-2xl overflow-hidden shadow-sm bg-gray-50">
                             @if($sideArticle->image)
-                                <img src="{{ asset('storage/' . $sideArticle->image) }}" alt="{{ $sideArticle->title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                <img src="{{ asset('storage/' . $sideArticle->image) }}" alt="{{ $sideArticle->title }}" 
+                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                     loading="lazy" decoding="async">
                             @endif
                         </div>
                         <div class="flex flex-col gap-1">
@@ -85,9 +89,11 @@
             <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
                 @foreach($articles as $article)
                 <article class="group bg-white rounded-xl overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col h-full">
-                    <a href="javascript:void(0)" onclick="trackArticleClick({{ $article->id }}, '{{ route('article.show', $article->slug) }}')" class="relative aspect-[16/10] overflow-hidden block bg-gray-100">
+                    <a href="javascript:void(0)" onclick="trackArticleClick({{ $article->id }}, '{{ route('article.show', $article->slug) }}')" class="relative aspect-[16/10] overflow-hidden block bg-gray-50">
                         @if($article->image)
-                            <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy">
+                            <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}" 
+                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                                 loading="lazy" decoding="async">
                         @endif
                         <div class="absolute top-2 left-2">
                             <span class="px-2 py-0.5 bg-white/90 backdrop-blur-sm text-[7px] md:text-[9px] font-black uppercase tracking-wider text-slate-900 rounded shadow-sm">
@@ -122,11 +128,48 @@
                 @endforeach
             </div>
 
-            <div class="mt-12 flex justify-center">
-                {{ $articles->links() }}
+            <!-- Premium Pagination -->
+            <div class="mt-24 flex justify-center">
+                <div class="pagination-amber-theme bg-slate-900 p-2 rounded-2xl shadow-2xl shadow-slate-900/40 border border-slate-800">
+                    {{ $articles->links() }}
+                </div>
             </div>
         </div>
     </section>
+
+    <style>
+        /* Force Amber Theme on Laravel Pagination */
+        .pagination-amber-theme nav div div span.relative.z-0, 
+        .pagination-amber-theme nav div div a.relative.z-0 {
+            display: flex;
+            gap: 4px;
+            border: none;
+        }
+        .pagination-amber-theme nav span[aria-current="page"] span {
+            background-color: #f59e0b !important;
+            color: #0f172a !important;
+            border-radius: 12px;
+            border: none !important;
+            font-weight: 900;
+            padding: 8px 16px;
+        }
+        .pagination-amber-theme nav a, 
+        .pagination-amber-theme nav span.relative.inline-flex {
+            background-color: transparent !important;
+            color: #94a3b8 !important;
+            border: none !important;
+            border-radius: 12px;
+            padding: 8px 16px;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+        .pagination-amber-theme nav a:hover {
+            background-color: rgba(255,255,255,0.05) !important;
+            color: #ffffff !important;
+        }
+        .pagination-amber-theme nav div:first-child { display: none !important; }
+        .pagination-amber-theme nav div:last-child { display: flex !important; justify-content: center; }
+    </style>
 
     <script>
         function trackArticleClick(id, url) {

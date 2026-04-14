@@ -1,16 +1,19 @@
 <x-app-layout>
-    <x-slot name="title">{{ $article->seo_title }} — BisnisGrowth</x-slot>
-
     <x-slot name="seo">
-        <meta name="description" content="{{ $article->seo_description }}">
+        <x-seo-head 
+            :title="$article->seo_title"
+            :description="$article->seo_description"
+            :ogImage="$article->image ? asset('storage/' . $article->image) : asset('images/Logo_Bisnis_Growth.png')"
+            :jsonLd="[
+                '@context' => 'https://schema.org',
+                '@type' => 'NewsArticle',
+                'headline' => $article->title,
+                'image' => [$article->image ? asset('storage/' . $article->image) : asset('images/Logo_Bisnis_Growth.png')],
+                'datePublished' => ($article->published_at ?: $article->created_at)->toIso8601String(),
+                'author' => ['@type' => 'Organization', 'name' => 'BisnisGrowth Team']
+            ]"
+        />
         <meta name="keywords" content="{{ $article->focus_keyword }}">
-        <link rel="canonical" href="{{ $article->canonical_url ?: route('article.show', $article->slug) }}">
-        
-        <meta property="og:title" content="{{ $article->seo_title }}">
-        <meta property="og:description" content="{{ $article->seo_description }}">
-        @if($article->image) <meta property="og:image" content="{{ asset('storage/' . $article->image) }}"> @endif
-        <meta property="og:url" content="{{ route('article.show', $article->slug) }}">
-        <meta property="og:type" content="article">
     </x-slot>
 
     <div class="bg-white py-12 md:py-20 px-6">
@@ -116,12 +119,17 @@
                                 </div>
                             </div>
                             <div class="flex flex-wrap gap-4">
-                                <button onclick="trackAndRedirect('whatsapp', 'https://wa.me/6289515915699?text={{ urlencode($article->title . ' - ' . url()->current()) }}')"
+                                @php
+                                    $waNumber = $siteSettings['official_whatsapp'] ?? '089515915699';
+                                    // Pastikan format nomor diawali 62 untuk WhatsApp link
+                                    $waFormatted = preg_replace('/^0/', '62', preg_replace('/[^\d]/', '', $waNumber));
+                                @endphp
+                                <button onclick="trackAndRedirect('whatsapp', 'https://wa.me/{{ $waFormatted }}?text={{ urlencode($article->title . ' - ' . url()->current()) }}')"
                                    class="px-8 py-4 bg-green-500 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-green-600 hover:shadow-xl hover:shadow-green-500/20 transition-all flex items-center gap-3">
                                     <svg class="h-4 w-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.328-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.13.57-.072 1.758-.713 2.006-1.403.248-.69.248-1.288.173-1.403-.074-.115-.272-.19-.57-.339zM12 22c-1.83 0-3.622-.47-5.202-1.363L2 22l1.393-5.113C2.493 15.298 2 13.67 2 12 2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
                                     WhatsApp
                                 </button>
-                                <button onclick="trackAndRedirect('phone', 'tel:089515915699')"
+                                <button onclick="trackAndRedirect('phone', 'tel:{{ $waNumber }}')"
                                    class="px-8 py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-800 hover:shadow-xl transition-all flex items-center gap-3">
                                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
                                     Telepon

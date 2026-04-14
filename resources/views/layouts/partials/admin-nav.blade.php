@@ -60,6 +60,29 @@
     <div>
         <p class="px-4 text-[10px] font-extrabold text-white/20 uppercase tracking-[0.2em] mb-3">Konfigurasi Sistem</p>
         <div class="space-y-1">
+            <a href="{{ route('admin.messages.index') }}"
+               class="{{ request()->routeIs('admin.messages*')
+                        ? 'bg-amber-400/10 text-amber-400 border-l-4 border-amber-400'
+                        : 'text-white/60 hover:bg-white/5 hover:text-white border-l-4 border-transparent' }}
+                        group flex items-center px-4 py-3 text-sm font-semibold transition-all duration-200">
+                <svg class="mr-3 h-5 w-5 {{ request()->routeIs('admin.messages*') ? 'text-amber-400' : 'text-white/30 group-hover:text-amber-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                Kotak Masuk
+            </a>
+
+            <a href="{{ route('admin.settings.index') }}"
+               class="{{ request()->routeIs('admin.settings*')
+                        ? 'bg-amber-400/10 text-amber-400 border-l-4 border-amber-400'
+                        : 'text-white/60 hover:bg-white/5 hover:text-white border-l-4 border-transparent' }}
+                        group flex items-center px-4 py-3 text-sm font-semibold transition-all duration-200">
+                <svg class="mr-3 h-5 w-5 {{ request()->routeIs('admin.settings*') ? 'text-amber-400' : 'text-white/30 group-hover:text-amber-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                Pengaturan Utama
+            </a>
+
             <a href="{{ route('admin.footer.edit') }}"
                class="{{ request()->routeIs('admin.footer.edit')
                         ? 'bg-amber-400/10 text-amber-400 border-l-4 border-amber-400'

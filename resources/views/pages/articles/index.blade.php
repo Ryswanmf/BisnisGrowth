@@ -91,43 +91,43 @@
                         </div>
                     @endif
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
                         @forelse($articles as $article)
-                            <article class="group bg-white rounded-[2rem] overflow-hidden border border-gray-100 hover:shadow-2xl hover:shadow-slate-200 transition-all duration-500 flex flex-col h-full">
-                                <div class="relative aspect-video overflow-hidden">
+                            <article class="group bg-white rounded-xl md:rounded-[2rem] overflow-hidden border border-gray-100 hover:shadow-2xl hover:shadow-slate-200 transition-all duration-500 flex flex-col h-full">
+                                <div class="relative aspect-[4/3] md:aspect-video overflow-hidden">
                                     @if($article->image)
                                         <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->image_alt ?: $article->title }}" 
                                              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                                     @else
-                                        <div class="w-full h-full bg-slate-50 flex items-center justify-center text-slate-200 font-black text-3xl">BG</div>
+                                        <div class="w-full h-full bg-slate-50 flex items-center justify-center text-slate-200 font-black text-2xl md:text-3xl">BG</div>
                                     @endif
                                     
                                     @if($article->category_name)
-                                    <div class="absolute top-4 left-4">
-                                        <span class="bg-white/90 backdrop-blur-md text-slate-900 text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg shadow-sm border border-white/20">
+                                    <div class="absolute top-2 left-2 md:top-4 md:left-4">
+                                        <span class="bg-white/90 backdrop-blur-md text-slate-900 text-[7px] md:text-[9px] font-black uppercase tracking-widest px-2 py-1 md:px-3 md:py-1.5 rounded-md md:rounded-lg shadow-sm border border-white/20">
                                             {{ $article->category_name }}
                                         </span>
                                     </div>
                                     @endif
                                 </div>
 
-                                <div class="p-6 flex flex-col flex-1">
-                                    <div class="flex items-center gap-2 mb-3">
-                                        <span class="text-[9px] font-black text-amber-600 uppercase tracking-widest">{{ ($article->published_at ?: $article->created_at)->translatedFormat('d M Y') }}</span>
+                                <div class="p-3 md:p-6 flex flex-col flex-1">
+                                    <div class="flex items-center gap-2 mb-2 md:mb-3">
+                                        <span class="text-[7px] md:text-[9px] font-black text-amber-600 uppercase tracking-widest">{{ ($article->published_at ?: $article->created_at)->translatedFormat('d M Y') }}</span>
                                     </div>
                                     
-                                    <h2 class="text-base font-black text-slate-900 leading-tight mb-3 group-hover:text-amber-600 transition-colors line-clamp-2">
+                                    <h2 class="text-[10px] md:text-base font-black text-slate-900 leading-tight mb-2 md:mb-3 group-hover:text-amber-600 transition-colors line-clamp-2">
                                         <a href="javascript:void(0)" onclick="trackArticleClick({{ $article->id }}, '{{ route('article.show', $article->slug) }}')">{{ $article->title }}</a>
                                     </h2>
                                     
-                                    <p class="text-gray-500 text-xs font-medium line-clamp-2 mb-6 leading-relaxed">
+                                    <p class="text-gray-500 text-[9px] md:text-xs font-medium line-clamp-2 mb-4 md:mb-6 leading-relaxed hidden sm:block">
                                         {{ $article->excerpt ?: Str::limit(strip_tags($article->content), 100) }}
                                     </p>
 
-                                    <div class="mt-auto pt-4 border-t border-gray-50 flex justify-between items-center">
-                                        <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest">{{ number_format($article->click_count) }} Clicks</span>
+                                    <div class="mt-auto pt-2 md:pt-4 border-t border-gray-50 flex justify-between items-center">
+                                        <span class="text-[7px] md:text-[9px] font-black text-gray-400 uppercase tracking-widest">{{ number_format($article->click_count) }} Clicks</span>
                                         <a href="javascript:void(0)" onclick="trackArticleClick({{ $article->id }}, '{{ route('article.show', $article->slug) }}')" class="text-amber-600 hover:text-amber-700 transition-colors">
-                                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                                            <svg class="h-3.5 w-3.5 md:h-5 md:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                                         </a>
                                     </div>
                                 </div>
@@ -143,13 +143,50 @@
                         @endforelse
                     </div>
 
-                    <div class="mt-16">
-                        {{ $articles->links() }}
+                    <!-- Premium Pagination -->
+                    <div class="mt-20 flex justify-center">
+                        <div class="pagination-amber-theme bg-slate-900 p-2 rounded-2xl shadow-2xl shadow-slate-900/40 border border-slate-800">
+                            {{ $articles->links() }}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <style>
+        /* Force Amber Theme on Laravel Pagination */
+        .pagination-amber-theme nav div div span.relative.z-0, 
+        .pagination-amber-theme nav div div a.relative.z-0 {
+            display: flex;
+            gap: 4px;
+            border: none;
+        }
+        .pagination-amber-theme nav span[aria-current="page"] span {
+            background-color: #f59e0b !important;
+            color: #0f172a !important;
+            border-radius: 12px;
+            border: none !important;
+            font-weight: 900;
+            padding: 8px 16px;
+        }
+        .pagination-amber-theme nav a, 
+        .pagination-amber-theme nav span.relative.inline-flex {
+            background-color: transparent !important;
+            color: #94a3b8 !important;
+            border: none !important;
+            border-radius: 12px;
+            padding: 8px 16px;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+        .pagination-amber-theme nav a:hover {
+            background-color: rgba(255,255,255,0.05) !important;
+            color: #ffffff !important;
+        }
+        .pagination-amber-theme nav div:first-child { display: none !important; }
+        .pagination-amber-theme nav div:last-child { display: flex !important; justify-content: center; }
+    </style>
 
     <script>
         function trackArticleClick(id, url) {

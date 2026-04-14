@@ -4,7 +4,22 @@
 @section('header', 'Tulis Artikel')
 
 @section('content')
-<form action="{{ route('admin.articles.store') }}" method="POST" enctype="multipart/form-data">
+<div class="space-y-6">
+    <div class="flex justify-between items-center bg-slate-900 p-6 rounded-[2rem] text-white">
+        <div>
+            <h3 class="text-lg font-black uppercase tracking-tight">AI Assistant</h3>
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Generate konten artikel otomatis</p>
+        </div>
+        <div class="flex gap-3">
+            <input type="text" id="ai-topic" placeholder="Masukkan topik/kata kunci..." class="bg-white/10 border-none rounded-xl px-4 py-2 text-xs focus:ring-amber-500 w-64 text-white">
+            <button type="button" onclick="generateWithAI()" id="btn-ai" class="bg-amber-500 text-slate-900 px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-400 transition-all flex items-center gap-2">
+                <span id="ai-text">Generate AI</span>
+                <svg id="ai-loader" class="hidden h-3 w-3 animate-spin" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <form action="{{ route('admin.articles.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
@@ -154,5 +169,57 @@
 
     textarea.addEventListener('input', updateWordCount);
     window.addEventListener('load', updateWordCount);
+
+    async function generateWithAI() {
+        const topic = document.getElementById('ai-topic').value;
+        if (!topic) {
+            alert('Silakan masukkan topik atau kata kunci terlebih dahulu!');
+            return;
+        }
+
+        const btn = document.getElementById('btn-ai');
+        const text = document.getElementById('ai-text');
+        const loader = document.getElementById('ai-loader');
+
+        // Loading State
+        btn.disabled = true;
+        text.innerText = 'Sedang Berpikir...';
+        loader.classList.remove('hidden');
+
+        try {
+            const response = await fetch('{{ route('admin.articles.generate-ai') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ topic: topic })
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                alert('AI Error: ' + data.error);
+            } else {
+                // Fill the form
+                document.querySelector('input[name="title"]').value = data.title;
+                document.getElementById('article-content').value = data.content;
+                document.querySelector('textarea[name="excerpt"]').value = data.excerpt;
+                document.querySelector('input[name="meta_title"]').value = data.meta_title;
+                document.querySelector('textarea[name="meta_description"]').value = data.meta_description;
+                document.querySelector('input[name="focus_keyword"]').value = data.focus_keyword;
+                
+                updateWordCount();
+                alert('Konten berhasil di-generate!');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Sistem Error: Gagal menghubungi server atau API AI. Silakan cek koneksi internet dan API Key Anda.');
+        } finally {
+            btn.disabled = false;
+            text.innerText = 'Generate AI';
+            loader.classList.add('hidden');
+        }
+    }
 </script>
 @endpush

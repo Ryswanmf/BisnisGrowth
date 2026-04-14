@@ -8,8 +8,34 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
+use App\Services\GeminiService;
+
 class ArticleController extends Controller
 {
+    protected $aiService;
+
+    public function __construct(GeminiService $aiService)
+    {
+        $this->aiService = $aiService;
+    }
+
+    public function generateAI(Request $request)
+    {
+        $request->validate(['topic' => 'required|string|max:255']);
+        
+        $result = $this->aiService->generateArticle($request->topic);
+
+        if (isset($result['error'])) {
+            return response()->json(['error' => $result['error']], 500);
+        }
+
+        if ($result) {
+            return response()->json($result);
+        }
+
+        return response()->json(['error' => 'Gagal mendapatkan respon dari AI'], 500);
+    }
+
     public function index()
     {
         $articles = Article::latest()->paginate(10);

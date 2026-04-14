@@ -16,6 +16,32 @@
 <meta name="robots" content="{{ $robots }}">
 <link rel="canonical" href="{{ $canonical }}">
 
+@if(!empty($siteSettings['ga_id']))
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ $siteSettings['ga_id'] }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '{{ $siteSettings['ga_id'] }}');
+    </script>
+@endif
+
+<!-- Organization Schema -->
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "Organization",
+  "name": "BisnisGrowth",
+  "url": "{{ url('/') }}",
+  "logo": "{{ asset('images/Logo_Bisnis_Growth.png') }}",
+  "sameAs": [
+    "https://facebook.com/bisnisgrowth",
+    "https://instagram.com/bisnisgrowth"
+  ]
+}
+</script>
+
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="{{ url()->current() }}">
@@ -29,9 +55,3 @@
 <meta property="twitter:title" content="{{ $fullTitle }}">
 <meta property="twitter:description" content="{{ $description }}">
 <meta property="twitter:image" content="{{ $ogImage }}">
-
-@if($jsonLd)
-<script type="application/ld+json">
-    {!! is_array($jsonLd) ? json_encode($jsonLd, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) : $jsonLd !!}
-</script>
-@endif

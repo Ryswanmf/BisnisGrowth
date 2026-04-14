@@ -38,22 +38,29 @@
 
             <!-- Simple Contact Form -->
             <div class="mt-20 max-w-4xl mx-auto bg-white p-12 rounded-[4rem] shadow-2xl shadow-slate-200 border border-gray-100">
-                <form action="#" class="space-y-8">
+                @if(session('success'))
+                    <div class="mb-10 bg-emerald-50 border border-emerald-100 text-emerald-600 px-8 py-5 rounded-3xl text-sm font-black animate-pulse">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                <form action="{{ route('contact.store') }}" method="POST" class="space-y-8">
+                    @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
                             <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Nama Lengkap</label>
-                            <input type="text" placeholder="Masukkan nama Anda" class="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 text-sm focus:ring-2 focus:ring-amber-500 font-medium">
+                            <input type="text" name="name" placeholder="Masukkan nama Anda" class="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 text-sm focus:ring-2 focus:ring-amber-500 font-medium" required>
                         </div>
                         <div>
                             <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Alamat Email</label>
-                            <input type="email" placeholder="email@contoh.com" class="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 text-sm focus:ring-2 focus:ring-amber-500 font-medium">
+                            <input type="email" name="email" placeholder="email@contoh.com" class="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 text-sm focus:ring-2 focus:ring-amber-500 font-medium" required>
                         </div>
                     </div>
                     <div>
                         <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Pesan Anda</label>
-                        <textarea rows="6" placeholder="Apa yang bisa kami bantu?" class="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 text-sm focus:ring-2 focus:ring-amber-500 font-medium"></textarea>
+                        <textarea name="message" rows="6" placeholder="Apa yang bisa kami bantu?" class="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 text-sm focus:ring-2 focus:ring-amber-500 font-medium" required></textarea>
                     </div>
-                    <button type="submit" class="w-full bg-slate-900 text-white py-5 rounded-3xl text-[10px] font-black uppercase tracking-[0.3em] hover:bg-amber-500 hover:text-slate-900 transition-all shadow-xl shadow-slate-900/10">
+                    <button type="submit" class="w-full bg-slate-900 text-white py-5 rounded-3xl text-[10px] font-black uppercase tracking-[0.3em] hover:bg-amber-500 hover:text-slate-900 transition-all shadow-xl shadow-slate-900/10 uppercase">
                         Kirim Pesan Sekarang
                     </button>
                 </form>
