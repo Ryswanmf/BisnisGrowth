@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-gray-50">
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>" class="h-full bg-gray-50">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'Admin Dashboard') — BisnisGrowth</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/Logo_Bisnis_Growth.png') }}">
+    <title><?php echo $__env->yieldContent('title', 'Admin Dashboard'); ?> — BisnisGrowth</title>
+    <link rel="icon" type="image/png" href="<?php echo e(asset('images/Logo_Bisnis_Growth.png')); ?>">
     
     <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -12,7 +12,7 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
 </head>
 <body class="h-full font-sans antialiased text-gray-900 overflow-hidden" x-data="{ sidebarOpen: false }">
 
@@ -21,21 +21,21 @@
         <!-- Sidebar Desktop -->
         <aside class="hidden md:flex md:flex-col md:w-64 bg-slate-900 text-white shrink-0 shadow-xl border-r border-white/5 h-full">
             <div class="flex items-center h-16 px-6 bg-slate-950/50 shrink-0">
-                <img class="h-8 w-8 mr-3" src="{{ asset('images/Logo_Bisnis_Growth.png') }}" alt="Logo">
+                <img class="h-8 w-8 mr-3" src="<?php echo e(asset('images/Logo_Bisnis_Growth.png')); ?>" alt="Logo">
                 <span class="font-bold text-lg tracking-tight">Bisnis<span class="text-amber-400">Growth</span></span>
             </div>
             <div class="flex-1 overflow-y-auto p-4 custom-scrollbar">
-                @include('layouts.partials.admin-nav')
+                <?php echo $__env->make('layouts.partials.admin-nav', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
             </div>
             <div class="p-4 bg-slate-950/30 border-t border-white/5 shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="h-8 w-8 bg-amber-500 rounded-lg flex items-center justify-center text-slate-900 font-bold text-xs uppercase">{{ substr(Auth::user()->name, 0, 1) }}</div>
+                    <div class="h-8 w-8 bg-amber-500 rounded-lg flex items-center justify-center text-slate-900 font-bold text-xs uppercase"><?php echo e(substr(Auth::user()->name, 0, 1)); ?></div>
                     <div class="flex-1 min-w-0">
                         <p class="text-[10px] font-black uppercase tracking-widest text-white/40 mb-0.5">Admin Server</p>
-                        <p class="text-xs font-bold truncate text-white">{{ Auth::user()->name }}</p>
+                        <p class="text-xs font-bold truncate text-white"><?php echo e(Auth::user()->name); ?></p>
                     </div>
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
+                    <form action="<?php echo e(route('logout')); ?>" method="POST">
+                        <?php echo csrf_field(); ?>
                         <button type="submit" class="text-white/40 hover:text-red-400 transition-colors p-1.5 hover:bg-white/5 rounded-lg">
                             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                         </button>
@@ -55,17 +55,17 @@
                 </div>
                 <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
                     <div class="flex-shrink-0 flex items-center px-6">
-                        <img class="h-8 w-auto mr-3" src="{{ asset('images/Logo_Bisnis_Growth.png') }}" alt="Logo">
+                        <img class="h-8 w-auto mr-3" src="<?php echo e(asset('images/Logo_Bisnis_Growth.png')); ?>" alt="Logo">
                         <span class="font-bold text-lg">Bisnis<span class="text-amber-400">Growth</span></span>
                     </div>
-                    <nav class="mt-8 px-4 flex-1">@include('layouts.partials.admin-nav')</nav>
+                    <nav class="mt-8 px-4 flex-1"><?php echo $__env->make('layouts.partials.admin-nav', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?></nav>
                     <div class="p-4 bg-slate-950/30 border-t border-white/5 mt-auto">
                         <div class="flex items-center justify-between gap-3">
                             <div class="flex items-center gap-3">
-                                <div class="h-10 w-10 bg-amber-500 rounded-xl flex items-center justify-center text-slate-900 font-bold text-sm uppercase shadow-lg shadow-amber-500/20">{{ substr(Auth::user()->name, 0, 1) }}</div>
-                                <div class="min-w-0"><p class="text-xs font-bold truncate text-white">{{ Auth::user()->name }}</p><p class="text-[9px] font-black uppercase tracking-widest text-white/30">Administrator</p></div>
+                                <div class="h-10 w-10 bg-amber-500 rounded-xl flex items-center justify-center text-slate-900 font-bold text-sm uppercase shadow-lg shadow-amber-500/20"><?php echo e(substr(Auth::user()->name, 0, 1)); ?></div>
+                                <div class="min-w-0"><p class="text-xs font-bold truncate text-white"><?php echo e(Auth::user()->name); ?></p><p class="text-[9px] font-black uppercase tracking-widest text-white/30">Administrator</p></div>
                             </div>
-                            <form action="{{ route('logout') }}" method="POST">@csrf<button type="submit" class="bg-red-500/10 text-red-500 p-2.5 rounded-xl hover:bg-red-500 hover:text-white transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg></button></form>
+                            <form action="<?php echo e(route('logout')); ?>" method="POST"><?php echo csrf_field(); ?><button type="submit" class="bg-red-500/10 text-red-500 p-2.5 rounded-xl hover:bg-red-500 hover:text-white transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg></button></form>
                         </div>
                     </div>
                 </div>
@@ -77,16 +77,16 @@
             <header class="relative z-10 flex-shrink-0 flex h-16 bg-white shadow-sm border-b border-gray-200">
                 <button @click="sidebarOpen = true" class="px-4 border-r border-gray-200 text-gray-500 md:hidden"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg></button>
                 <div class="flex-1 px-6 flex justify-between items-center">
-                    <h1 class="text-lg font-black text-slate-900 uppercase tracking-tight">@yield('header', 'Dashboard')</h1>
+                    <h1 class="text-lg font-black text-slate-900 uppercase tracking-tight"><?php echo $__env->yieldContent('header', 'Dashboard'); ?></h1>
                     <div class="flex items-center">
-                        <div class="hidden md:flex flex-col items-end mr-6"><span class="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Server Time</span><span class="text-xs font-bold text-slate-900 leading-none">{{ now()->translatedFormat('d F Y') }}</span></div>
+                        <div class="hidden md:flex flex-col items-end mr-6"><span class="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Server Time</span><span class="text-xs font-bold text-slate-900 leading-none"><?php echo e(now()->translatedFormat('d F Y')); ?></span></div>
                         <div class="h-8 w-px bg-gray-100 mr-6 hidden md:block"></div>
                         <button class="bg-gray-50 p-2 rounded-xl text-gray-400 hover:text-amber-500 transition-all relative border border-gray-100"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg><span class="absolute top-2 right-2 block h-2 w-2 rounded-full bg-amber-500 ring-2 ring-white"></span></button>
                     </div>
                 </div>
             </header>
             <main class="flex-1 overflow-y-auto focus:outline-none bg-gray-50 p-6 md:p-10 custom-scrollbar">
-                <div class="max-w-7xl mx-auto">@yield('content')</div>
+                <div class="max-w-7xl mx-auto"><?php echo $__env->yieldContent('content'); ?></div>
             </main>
         </div>
     </div>
@@ -104,7 +104,7 @@
         .swal2-cancel { background-color: #f1f5f9 !important; color: #64748b !important; border-radius: 1rem !important; font-weight: 900 !important; text-transform: uppercase !important; font-size: 10px !important; letter-spacing: 0.1em !important; padding: 1rem 2rem !important; }
     </style>
 
-    @stack('scripts')
+    <?php echo $__env->yieldPushContent('scripts'); ?>
 
     <script>
         // SweetAlert2 Configuration
@@ -121,13 +121,13 @@
         });
 
         // Listen for Laravel Flash Messages
-        @if(session('success'))
-            Toast.fire({ icon: 'success', title: '{{ session('success') }}', background: '#0f172a', color: '#fff', iconColor: '#fbbf24' });
-        @endif
+        <?php if(session('success')): ?>
+            Toast.fire({ icon: 'success', title: '<?php echo e(session('success')); ?>', background: '#0f172a', color: '#fff', iconColor: '#fbbf24' });
+        <?php endif; ?>
 
-        @if(session('error'))
-            Swal.fire({ icon: 'error', title: 'Ups!', text: '{{ session('error') }}', confirmButtonText: 'OKE' });
-        @endif
+        <?php if(session('error')): ?>
+            Swal.fire({ icon: 'error', title: 'Ups!', text: '<?php echo e(session('error')); ?>', confirmButtonText: 'OKE' });
+        <?php endif; ?>
 
         // Global Confirm Delete
         window.confirmDelete = function(formId) {
@@ -148,3 +148,4 @@
     </script>
 </body>
 </html>
+<?php /**PATH D:\laragon\www\BisnisGrowth\resources\views/layouts/admin.blade.php ENDPATH**/ ?>

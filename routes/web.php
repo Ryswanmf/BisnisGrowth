@@ -46,25 +46,29 @@ Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->
 // Admin Dashboard & Management
 Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard.index');
-    Route::resource('/articles', App\Http\Controllers\Admin\ArticleController::class)->names('admin.articles')->parameters(['articles' => 'article']);
-    Route::post('/articles/generate-ai', [App\Http\Controllers\Admin\ArticleController::class, 'generateAI'])->name('admin.articles.generate-ai');
-    Route::resource('/categories', App\Http\Controllers\Admin\CategoryController::class)->names('admin.categories');
-    Route::get('/traffic', [App\Http\Controllers\Admin\TrafficController::class, 'index'])->name('admin.traffic.index');
 
-    // Contact Messages
-    Route::get('/messages', [App\Http\Controllers\Admin\ContactMessageController::class, 'index'])->name('admin.messages.index');
-    Route::delete('/messages/{message}', [App\Http\Controllers\Admin\ContactMessageController::class, 'destroy'])->name('admin.messages.destroy');
+    // Akses Berdua (Admin & User)
+    Route::middleware(['role:user'])->group(function() {
+        Route::resource('/articles', App\Http\Controllers\Admin\ArticleController::class)->names('admin.articles')->parameters(['articles' => 'article']);
+        Route::post('/articles/generate-ai', [App\Http\Controllers\Admin\ArticleController::class, 'generateAI'])->name('admin.articles.generate-ai');
+        Route::resource('/categories', App\Http\Controllers\Admin\CategoryController::class)->names('admin.categories');
+        Route::get('/traffic', [App\Http\Controllers\Admin\TrafficController::class, 'index'])->name('admin.traffic.index');
+    });
 
-    // Site Settings
-    Route::get('/settings', [App\Http\Controllers\Admin\SiteSettingController::class, 'index'])->name('admin.settings.index');
-    Route::put('/settings', [App\Http\Controllers\Admin\SiteSettingController::class, 'update'])->name('admin.settings.update');
-
-    // Footer Settings
-    Route::get('/footer', [App\Http\Controllers\Admin\FooterSettingController::class, 'edit'])->name('admin.footer.edit');
-    Route::put('/footer', [App\Http\Controllers\Admin\FooterSettingController::class, 'update'])->name('admin.footer.update');
-
-    // Custom Pages (Privacy, Terms, etc)
-    Route::resource('/pages', App\Http\Controllers\Admin\PageController::class)->names('admin.pages');
+    // Akses Khusus (Hanya Admin)
+    Route::middleware(['role:admin'])->group(function() {
+        Route::resource('/users', App\Http\Controllers\Admin\UserController::class)->names('admin.users');
+        Route::get('/messages', [App\Http\Controllers\Admin\ContactMessageController::class, 'index'])->name('admin.messages.index');
+        Route::delete('/messages/{message}', [App\Http\Controllers\Admin\ContactMessageController::class, 'destroy'])->name('admin.messages.destroy');
+        Route::get('/settings/backup', [App\Http\Controllers\Admin\SiteSettingController::class, 'backupDatabase'])->name('admin.settings.backup');
+        Route::get('/settings', [App\Http\Controllers\Admin\SiteSettingController::class, 'index'])->name('admin.settings.index');
+        Route::put('/settings', [App\Http\Controllers\Admin\SiteSettingController::class, 'update'])->name('admin.settings.update');
+        Route::get('/footer', [App\Http\Controllers\Admin\FooterSettingController::class, 'edit'])->name('admin.footer.edit');
+        Route::put('/footer', [App\Http\Controllers\Admin\FooterSettingController::class, 'update'])->name('admin.footer.update');
+        
+        // Custom Pages (Hanya Admin)
+        Route::resource('/pages', App\Http\Controllers\Admin\PageController::class)->names('admin.pages');
+    });
 });
 
 // Business Profile (MUST BE AT THE BOTTOM)

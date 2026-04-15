@@ -15,8 +15,18 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, string $role): Response
     {
-        if (!$request->user() || $request->user()->role !== $role) {
-            abort(403, 'Unauthorized action.');
+        if (!$request->user()) {
+            return redirect()->route('login');
+        }
+
+        // Admin selalu diperbolehkan
+        if ($request->user()->role === 'admin') {
+            return $next($request);
+        }
+
+        // Cek apakah role user sesuai dengan yang diminta
+        if ($request->user()->role !== $role) {
+            abort(403, 'Anda tidak memiliki hak akses untuk halaman ini.');
         }
 
         return $next($request);

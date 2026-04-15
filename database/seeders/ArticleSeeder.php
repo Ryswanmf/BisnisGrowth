@@ -3,79 +3,92 @@
 namespace Database\Seeders;
 
 use App\Models\Article;
+use App\Models\User;
+use App\Models\Category;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Http;
 
 class ArticleSeeder extends Seeder
 {
     public function run(): void
     {
-        // Bersihkan folder lama agar rapi
-        Storage::disk('public')->deleteDirectory('articles');
-        Storage::disk('public')->makeDirectory('articles');
+        // Bersihkan data lama agar ID dimulai dari awal (untuk mempermudah shortcode)
+        Article::truncate();
 
-        $dataArticles = [
-            ['title' => 'Strategi Digital Marketing UMKM 2026: Dominasi Video Pendek', 'category' => 'Digital Marketing', 'keyword' => 'marketing'],
-            ['title' => 'Cara Mengelola Arus Kas Bisnis Agar Tetap Sehat dan Likuid', 'category' => 'Keuangan', 'keyword' => 'finance'],
-            ['title' => 'Pentingnya Izin Usaha (NIB) sebagai Legalitas UMKM Modern', 'category' => 'Legalitas', 'keyword' => 'legal'],
-            ['title' => 'Tips Memilih Lokasi Bisnis Kuliner: Strategi Hook dan Traffic', 'category' => 'Operasional', 'keyword' => 'restaurant'],
-            ['title' => 'Membangun Branding yang Kuat dengan Biaya Minim dan Efektif', 'category' => 'Branding', 'keyword' => 'branding'],
+        $admin = User::where('role', 'admin')->first() ?: User::first();
+        $categories = Category::where('is_active', true)->pluck('name')->toArray();
+        if (empty($categories)) $categories = ['Digital Marketing', 'Keuangan', 'Operasional', 'Legalitas', 'Branding'];
+
+        $topics = [
+            ['title' => '{Strategi|Rahasia|Tips} Jitu Pemasaran {TikTok|Instagram} 2026', 'cat' => 'Digital Marketing'],
+            ['title' => 'Cara {Mudah|Cepat} Daftar {NIB|Sertifikat Halal} untuk UMKM', 'cat' => 'Legalitas'],
+            ['title' => '{Pentingnya|Manfaat} Audit Keuangan bagi {Bisnis Lokal|Startup}', 'cat' => 'Keuangan'],
+            ['title' => 'Membangun {Sistem|SOP} Kerja yang {Efisien|Modern}', 'cat' => 'Operasional'],
+            ['title' => '{Tren|Inovasi} Desain Produk yang Menjual di Tahun 2026', 'cat' => 'Branding'],
+            ['title' => '{Panduan|Langkah} Optimasi Google Maps untuk Toko Anda', 'cat' => 'Digital Marketing'],
+            ['title' => 'Mengelola {Stok|Inventori} Tanpa Ribet dengan Teknologi AI', 'cat' => 'Operasional'],
+            ['title' => '{Analisis|Cara Baca} Laporan Arus Kas untuk Pemula', 'cat' => 'Keuangan'],
+            ['title' => 'Kiat Sukses {Kolaborasi|Kemitraan} dengan Influencer Lokal', 'cat' => 'Branding'],
+            ['title' => 'Legalitas {Usaha Dagang|CV|PT} Mana yang Lebih Cocok?', 'cat' => 'Legalitas'],
+            ['title' => 'Meningkatkan {Loyalitas|Retensi} Pelanggan dengan CRM Sederhana', 'cat' => 'Digital Marketing'],
+            ['title' => '{Tips|Cara} Negosiasi dengan Supplier agar Dapat Harga Terbaik', 'cat' => 'Operasional'],
+            ['title' => 'Mengapa {Storytelling|Cerita} Penting untuk Brand Bisnis Anda?', 'cat' => 'Branding'],
+            ['title' => 'Persiapan {Ekspor|Pasar Global} bagi Produk Lokal Indonesia', 'cat' => 'Operasional'],
+            ['title' => 'Strategi {Harga|Pricing} agar Tetap Untung di Tengah Persaingan', 'cat' => 'Keuangan'],
+            ['title' => 'Panduan {Copywriting|Menulis} Iklan yang Mematikan', 'cat' => 'Digital Marketing'],
+            ['title' => 'Mengurus {Hak Kekayaan Intelektual|HAKI} Produk Anda', 'cat' => 'Legalitas'],
+            ['title' => '{Kunci|Pondasi} Manajemen Tim yang Solid dan Loyal', 'cat' => 'Operasional'],
+            ['title' => 'Membangun {Personal Branding|Citra Diri} sebagai Founder UMKM', 'cat' => 'Branding'],
+            ['title' => 'Cara Memilih {Aplikasi Kasir|Point of Sale} yang Tepat', 'cat' => 'Keuangan'],
         ];
 
-        // Tambah data hingga 20
-        for ($i = 6; $i <= 20; $i++) {
-            $categories = ['Digital Marketing', 'Keuangan', 'Operasional', 'Legalitas', 'Branding'];
-            $cat = $categories[array_rand($categories)];
-            $dataArticles[] = [
-                'title' => "Panduan Akselerasi Bisnis $cat: Rahasia Sukses Bagian ke-$i",
-                'category' => $cat,
-                'keyword' => 'business'
-            ];
-        }
+        foreach ($topics as $index => $t) {
+            $id = $index + 1;
+            $slug = Str::slug(str_replace(['{', '}', '|'], '-', $t['title'])) . '-' . $id;
+            
+            // Generate link kustom untuk simulasi
+            $linkPerusahaan = '<a href="https://bisnisgrowth.id" class="text-amber-600 font-bold hover:underline">PT Bisnis Growth Indonesia</a>';
+            $linkFounder = '<a href="#" class="text-amber-600 font-bold hover:underline">Riswan</a>';
+            
+            // Selipkan artikel terkait secara acak (mengacu ke ID lain)
+            $relatedId = ($id == 1) ? 2 : $id - 1;
+            $shortcode = '[related id="'.$relatedId.'"]';
 
-        foreach ($dataArticles as $index => $data) {
-            $slug = Str::slug($data['title']);
-            $paths = [];
+            Article::create([
+                'user_id' => $admin->id ?? null,
+                'title' => $t['title'],
+                'slug' => $slug,
+                'category_name' => $t['cat'],
+                'excerpt' => "{Simak|Baca|Berikut ini} ulasan lengkap mengenai {$t['title']} oleh tim ahli kami.",
+                'content' => "
+                    <h2>Pentingnya Strategi dalam Bisnis</h2>
+                    <p>{Selamat pagi|Halo|Halo rekan-rekan} semua. Hari ini kita akan membahas sesuatu yang sangat {krusial|penting}, yaitu mengenai <strong>{$t['title']}</strong>.</p>
+                    <p>Menurut pakar bisnis ternama, {$linkFounder}, setiap langkah yang diambil oleh {$linkPerusahaan} selalu didasarkan pada data riset pasar yang mendalam.</p>
+                    
+                    $shortcode
 
-            // Generate 4 gambar unik untuk setiap artikel
-            for ($imgIndex = 1; $imgIndex <= 4; $imgIndex++) {
-                $imgName = "article-{$index}-{$imgIndex}.jpg";
-                
-                // Menggunakan placeholder yang stabil dan unik per gambar
-                // Catatan: Di lingkungan lokal, ini hanya menyimpan path. 
-                // Jika ingin download sungguhan, gunakan file_get_contents.
-                $paths[$imgIndex] = "articles/" . $imgName;
-                
-                // Simulasi file ada (agar asset() tidak error)
-                Storage::disk('public')->put($paths[$imgIndex], 'dummy content');
-            }
-
-            Article::updateOrCreate(
-                ['slug' => $slug],
-                [
-                    'title' => $data['title'],
-                    'category_name' => $data['category'],
-                    'excerpt' => "Pelajari panduan mendalam mengenai {$data['title']} untuk membantu UMKM Indonesia berkembang pesat di era digital.",
-                    'content' => "Ini adalah konten artikel profesional tentang <strong>{$data['title']}</strong>. <br><br>Dalam dunia bisnis yang kompetitif, memahami {$data['category']} adalah kunci utama. Panduan ini akan membahas strategi langkah-demi-langkah, analisis pasar terbaru, dan tips praktis yang bisa langsung diterapkan oleh pelaku usaha. <br><br>Gunakan data dan wawasan ini untuk mengambil keputusan yang lebih tepat bagi pertumbuhan jangka panjang bisnis Anda.",
-                    'image' => $paths[1],
-                    'image_2' => $paths[2],
-                    'image_3' => $paths[3],
-                    'image_4' => $paths[4],
-                    'image_alt' => $data['title'],
-                    'is_published' => true,
-                    'is_featured' => ($index < 4),
-                    'published_at' => Carbon::now()->subDays($index),
-                    'view_count' => rand(1000, 20000),
-                    'click_count' => rand(500, 5000),
-                    'whatsapp_clicks' => rand(10, 500),
-                    'phone_clicks' => rand(5, 200),
-                    'meta_title' => $data['title'] . ' | BisnisGrowth',
-                    'meta_description' => "Baca panduan {$data['title']} selengkapnya hanya di BisnisGrowth.id",
-                ]
-            );
+                    <h2>Langkah-Langkah Implementasi</h2>
+                    <p>Strategi yang {efektif|tepat|jitu} adalah kunci pertumbuhan. Anda perlu melakukan riset, eksekusi, dan evaluasi secara berkala.</p>
+                    <p>Banyak pengusaha sukses telah membuktikan bahwa dengan {$t['title']}, omzet mereka meningkat hingga {50%|70%|100%}.</p>
+                    
+                    <h2>Kesimpulan</h2>
+                    <p>Semoga panduan mengenai {$t['title']} ini {bermanfaat|berguna} untuk bisnis Anda. Jangan lupa untuk terus berinovasi dan beradaptasi dengan teknologi terbaru.</p>
+                ",
+                'image' => 'articles/sample-' . (($id % 5) + 1) . '.webp',
+                'image_2' => 'articles/sample-' . (($id % 5) + 2) . '.webp',
+                'image_3' => 'articles/sample-' . (($id % 5) + 3) . '.webp',
+                'image_4' => 'articles/sample-' . (($id % 5) + 4) . '.webp',
+                'is_published' => true,
+                'is_featured' => ($index < 4),
+                'published_at' => Carbon::now()->subDays($index),
+                'view_count' => rand(500, 10000),
+                'click_count' => rand(100, 5000),
+                'whatsapp_clicks' => rand(10, 500),
+                'phone_clicks' => rand(5, 200),
+                'meta_title' => $t['title'],
+                'meta_description' => "Panduan strategis mengenai " . $t['title'] . " untuk kemajuan UMKM.",
+            ]);
         }
     }
 }

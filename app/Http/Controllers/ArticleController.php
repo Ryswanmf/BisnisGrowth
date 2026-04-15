@@ -62,6 +62,9 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
+        // Load author
+        $article->load('user');
+
         // Increment view count
         $article->increment('view_count');
 

@@ -56,7 +56,12 @@ class TrafficController extends Controller
         $devices = PageView::select('device', DB::raw('count(*) as total'))->groupBy('device')->get();
         $topPages = PageView::select('url', DB::raw('count(*) as total'))->groupBy('url')->orderBy('total', 'desc')->take(5)->get();
 
-        return view('admin.traffic.index', compact('stats', 'dailyTrend', 'weeklyTrend', 'monthlyTrend', 'devices', 'topPages'));
+        // Data SEO Artikel untuk Inventori (Paginated)
+        $seoData = Article::published()
+            ->select('title', 'slug', 'focus_keyword', 'canonical_url')
+            ->paginate(10);
+
+        return view('admin.traffic.index', compact('stats', 'dailyTrend', 'weeklyTrend', 'monthlyTrend', 'devices', 'topPages', 'seoData'));
     }
 
     private function getMetricsForDateRange($start, $end, $label)

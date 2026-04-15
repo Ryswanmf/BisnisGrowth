@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\Log;
 class GeminiService
 {
     protected $apiKey;
-    // Menggunakan model Gemini 2.5 Flash terbaru di tahun 2026
-    protected $apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
     public function __construct()
     {
@@ -22,86 +20,59 @@ class GeminiService
             return ['error' => 'API Key Gemini belum diatur di .env'];
         }
 
-        $prompt = "Anda adalah penulis artikel bisnis profesional untuk platform BisnisGrowth. 
-        Tugas: Buat artikel lengkap tentang topik: \"$topic\".
-        
-        Persyaratan:
-        1. Bahasa: Indonesia.
-        2. Panjang: Minimal 600-800 kata.
-        3. Format: Gunakan HTML (h2, p, strong).
-        
-        WAJIB berikan hasil HANYA dalam format JSON VALID tanpa teks tambahan apapun.
-        Struktur JSON:
+        // Urutan model dari yang paling cerdas ke yang paling stabil
+        $models = [
+            ['name' => 'gemini-1.5-flash', 'api' => 'v1beta'],
+            ['name' => 'gemini-1.5-flash-latest', 'api' => 'v1beta'],
+            ['name' => 'gemini-pro', 'api' => 'v1'],
+        ];
+
+        $prompt = "Anda adalah penulis artikel bisnis profesional. Buat artikel lengkap (600-800 kata) tentang topik: \"$topic\".
+        WAJIB berikan hasil dalam format JSON VALID:
         {
-            \"title\": \"Judul SEO\",
-            \"content\": \"Isi HTML\",
-            \"excerpt\": \"Ringkasan artikel\",
+            \"title\": \"Judul\",
+            \"content\": \"Isi HTML (h2, p, strong)\",
+            \"excerpt\": \"Ringkasan\",
             \"meta_title\": \"Meta Title\",
             \"meta_description\": \"Meta Description\",
-            \"focus_keyword\": \"Kata Kunci\"
+            \"focus_keyword\": \"Keyword\"
         }";
 
-        try {
-            $response = Http::withoutVerifying()->post($this->apiUrl . '?key=' . $this->apiKey, [
-                'contents' => [
-                    [
-                        'parts' => [
-                            ['text' => $prompt]
-                        ]
-                    ]
-                ],
-                'generationConfig' => [
-                    'response_mime_type' => 'application/json',
-                ]
-            ]);
-
-            if ($response->successful()) {
-                $data = $response->json();
-                $text = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
-                
-                if ($text) {
-                    $decoded = json_decode($text, true);
-                    if (json_last_error() === JSON_ERROR_NONE) {
-                        return $decoded;
-                    }
-                }
-                return ['error' => 'Gagal memproses data JSON dari AI.'];
-            } else {
-                // Jika 2.5 gagal (misal belum aktif di region), coba fallback ke 2.0 atau 1.5
-                if ($response->status() == 404) {
-                    return $this->tryAlternativeModels($topic);
-                }
-
-                $err = $response->json();
-                return ['error' => 'Gemini AI: ' . ($err['error']['message'] ?? 'Respon tidak ditemukan')];
-            }
-        } catch (\Exception $e) {
-            return ['error' => 'Kesalahan koneksi ke Google AI.'];
-        }
-    }
-
-    private function tryAlternativeModels($topic)
-    {
-        // Mencoba model-model sebelumnya jika 2.5 belum tersedia
-        $models = ['gemini-2.0-flash', 'gemini-1.5-flash'];
-        
-        foreach ($models as $model) {
-            $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$this->apiKey}";
-            
+        foreach ($models as $m) {
             try {
-                $response = Http::withoutVerifying()->post($url, [
-                    'contents' => [['parts' => [['text' => "Buat artikel bisnis dalam Bahasa Indonesia tentang $topic. Kembalikan HANYA JSON VALID."]]]],
-                    'generationConfig' => ['response_mime_type' => 'application/json']
-                ]);
+                $url = "https://generativelanguage.googleapis.com/{$m['api']}/models/{$m['name']}:generateContent?key={$this->apiKey}";
+                
+                $payload = [
+                    'contents' => [['parts' => [['text' => $prompt]]]]
+                ];
+
+                // JSON Mode hanya didukung di v1beta
+                if ($m['api'] === 'v1beta') {
+                    $payload['generationConfig'] = ['response_mime_type' => 'application/json'];
+                }
+
+                $response = Http::withoutVerifying()->timeout(60)->post($url, $payload);
 
                 if ($response->successful()) {
                     $data = $response->json();
                     $text = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
-                    if ($text) return json_decode($text, true);
+                    if ($text) {
+                        $jsonString = preg_replace('/^```json\s*|```$/', '', trim($text));
+                        $decoded = json_decode($jsonString, true);
+                        if (json_last_error() === JSON_ERROR_NONE) {
+                            return $decoded;
+                        }
+                    }
                 }
-            } catch (\Exception $e) { continue; }
+
+                // Jika error karena beban tinggi (503), lanjut ke model berikutnya
+                Log::warning("Gemini Model {$m['name']} sibuk atau gagal: " . $response->status());
+                
+            } catch (\Exception $e) {
+                Log::error("Gemini Exception pada {$m['name']}: " . $e->getMessage());
+            }
         }
 
-        return ['error' => 'Model Gemini 2.5/2.0/1.5 tidak ditemukan. Mohon pastikan API Key Anda memiliki akses ke model terbaru di Google AI Studio.'];
+        return ['error' => 'Layanan AI sedang sibuk karena permintaan yang sangat tinggi di server Google. Silakan coba lagi dalam 1-2 menit.'];
     }
 }

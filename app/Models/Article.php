@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\ContentHelper;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,10 +12,43 @@ class Article extends Model
      * The attributes that are mass assignable.
      */
     protected $fillable = [
-        'title', 'slug', 'excerpt', 'content', 'image', 'image_2', 'image_3', 'image_4', 
-        'image_alt', 'category_name', 'view_count', 'is_featured', 'is_published', 
-        'published_at', 'meta_title', 'meta_description', 'focus_keyword', 'canonical_url'
+        'user_id', 'title', 'slug', 'excerpt', 'content', 'image', 'image_2', 'image_3', 'image_4', 
+        'image_alt', 'category_name', 'view_count', 'click_count', 'whatsapp_clicks', 'phone_clicks',
+        'is_featured', 'is_published', 'published_at', 'meta_title', 'meta_description', 
+        'focus_keyword', 'canonical_url'
     ];
+
+    /**
+     * Get the user that owns the article.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Accessor: Title with Content Support
+     */
+    protected function title(): Attribute
+    {
+        return Attribute::get(fn ($value) => ContentHelper::process($value));
+    }
+
+    /**
+     * Accessor: Content with Content Support (Spintax + Related)
+     */
+    protected function content(): Attribute
+    {
+        return Attribute::get(fn ($value) => ContentHelper::process($value));
+    }
+
+    /**
+     * Accessor: Excerpt with Content Support
+     */
+    protected function excerpt(): Attribute
+    {
+        return Attribute::get(fn ($value) => ContentHelper::process($value));
+    }
 
     /**
      * Get the attributes that should be cast.
@@ -30,25 +64,23 @@ class Article extends Model
 
     /**
      * Accessor: SEO Title
-     * Uses meta_title if available, fallback to title
      */
     protected function seoTitle(): Attribute
     {
-        return Attribute::get(fn () => $this->meta_title ?: $this->title);
+        return Attribute::get(fn () => ContentHelper::process($this->meta_title ?: $this->getRawOriginal('title')));
     }
 
     /**
      * Accessor: SEO Description
-     * Uses meta_description or excerpt, fallback to content snippet
      */
     protected function seoDescription(): Attribute
     {
         return Attribute::get(function () {
             $desc = $this->meta_description ?: $this->excerpt;
             if (!$desc) {
-                $desc = substr(strip_tags($this->content), 0, 160);
+                $desc = substr(strip_tags($this->getRawOriginal('content')), 0, 160);
             }
-            return $desc;
+            return ContentHelper::process($desc);
         });
     }
 

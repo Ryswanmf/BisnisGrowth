@@ -1,9 +1,9 @@
-@extends('layouts.admin')
 
-@section('title', 'Analisis Traffic')
-@section('header', 'Traffic & Konversi')
 
-@section('content')
+<?php $__env->startSection('title', 'Analisis Traffic'); ?>
+<?php $__env->startSection('header', 'Traffic & Konversi'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="space-y-10">
     
     <!-- ROW 1: CONVERSION SUMMARY (ARTICLE, WA, PHONE) -->
@@ -13,7 +13,7 @@
                 <svg class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l4 4v10a2 2 0 01-2 2zM14 4v4h4m-4 7h.01M9 15h.01M9 11h.01M12 11h.01M12 15h.01M15 11h.01M15 15h.01"/></svg>
             </div>
             <p class="text-[10px] font-black uppercase tracking-[0.2em] mb-3 opacity-80">Total Klik Artikel</p>
-            <h3 class="text-4xl font-black tracking-tighter">{{ number_format($stats['total_article_clicks']) }}</h3>
+            <h3 class="text-4xl font-black tracking-tighter"><?php echo e(number_format($stats['total_article_clicks'])); ?></h3>
         </div>
         
         <div class="bg-emerald-500 p-8 rounded-[2.5rem] shadow-xl shadow-emerald-500/20 text-white relative overflow-hidden group">
@@ -21,7 +21,7 @@
                 <svg class="h-24 w-24" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.328-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.13.57-.072 1.758-.713 2.006-1.403.248-.69.248-1.288.173-1.403-.074-.115-.272-.19-.57-.339zM12 22c-1.83 0-3.622-.47-5.202-1.363L2 22l1.393-5.113C2.493 15.298 2 13.67 2 12 2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" fill="currentColor"/></svg>
             </div>
             <p class="text-[10px] font-black uppercase tracking-[0.2em] mb-3 opacity-80">Total Klik WhatsApp</p>
-            <h3 class="text-4xl font-black tracking-tighter">{{ number_format($stats['total_wa_clicks']) }}</h3>
+            <h3 class="text-4xl font-black tracking-tighter"><?php echo e(number_format($stats['total_wa_clicks'])); ?></h3>
         </div>
 
         <div class="bg-slate-800 p-8 rounded-[2.5rem] shadow-xl shadow-slate-800/20 text-white relative overflow-hidden group">
@@ -29,7 +29,7 @@
                 <svg class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
             </div>
             <p class="text-[10px] font-black uppercase tracking-[0.2em] mb-3 opacity-80">Total Klik Telepon</p>
-            <h3 class="text-4xl font-black tracking-tighter">{{ number_format($stats['total_phone_clicks']) }}</h3>
+            <h3 class="text-4xl font-black tracking-tighter"><?php echo e(number_format($stats['total_phone_clicks'])); ?></h3>
         </div>
     </div>
 
@@ -55,22 +55,22 @@
             <div class="h-[250px] w-full flex items-center justify-center relative">
                 <canvas id="interactionChart"></canvas>
                 <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none mt-2">
-                    <span class="text-2xl font-black text-slate-900">{{ number_format($stats['total_article_clicks'] + $stats['total_wa_clicks'] + $stats['total_phone_clicks']) }}</span>
+                    <span class="text-2xl font-black text-slate-900"><?php echo e(number_format($stats['total_article_clicks'] + $stats['total_wa_clicks'] + $stats['total_phone_clicks'])); ?></span>
                     <span class="text-[8px] font-black text-gray-400 uppercase tracking-widest">Total Klik</span>
                 </div>
             </div>
             <div class="mt-10 space-y-4 px-2">
                 <div class="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
                     <div class="flex items-center gap-3"><span class="h-2 w-2 rounded-full bg-blue-500"></span><span class="text-gray-400">Klik Artikel</span></div>
-                    <span class="text-slate-900">{{ number_format($stats['total_article_clicks']) }}</span>
+                    <span class="text-slate-900"><?php echo e(number_format($stats['total_article_clicks'])); ?></span>
                 </div>
                 <div class="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
                     <div class="flex items-center gap-3"><span class="h-2 w-2 rounded-full bg-emerald-500"></span><span class="text-gray-400">Klik WhatsApp</span></div>
-                    <span class="text-slate-900">{{ number_format($stats['total_wa_clicks']) }}</span>
+                    <span class="text-slate-900"><?php echo e(number_format($stats['total_wa_clicks'])); ?></span>
                 </div>
                 <div class="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
                     <div class="flex items-center gap-3"><span class="h-2 w-2 rounded-full bg-slate-400"></span><span class="text-gray-400">Klik Telepon</span></div>
-                    <span class="text-slate-900">{{ number_format($stats['total_phone_clicks']) }}</span>
+                    <span class="text-slate-900"><?php echo e(number_format($stats['total_phone_clicks'])); ?></span>
                 </div>
             </div>
         </div>
@@ -86,12 +86,12 @@
         <div class="bg-white p-8 md:p-10 rounded-[3rem] shadow-sm border border-gray-100">
             <h4 class="text-xs font-black text-slate-900 uppercase tracking-widest mb-8">Halaman Populer</h4>
             <div class="space-y-4">
-                @foreach($topPages as $page)
+                <?php $__currentLoopData = $topPages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-transparent group hover:border-amber-100 hover:bg-amber-50 transition-all">
-                        <span class="text-xs font-bold text-slate-600 truncate max-w-[200px] group-hover:text-slate-900">{{ $page->url ?: '/' }}</span>
-                        <span class="text-xs font-black text-slate-900 bg-white px-4 py-1.5 rounded-xl shadow-sm border border-gray-100">{{ number_format($page->total) }} Hits</span>
+                        <span class="text-xs font-bold text-slate-600 truncate max-w-[200px] group-hover:text-slate-900"><?php echo e($page->url ?: '/'); ?></span>
+                        <span class="text-xs font-black text-slate-900 bg-white px-4 py-1.5 rounded-xl shadow-sm border border-gray-100"><?php echo e(number_format($page->total)); ?> Hits</span>
                     </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
         </div>
     </div>
@@ -103,7 +103,7 @@
                 <h4 class="text-sm font-black text-slate-900 uppercase tracking-widest mb-1">Monitor Kata Kunci SEO</h4>
                 <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Focus Keyword & Canonical URL seluruh artikel</p>
             </div>
-            <span class="px-4 py-2 bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest rounded-xl">{{ $seoData->count() }} Artikel Aktif</span>
+            <span class="px-4 py-2 bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest rounded-xl"><?php echo e($seoData->count()); ?> Artikel Aktif</span>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
@@ -115,35 +115,36 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50">
-                    @forelse($seoData as $seo)
+                    <?php $__empty_1 = true; $__currentLoopData = $seoData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $seo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <tr class="hover:bg-gray-50/50 transition-colors">
                         <td class="px-6 py-4">
-                            <p class="text-xs font-black text-slate-900 truncate max-w-[300px]">{{ $seo->title }}</p>
-                            <p class="text-[9px] text-gray-400 font-bold mt-1 italic">/artikel/{{ $seo->slug }}</p>
+                            <p class="text-xs font-black text-slate-900 truncate max-w-[300px]"><?php echo e($seo->title); ?></p>
+                            <p class="text-[9px] text-gray-400 font-bold mt-1 italic">/artikel/<?php echo e($seo->slug); ?></p>
                         </td>
                         <td class="px-6 py-4">
-                            @if($seo->focus_keyword)
-                                <span class="px-3 py-1.5 bg-amber-50 text-amber-700 text-[10px] font-black uppercase tracking-widest rounded-lg border border-amber-100">{{ $seo->focus_keyword }}</span>
-                            @else
+                            <?php if($seo->focus_keyword): ?>
+                                <span class="px-3 py-1.5 bg-amber-50 text-amber-700 text-[10px] font-black uppercase tracking-widest rounded-lg border border-amber-100"><?php echo e($seo->focus_keyword); ?></span>
+                            <?php else: ?>
                                 <span class="text-[10px] text-gray-300 font-black uppercase tracking-widest italic">Belum diatur</span>
-                            @endif
+                            <?php endif; ?>
                         </td>
                         <td class="px-6 py-4">
-                            @if($seo->canonical_url)
-                                <code class="text-[10px] text-blue-500 font-bold truncate max-w-[250px] block">{{ $seo->canonical_url }}</code>
-                            @else
+                            <?php if($seo->canonical_url): ?>
+                                <code class="text-[10px] text-blue-500 font-bold truncate max-w-[250px] block"><?php echo e($seo->canonical_url); ?></code>
+                            <?php else: ?>
                                 <code class="text-[10px] text-gray-300 font-bold truncate max-w-[250px] block">Auto-generated</code>
-                            @endif
+                            <?php endif; ?>
                         </td>
                     </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr><td colspan="3" class="px-6 py-10 text-center text-gray-400 italic text-sm">Belum ada data SEO artikel.</td></tr>
-                    @endforelse
+                    <?php endif; ?>
                     </tbody>
                     </table>
                     </div>
                     <div class="mt-6">
-                    {{ $seoData->appends(['tab' => 'maintenance'])->links() }}
+                    <?php echo e($seoData->appends(['tab' => 'maintenance'])->links()); ?>
+
                     </div>
                     </div></div>
 
@@ -151,9 +152,9 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const trendData = {
-        daily: { labels: {!! json_encode($dailyTrend->pluck('label')) !!}, views: {!! json_encode($dailyTrend->pluck('views')) !!}, articles: {!! json_encode($dailyTrend->pluck('articles')) !!}, whatsapp: {!! json_encode($dailyTrend->pluck('whatsapp')) !!}, phone: {!! json_encode($dailyTrend->pluck('phone')) !!} },
-        weekly: { labels: {!! json_encode($weeklyTrend->pluck('label')) !!}, views: {!! json_encode($weeklyTrend->pluck('views')) !!}, articles: {!! json_encode($weeklyTrend->pluck('articles')) !!}, whatsapp: {!! json_encode($weeklyTrend->pluck('whatsapp')) !!}, phone: {!! json_encode($weeklyTrend->pluck('phone')) !!} },
-        monthly: { labels: {!! json_encode($monthlyTrend->pluck('label')) !!}, views: {!! json_encode($monthlyTrend->pluck('views')) !!}, articles: {!! json_encode($monthlyTrend->pluck('articles')) !!}, whatsapp: {!! json_encode($monthlyTrend->pluck('whatsapp')) !!}, phone: {!! json_encode($monthlyTrend->pluck('phone')) !!} }
+        daily: { labels: <?php echo json_encode($dailyTrend->pluck('label')); ?>, views: <?php echo json_encode($dailyTrend->pluck('views')); ?>, articles: <?php echo json_encode($dailyTrend->pluck('articles')); ?>, whatsapp: <?php echo json_encode($dailyTrend->pluck('whatsapp')); ?>, phone: <?php echo json_encode($dailyTrend->pluck('phone')); ?> },
+        weekly: { labels: <?php echo json_encode($weeklyTrend->pluck('label')); ?>, views: <?php echo json_encode($weeklyTrend->pluck('views')); ?>, articles: <?php echo json_encode($weeklyTrend->pluck('articles')); ?>, whatsapp: <?php echo json_encode($weeklyTrend->pluck('whatsapp')); ?>, phone: <?php echo json_encode($weeklyTrend->pluck('phone')); ?> },
+        monthly: { labels: <?php echo json_encode($monthlyTrend->pluck('label')); ?>, views: <?php echo json_encode($monthlyTrend->pluck('views')); ?>, articles: <?php echo json_encode($monthlyTrend->pluck('articles')); ?>, whatsapp: <?php echo json_encode($monthlyTrend->pluck('whatsapp')); ?>, phone: <?php echo json_encode($monthlyTrend->pluck('phone')); ?> }
     };
 
     let mainChart;
@@ -198,15 +199,17 @@
             type: 'doughnut',
             data: {
                 labels: ['Artikel', 'WA', 'Telp'],
-                datasets: [{ data: [{{ $stats['total_article_clicks'] }}, {{ $stats['total_wa_clicks'] }}, {{ $stats['total_phone_clicks'] }}], backgroundColor: ['#3b82f6', '#10b981', '#94a3b8'], borderWidth: 8, borderColor: '#ffffff', hoverOffset: 15 }]
+                datasets: [{ data: [<?php echo e($stats['total_article_clicks']); ?>, <?php echo e($stats['total_wa_clicks']); ?>, <?php echo e($stats['total_phone_clicks']); ?>], backgroundColor: ['#3b82f6', '#10b981', '#94a3b8'], borderWidth: 8, borderColor: '#ffffff', hoverOffset: 15 }]
             },
             options: { cutout: '85%', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
         });
         new Chart(document.getElementById('deviceChart'), {
             type: 'bar',
-            data: { labels: {!! json_encode($devices->pluck('device')) !!}, datasets: [{ data: {!! json_encode($devices->pluck('total')) !!}, backgroundColor: '#0f172a', borderRadius: 12 }] },
+            data: { labels: <?php echo json_encode($devices->pluck('device')); ?>, datasets: [{ data: <?php echo json_encode($devices->pluck('total')); ?>, backgroundColor: '#0f172a', borderRadius: 12 }] },
             options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { weight: '900', size: 10 } } }, y: { grid: { display: false }, ticks: { font: { weight: '900', size: 10 } } } } }
         });
     });
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\laragon\www\BisnisGrowth\resources\views/admin/traffic/index.blade.php ENDPATH**/ ?>
