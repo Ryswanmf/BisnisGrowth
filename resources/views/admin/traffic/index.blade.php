@@ -151,9 +151,9 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const trendData = {
-        daily: { labels: {!! json_encode($dailyTrend->pluck('label')) !!}, views: {!! json_encode($dailyTrend->pluck('views')) !!}, articles: {!! json_encode($dailyTrend->pluck('articles')) !!}, whatsapp: {!! json_encode($dailyTrend->pluck('whatsapp')) !!}, phone: {!! json_encode($dailyTrend->pluck('phone')) !!} },
-        weekly: { labels: {!! json_encode($weeklyTrend->pluck('label')) !!}, views: {!! json_encode($weeklyTrend->pluck('views')) !!}, articles: {!! json_encode($weeklyTrend->pluck('articles')) !!}, whatsapp: {!! json_encode($weeklyTrend->pluck('whatsapp')) !!}, phone: {!! json_encode($weeklyTrend->pluck('phone')) !!} },
-        monthly: { labels: {!! json_encode($monthlyTrend->pluck('label')) !!}, views: {!! json_encode($monthlyTrend->pluck('views')) !!}, articles: {!! json_encode($monthlyTrend->pluck('articles')) !!}, whatsapp: {!! json_encode($monthlyTrend->pluck('whatsapp')) !!}, phone: {!! json_encode($monthlyTrend->pluck('phone')) !!} }
+        daily: { labels: {!! json_encode($dailyTrend->pluck('label')) !!}, views: {!! json_encode($dailyTrend->pluck('views')) !!}, articles: {!! json_encode($dailyTrend->pluck('articles')) !!}, whatsapp: {!! json_encode($dailyTrend->pluck('whatsapp')) !!}, phone: {!! json_encode($dailyTrend->pluck('phone')) !!}, comments: {!! json_encode($dailyTrend->pluck('comments')) !!} },
+        weekly: { labels: {!! json_encode($weeklyTrend->pluck('label')) !!}, views: {!! json_encode($weeklyTrend->pluck('views')) !!}, articles: {!! json_encode($weeklyTrend->pluck('articles')) !!}, whatsapp: {!! json_encode($weeklyTrend->pluck('whatsapp')) !!}, phone: {!! json_encode($weeklyTrend->pluck('phone')) !!}, comments: {!! json_encode($weeklyTrend->pluck('comments')) !!} },
+        monthly: { labels: {!! json_encode($monthlyTrend->pluck('label')) !!}, views: {!! json_encode($monthlyTrend->pluck('views')) !!}, articles: {!! json_encode($monthlyTrend->pluck('articles')) !!}, whatsapp: {!! json_encode($monthlyTrend->pluck('whatsapp')) !!}, phone: {!! json_encode($monthlyTrend->pluck('phone')) !!}, comments: {!! json_encode($monthlyTrend->pluck('comments')) !!} }
     };
 
     let mainChart;
@@ -168,6 +168,7 @@
                 datasets: [
                     { label: 'Hits', data: data.views, borderColor: '#f59e0b', borderWidth: 4, tension: 0.4, fill: true, backgroundColor: 'rgba(245, 158, 11, 0.03)', pointRadius: 4, pointBackgroundColor: '#fff', pointBorderWidth: 2 },
                     { label: 'Artikel', data: data.articles, borderColor: '#3b82f6', borderWidth: 4, tension: 0.4, fill: false, pointRadius: 4, pointBackgroundColor: '#fff', pointBorderWidth: 2 },
+                    { label: 'Komentar', data: data.comments, borderColor: '#fbbf24', borderWidth: 4, tension: 0.4, fill: false, pointRadius: 4, pointBackgroundColor: '#fff', pointBorderWidth: 2 },
                     { label: 'WhatsApp', data: data.whatsapp, borderColor: '#10b981', borderWidth: 4, tension: 0.4, fill: false, pointRadius: 4, pointBackgroundColor: '#fff', pointBorderWidth: 2 },
                     { label: 'Telepon', data: data.phone, borderColor: '#94a3b8', borderWidth: 4, tension: 0.4, fill: false, pointRadius: 4, pointBackgroundColor: '#fff', pointBorderWidth: 2 }
                 ]
@@ -205,6 +206,12 @@
         new Chart(document.getElementById('deviceChart'), {
             type: 'bar',
             data: { labels: {!! json_encode($devices->pluck('device')) !!}, datasets: [{ data: {!! json_encode($devices->pluck('total')) !!}, backgroundColor: '#0f172a', borderRadius: 12 }] },
+            options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { weight: '900', size: 10 } } }, y: { grid: { display: false }, ticks: { font: { weight: '900', size: 10 } } } } }
+        });
+    });
+</script>
+@endsection
+#0f172a', borderRadius: 12 }] },
             options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { weight: '900', size: 10 } } }, y: { grid: { display: false }, ticks: { font: { weight: '900', size: 10 } } } } }
         });
     });
