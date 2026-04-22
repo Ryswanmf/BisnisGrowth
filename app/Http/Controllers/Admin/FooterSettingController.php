@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\FooterSetting;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class FooterSettingController extends Controller
 {
@@ -31,11 +31,23 @@ class FooterSettingController extends Controller
         $data = $request->except('logo');
 
         if ($request->hasFile('logo')) {
-            // Hapus logo lama
-            if ($setting->logo) {
-                Storage::disk('public')->delete($setting->logo);
+            $directory = public_path('uploads/footer');
+            
+            // Pastikan direktori ada
+            if (!File::exists($directory)) {
+                File::makeDirectory($directory, 0755, true);
             }
-            $data['logo'] = $request->file('logo')->store('footer', 'public');
+
+            // Hapus logo lama
+            if ($setting->logo && File::exists(public_path($setting->logo))) {
+                File::delete(public_path($setting->logo));
+            }
+
+            $file = $request->file('logo');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move($directory, $filename);
+            
+            $data['logo'] = 'uploads/footer/' . $filename;
         }
 
         $setting->fill($data);

@@ -3,12 +3,12 @@
         <x-seo-head 
             :title="$article->seo_title"
             :description="$article->seo_description"
-            :ogImage="$article->image ? asset('storage/' . $article->image) : asset('images/Logo_Bisnis_Growth.png')"
+            :ogImage="$article->image ? asset($article->image) : asset('images/Logo_Bisnis_Growth.png')"
             :jsonLd="[
                 '@context' => 'https://schema.org',
                 '@type' => 'NewsArticle',
                 'headline' => $article->title,
-                'image' => [$article->image ? asset('storage/' . $article->image) : asset('images/Logo_Bisnis_Growth.png')],
+                'image' => [$article->image ? asset($article->image) : asset('images/Logo_Bisnis_Growth.png')],
                 'datePublished' => ($article->published_at ?: $article->created_at)->toIso8601String(),
                 'author' => ['@type' => 'Organization', 'name' => 'BisnisGrowth Team']
             ]"
@@ -71,7 +71,7 @@
                             <!-- Main Hero Image -->
                             @if($article->image)
                                 <div class="aspect-[21/9] rounded-[3rem] overflow-hidden bg-gray-100 shadow-2xl shadow-slate-200/50 border-[12px] border-white ring-1 ring-gray-100">
-                                    <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->image_alt ?: $article->title }}" class="w-full h-full object-cover">
+                                    <img src="{{ asset($article->image) }}" alt="{{ $article->image_alt ?: $article->title }}" class="w-full h-full object-cover">
                                 </div>
                             @endif
 

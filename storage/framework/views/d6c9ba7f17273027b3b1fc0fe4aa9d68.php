@@ -98,10 +98,10 @@
         .custom-scrollbar:hover::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); }
         aside .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); }
         aside .custom-scrollbar:hover::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
-        .swal2-popup { border-radius: 2.5rem !important; padding: 2rem !important; }
+        .swal2-popup { border-radius: 1.5rem !important; padding: 2rem !important; }
         .swal2-title { font-weight: 900 !important; font-family: 'Inter', sans-serif !important; letter-spacing: -0.025em !important; }
-        .swal2-confirm { background-color: #0f172a !important; border-radius: 1rem !important; font-weight: 900 !important; text-transform: uppercase !important; font-size: 10px !important; letter-spacing: 0.1em !important; padding: 1rem 2rem !important; }
-        .swal2-cancel { background-color: #f1f5f9 !important; color: #64748b !important; border-radius: 1rem !important; font-weight: 900 !important; text-transform: uppercase !important; font-size: 10px !important; letter-spacing: 0.1em !important; padding: 1rem 2rem !important; }
+        .swal2-confirm { background-color: #0f172a !important; border-radius: 0.75rem !important; font-weight: 900 !important; text-transform: uppercase !important; font-size: 10px !important; letter-spacing: 0.1em !important; padding: 1rem 2rem !important; }
+        .swal2-cancel { background-color: #f1f5f9 !important; color: #64748b !important; border-radius: 0.75rem !important; font-weight: 900 !important; text-transform: uppercase !important; font-size: 10px !important; letter-spacing: 0.1em !important; padding: 1rem 2rem !important; }
     </style>
 
     <?php echo $__env->yieldPushContent('scripts'); ?>

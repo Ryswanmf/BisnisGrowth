@@ -6,29 +6,23 @@ use App\Http\Controllers\Controller;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
-use App\Services\GeminiService;
+use Illuminate\Support\Facades\File;
 
 class ArticleController extends Controller
 {
-    protected $aiService;
-
-    public function __construct(GeminiService $aiService)
-    {
-        $this->aiService = $aiService;
-    }
-
     /**
      * Native PHP Image Optimization (Convert to WebP & Resize)
+     * Langsung ke folder PUBLIC untuk kemudahan di cPanel
      */
     private function optimizeAndStore($file)
     {
         $filename = Str::random(30) . '.webp';
-        $path = 'articles/' . $filename;
-        $fullPath = storage_path('app/public/' . $path);
+        $directory = public_path('uploads/articles');
+        $fullPath = $directory . '/' . $filename;
 
-        if (!Storage::disk('public')->exists('articles')) {
-            Storage::disk('public')->makeDirectory('articles');
+        // Pastikan direktori ada
+        if (!File::exists($directory)) {
+            File::makeDirectory($directory, 0755, true);
         }
 
         // Ambil info gambar
@@ -40,7 +34,9 @@ class ArticleController extends Controller
             case 'image/jpeg': $image = imagecreatefromjpeg($file->getRealPath()); break;
             case 'image/png':  $image = imagecreatefrompng($file->getRealPath()); break;
             case 'image/webp': $image = imagecreatefromwebp($file->getRealPath()); break;
-            default: return $file->store('articles', 'public'); // Simpan asli jika format tak dikenal
+            default: 
+                $file->move($directory, $filename);
+                return 'uploads/articles/' . $filename;
         }
 
         // Resize jika lebar > 1200px
@@ -51,7 +47,6 @@ class ArticleController extends Controller
             $newHeight = floor($origHeight * ($newWidth / $origWidth));
             $tmpImg = imagecreatetruecolor($newWidth, $newHeight);
             
-            // Handle transparansi untuk PNG
             if ($mime == 'image/png') {
                 imagealphablending($tmpImg, false);
                 imagesavealpha($tmpImg, true);
@@ -66,15 +61,7 @@ class ArticleController extends Controller
         imagewebp($image, $fullPath, 80);
         imagedestroy($image);
 
-        return $path;
-    }
-
-    public function generateAI(Request $request)
-    {
-        $request->validate(['topic' => 'required|string|max:255']);
-        $result = $this->aiService->generateArticle($request->topic);
-        if (isset($result['error'])) return response()->json(['error' => $result['error']], 500);
-        return $result ? response()->json($result) : response()->json(['error' => 'Gagal mendapatkan respon dari AI'], 500);
+        return 'uploads/articles/' . $filename;
     }
 
     public function index()
@@ -139,7 +126,9 @@ class ArticleController extends Controller
 
         foreach(['image', 'image_2', 'image_3', 'image_4'] as $imgField) {
             if ($request->hasFile($imgField)) {
-                if ($article->$imgField) Storage::disk('public')->delete($article->$imgField);
+                if ($article->$imgField && File::exists(public_path($article->$imgField))) {
+                    File::delete(public_path($article->$imgField));
+                }
                 $data[$imgField] = $this->optimizeAndStore($request->file($imgField));
             }
         }
@@ -152,10 +141,12 @@ class ArticleController extends Controller
     public function destroy(Article $article)
     {
         foreach(['image', 'image_2', 'image_3', 'image_4'] as $imgField) {
-            if ($article->$imgField) Storage::disk('public')->delete($article->$imgField);
+            if ($article->$imgField && File::exists(public_path($article->$imgField))) {
+                File::delete(public_path($article->$imgField));
+            }
         }
         $article->delete();
-        \Illuminate\Support\Facades\Cache::flush();
+        \Illuminate\Support\Facades\Cache::forget('article_categories_count_v2');
         return redirect()->route('admin.articles.index')->with('success', 'Artikel berhasil dihapus!');
     }
 }

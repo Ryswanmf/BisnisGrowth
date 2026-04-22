@@ -10,7 +10,7 @@
             <h2 class="text-xl font-black text-slate-900 tracking-tight">Daftar Pengguna</h2>
             <p class="text-gray-500 text-sm font-medium">Kelola hak akses administrator dan staf Anda.</p>
         </div>
-        <a href="{{ route('admin.users.create') }}" class="bg-slate-900 text-white px-6 py-3 rounded-2xl text-sm font-black flex items-center gap-2 hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20">
+        <a href="{{ route('admin.users.create') }}" class="bg-slate-900 text-white px-6 py-3 rounded-xl text-sm font-black flex items-center gap-2 hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20">
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
             </svg>
@@ -18,7 +18,7 @@
         </a>
     </div>
 
-    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-gray-50/50 border-b border-gray-100">

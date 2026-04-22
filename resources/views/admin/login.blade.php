@@ -15,7 +15,7 @@
     
     <div class="w-full max-w-[420px]">
         <!-- Login Card -->
-        <div class="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-2xl relative overflow-hidden">
+        <div class="bg-white rounded-xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
             <!-- Subtle Decorative Gradient -->
             <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full -mr-16 -mt-16"></div>
             
@@ -38,7 +38,7 @@
                             </svg>
                         </div>
                         <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus
-                            class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm font-bold text-slate-700 focus:outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 transition-all"
+                            class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 pl-12 pr-4 text-sm font-bold text-slate-700 focus:outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 transition-all"
                             placeholder="admin@email.com">
                     </div>
                     @error('email')
@@ -58,13 +58,13 @@
                             </svg>
                         </div>
                         <input id="password" type="password" name="password" required
-                            class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm font-bold text-slate-700 focus:outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 transition-all"
+                            class="w-full bg-slate-50 border border-slate-100 rounded-xl py-4 pl-12 pr-4 text-sm font-bold text-slate-700 focus:outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 transition-all"
                             placeholder="••••••••">
                     </div>
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" class="w-full bg-slate-900 text-white font-black py-5 px-6 rounded-2xl text-[10px] uppercase tracking-[0.3em] hover:bg-slate-800 transition-all shadow-xl shadow-slate-900/20 active:scale-[0.98] transform flex items-center justify-center gap-3">
+                <button type="submit" class="w-full bg-slate-900 text-white font-black py-5 px-6 rounded-xl text-[10px] uppercase tracking-[0.3em] hover:bg-slate-800 transition-all shadow-xl shadow-slate-900/20 active:scale-[0.98] transform flex items-center justify-center gap-3">
                     <span>Masuk ke Panel Admin</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/>

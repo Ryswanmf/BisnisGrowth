@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="space-y-6">
-    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-gray-50/50 border-b border-gray-100">

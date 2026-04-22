@@ -3,12 +3,12 @@
 <div class="card flex flex-col h-full hover:shadow-lg transition-shadow">
     <div class="flex items-center gap-4 mb-4">
         <div class="relative">
-            <img src="{{ $business->logo ? asset('storage/' . $business->logo) : 'https://ui-avatars.com/api/?name=' . urlencode($business->name) . '&background=7B1F2E&color=FFF8E7' }}" 
+            <img src="{{ $business->logo ? asset($business->logo) : 'https://ui-avatars.com/api/?name=' . urlencode($business->name) . '&background=7B1F2E&color=FFF8E7' }}" 
                  alt="{{ $business->name }}" 
-                 class="w-16 h-16 rounded-full object-cover border-2 border-gray-50"
+                 class="w-16 h-16 rounded-lg object-cover border-2 border-gray-50"
                  loading="lazy">
             @if($business->is_verified)
-                <div class="absolute -bottom-1 -right-1 bg-gold-400 text-burgundy-800 rounded-full p-1" title="Terverifikasi">
+                <div class="absolute -bottom-1 -right-1 bg-gold-400 text-burgundy-800 rounded-md p-1" title="Terverifikasi">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                     </svg>

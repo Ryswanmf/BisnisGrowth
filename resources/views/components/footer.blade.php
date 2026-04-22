@@ -8,7 +8,7 @@
                 <a href="/" class="flex items-center gap-4 text-2xl font-black text-white group">
                     <div class="bg-white p-2 rounded-2xl shadow-xl transition-all duration-500 group-hover:rotate-6 group-hover:scale-110 shrink-0">
                         @if($footerSetting && $footerSetting->logo)
-                            <img src="{{ asset('storage/' . $footerSetting->logo) }}" alt="Logo" class="h-10 w-10 object-contain">
+                            <img src="{{ asset($footerSetting->logo) }}" alt="Logo" class="h-10 w-10 object-contain">
                         @else
                             <img src="{{ asset('images/Logo_Bisnis_Growth.png') }}" alt="Logo" class="h-10 w-10 object-contain">
                         @endif

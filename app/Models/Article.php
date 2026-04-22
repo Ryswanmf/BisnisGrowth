@@ -76,11 +76,17 @@ class Article extends Model
     protected function seoDescription(): Attribute
     {
         return Attribute::get(function () {
-            $desc = $this->meta_description ?: $this->excerpt;
-            if (!$desc) {
-                $desc = substr(strip_tags($this->getRawOriginal('content')), 0, 160);
-            }
-            return ContentHelper::process($desc);
+            // Ambil meta_description atau excerpt atau content
+            $text = $this->meta_description ?: ($this->excerpt ?: $this->getRawOriginal('content'));
+            
+            // 1. Proses Spintax dulu
+            $processed = ContentHelper::process($text);
+            
+            // 2. Bersihkan HTML tags
+            $clean = strip_tags($processed);
+            
+            // 3. Potong sesuai limit SEO (160 karakter)
+            return \Illuminate\Support\Str::limit($clean, 160);
         });
     }
 

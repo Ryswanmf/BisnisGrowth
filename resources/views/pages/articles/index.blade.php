@@ -96,8 +96,9 @@
                             <article class="group bg-white rounded-xl md:rounded-[2rem] overflow-hidden border border-gray-100 hover:shadow-2xl hover:shadow-slate-200 transition-all duration-500 flex flex-col h-full">
                                 <div class="relative aspect-[4/3] md:aspect-video overflow-hidden">
                                     @if($article->image)
-                                        <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->image_alt ?: $article->title }}" 
-                                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                                        <img src="{{ asset($article->image) }}" alt="{{ $article->image_alt ?: $article->title }}" 
+                                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                             loading="lazy">
                                     @else
                                         <div class="w-full h-full bg-slate-50 flex items-center justify-center text-slate-200 font-black text-2xl md:text-3xl">BG</div>
                                     @endif

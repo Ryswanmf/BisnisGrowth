@@ -10,7 +10,7 @@
             <h2 class="text-xl font-black text-slate-900 tracking-tight">Daftar Kategori</h2>
             <p class="text-gray-500 text-sm font-medium">Kelola kategori bisnis untuk artikel Anda.</p>
         </div>
-        <a href="{{ route('admin.categories.create') }}" class="bg-amber-500 text-slate-900 px-6 py-3 rounded-2xl text-sm font-black flex items-center gap-2 hover:bg-amber-400 transition-all shadow-lg shadow-amber-500/20">
+        <a href="{{ route('admin.categories.create') }}" class="bg-amber-500 text-slate-900 px-6 py-3 rounded-xl text-sm font-black flex items-center gap-2 hover:bg-amber-400 transition-all shadow-lg shadow-amber-500/20">
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
             </svg>
@@ -24,7 +24,7 @@
         </div>
     @endif
 
-    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-gray-50/50 border-b border-gray-100">

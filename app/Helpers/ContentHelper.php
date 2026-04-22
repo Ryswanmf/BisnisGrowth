@@ -22,7 +22,7 @@ class ContentHelper
     private static function processSpintax($text)
     {
         return preg_replace_callback(
-            '/\{(((?>[^\{\}]+)|(?R))*)\}/x',
+            '/\{([^{}]+)\}/',
             function ($match) {
                 $parts = explode('|', $match[1]);
                 return $parts[array_rand($parts)];
@@ -39,7 +39,7 @@ class ContentHelper
 
             if ($article) {
                 $url = route('article.show', $article->slug);
-                $title = $article->getRawOriginal('title'); // Pakai title asli (tanpa spin) agar konsisten di link
+                $title = $article->title; // Menggunakan accessor agar spintax diproses
                 
                 return '
                 <div class="not-prose my-2">

@@ -11,11 +11,11 @@
      <?php $__env->slot('seo', null, []); ?> 
         <?php if (isset($component)) { $__componentOriginal4232ba5ed77147a6b6573253fafb715d = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4232ba5ed77147a6b6573253fafb715d = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.seo-head','data' => ['title' => $article->seo_title,'description' => $article->seo_description,'ogImage' => $article->image ? asset('storage/' . $article->image) : asset('images/Logo_Bisnis_Growth.png'),'jsonLd' => [
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.seo-head','data' => ['title' => $article->seo_title,'description' => $article->seo_description,'ogImage' => $article->image ? asset($article->image) : asset('images/Logo_Bisnis_Growth.png'),'jsonLd' => [
                 '@context' => 'https://schema.org',
                 '@type' => 'NewsArticle',
                 'headline' => $article->title,
-                'image' => [$article->image ? asset('storage/' . $article->image) : asset('images/Logo_Bisnis_Growth.png')],
+                'image' => [$article->image ? asset($article->image) : asset('images/Logo_Bisnis_Growth.png')],
                 'datePublished' => ($article->published_at ?: $article->created_at)->toIso8601String(),
                 'author' => ['@type' => 'Organization', 'name' => 'BisnisGrowth Team']
             ]]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -25,11 +25,11 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($article->seo_title),'description' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($article->seo_description),'ogImage' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($article->image ? asset('storage/' . $article->image) : asset('images/Logo_Bisnis_Growth.png')),'jsonLd' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute([
+<?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($article->seo_title),'description' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($article->seo_description),'ogImage' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($article->image ? asset($article->image) : asset('images/Logo_Bisnis_Growth.png')),'jsonLd' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute([
                 '@context' => 'https://schema.org',
                 '@type' => 'NewsArticle',
                 'headline' => $article->title,
-                'image' => [$article->image ? asset('storage/' . $article->image) : asset('images/Logo_Bisnis_Growth.png')],
+                'image' => [$article->image ? asset($article->image) : asset('images/Logo_Bisnis_Growth.png')],
                 'datePublished' => ($article->published_at ?: $article->created_at)->toIso8601String(),
                 'author' => ['@type' => 'Organization', 'name' => 'BisnisGrowth Team']
             ])]); ?>
@@ -104,7 +104,7 @@
                             <!-- Main Hero Image -->
                             <?php if($article->image): ?>
                                 <div class="aspect-[21/9] rounded-[3rem] overflow-hidden bg-gray-100 shadow-2xl shadow-slate-200/50 border-[12px] border-white ring-1 ring-gray-100">
-                                    <img src="<?php echo e(asset('storage/' . $article->image)); ?>" alt="<?php echo e($article->image_alt ?: $article->title); ?>" class="w-full h-full object-cover">
+                                    <img src="<?php echo e(asset($article->image)); ?>" alt="<?php echo e($article->image_alt ?: $article->title); ?>" class="w-full h-full object-cover">
                                 </div>
                             <?php endif; ?>
 

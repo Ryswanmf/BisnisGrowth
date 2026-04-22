@@ -37,7 +37,7 @@
     <x-seo-head 
         :title="$business->meta_title ?? $business->name . ' — ' . $business->tagline"
         :description="$business->meta_description ?? Str::limit($business->description, 155)"
-        :ogImage="$business->logo ? asset('storage/' . $business->logo) : null"
+        :ogImage="$business->logo ? asset($business->logo) : null"
         :jsonLd="$jsonLd"
     />
 
@@ -52,7 +52,7 @@
         <!-- Cover Image -->
         <div class="h-40 bg-gray-200 overflow-hidden relative">
             @if($business->cover_image)
-                <img src="{{ asset('storage/' . $business->cover_image) }}" alt="" class="w-full h-full object-cover">
+                <img src="{{ asset($business->cover_image) }}" alt="" class="w-full h-full object-cover">
             @else
                 <div class="w-full h-full bg-burgundy-900/10 flex items-center justify-center">
                     <svg class="w-12 h-12 text-burgundy-900/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -66,11 +66,11 @@
         <div class="px-6 pb-12 -mt-16 flex-grow relative z-10 text-center">
             <!-- Logo -->
             <div class="inline-block relative">
-                <img src="{{ $business->logo ? asset('storage/' . $business->logo) : 'https://ui-avatars.com/api/?name=' . urlencode($business->name) . '&background=7B1F2E&color=FFF8E7' }}" 
+                <img src="{{ $business->logo ? asset($business->logo) : 'https://ui-avatars.com/api/?name=' . urlencode($business->name) . '&background=7B1F2E&color=FFF8E7' }}" 
                      alt="{{ $business->name }}" 
-                     class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg mx-auto bg-white">
+                     class="w-32 h-32 rounded-xl object-cover border-4 border-white shadow-lg mx-auto bg-white">
                 @if($business->is_verified)
-                    <div class="absolute bottom-1 right-1 bg-gold-400 text-burgundy-800 rounded-full p-1.5 shadow-md border-2 border-white" title="Terverifikasi">
+                    <div class="absolute bottom-1 right-1 bg-gold-400 text-burgundy-800 rounded-md p-1.5 shadow-md border-2 border-white" title="Terverifikasi">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                         </svg>

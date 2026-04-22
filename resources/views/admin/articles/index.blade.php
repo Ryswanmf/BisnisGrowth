@@ -11,7 +11,7 @@
             <h2 class="text-xl font-black text-slate-900 tracking-tight">Daftar Artikel</h2>
             <p class="text-gray-500 text-sm font-medium">Pantau performa konten edukasi bisnis Anda.</p>
         </div>
-        <a href="{{ route('admin.articles.create') }}" class="bg-amber-500 text-slate-900 px-6 py-3 rounded-2xl text-sm font-black flex items-center gap-2 hover:bg-amber-400 transition-all shadow-lg shadow-amber-500/20">
+        <a href="{{ route('admin.articles.create') }}" class="bg-amber-500 text-slate-900 px-6 py-3 rounded-xl text-sm font-black flex items-center gap-2 hover:bg-amber-400 transition-all shadow-lg shadow-amber-500/20">
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
             </svg>
@@ -26,7 +26,7 @@
     @endif
 
     <!-- Table Card -->
-    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
@@ -44,7 +44,7 @@
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-4">
                                 @if($article->image)
-                                    <img src="{{ asset('storage/' . $article->image) }}" class="h-12 w-16 object-cover rounded-xl border border-gray-100">
+                                    <img src="{{ asset($article->image) }}" class="h-12 w-16 object-cover rounded-xl border border-gray-100">
                                 @else
                                     <div class="h-12 w-16 bg-gray-50 rounded-xl flex items-center justify-center text-gray-200 font-black text-xs">BG</div>
                                 @endif

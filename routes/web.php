@@ -50,7 +50,6 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     // Akses Berdua (Admin & User)
     Route::middleware(['role:user'])->group(function() {
         Route::resource('/articles', App\Http\Controllers\Admin\ArticleController::class)->names('admin.articles')->parameters(['articles' => 'article']);
-        Route::post('/articles/generate-ai', [App\Http\Controllers\Admin\ArticleController::class, 'generateAI'])->name('admin.articles.generate-ai');
         Route::resource('/categories', App\Http\Controllers\Admin\CategoryController::class)->names('admin.categories');
         Route::get('/traffic', [App\Http\Controllers\Admin\TrafficController::class, 'index'])->name('admin.traffic.index');
     });
