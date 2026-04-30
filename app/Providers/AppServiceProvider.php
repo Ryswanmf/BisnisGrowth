@@ -11,7 +11,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind('path.public', function() {
+            if (file_exists(base_path('../public_html'))) {
+                return base_path('../public_html');
+            }
+            
+            // Jika folder domain adalah nama folder induknya sendiri (bisnisgrowth.sites.id)
+            if (str_contains(base_path(), 'bisnisgrowth.sites.id')) {
+                return dirname(base_path());
+            }
+
+            return base_path('public');
+        });
     }
 
     /**

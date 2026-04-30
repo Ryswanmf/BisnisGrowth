@@ -143,6 +143,73 @@
                             </div>
                         </div>
 
+                        <!-- Comments Section -->
+                        <div class="mt-24 border-t border-gray-100 pt-20">
+                            <div class="flex items-center justify-between mb-12">
+                                <h3 class="text-2xl font-black text-slate-900 tracking-tight">Komentar (<?php echo e($article->comments->count()); ?>)</h3>
+                                <div class="h-1 flex-1 bg-gray-50 mx-8 rounded-full"></div>
+                            </div>
+
+                            <?php if(session('success_comment')): ?>
+                                <div class="bg-emerald-50 border border-emerald-100 text-emerald-600 p-6 rounded-2xl mb-12 text-sm font-bold animate-bounce">
+                                    <?php echo e(session('success_comment')); ?>
+
+                                </div>
+                            <?php endif; ?>
+
+                            <div class="space-y-10 mb-16">
+                                <?php $__empty_1 = true; $__currentLoopData = $article->comments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $comment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                    <div class="flex gap-6">
+                                        <div class="h-12 w-14 md:h-16 md:w-16 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400 shrink-0">
+                                            <svg class="h-6 w-6 md:h-8 md:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                        </div>
+                                        <div class="flex-1">
+                                            <div class="flex items-center gap-3 mb-2">
+                                                <h4 class="font-black text-slate-900 text-sm md:text-base"><?php echo e($comment->name); ?></h4>
+                                                <span class="text-[10px] font-bold text-gray-300 uppercase tracking-widest"><?php echo e($comment->created_at->diffForHumans()); ?></span>
+                                            </div>
+                                            <p class="text-gray-600 text-sm md:text-base leading-relaxed bg-gray-50 p-4 md:p-6 rounded-2xl border border-gray-100">
+                                                <?php echo e($comment->content); ?>
+
+                                            </p>
+                                        </div>
+                                    </div>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                    <div class="text-center py-12 bg-gray-50 rounded-[2rem] border border-dashed border-gray-200">
+                                        <p class="text-gray-400 font-bold text-sm">Belum ada komentar. Jadilah yang pertama!</p>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+
+                            <!-- Comment Form -->
+                            <div class="bg-slate-900 p-8 md:p-12 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
+                                <div class="absolute -right-10 -top-10 h-40 w-40 bg-amber-500/10 rounded-full blur-3xl"></div>
+                                <div class="relative z-10">
+                                    <h4 class="text-xl font-black text-white mb-2">Tulis Komentar</h4>
+                                    <p class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-8">Berikan tanggapan Anda mengenai artikel ini</p>
+                                    
+                                    <form action="<?php echo e(route('article.comment.store', $article->id)); ?>" method="POST" class="space-y-6">
+                                        <?php echo csrf_field(); ?>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div>
+                                                <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 ml-1">Nama Lengkap</label>
+                                                <input type="text" name="name" required placeholder="Masukkan nama Anda..." 
+                                                       class="w-full bg-white/5 border-none rounded-xl px-5 py-4 text-white text-sm focus:ring-2 focus:ring-amber-500 transition-all">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 ml-1">Isi Komentar</label>
+                                            <textarea name="content" rows="5" required placeholder="Apa yang Anda pikirkan?" 
+                                                      class="w-full bg-white/5 border-none rounded-xl px-5 py-4 text-white text-sm focus:ring-2 focus:ring-amber-500 transition-all"></textarea>
+                                        </div>
+                                        <button type="submit" class="bg-amber-500 text-slate-900 px-10 py-4 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-amber-400 transition-all shadow-xl shadow-amber-500/20">
+                                            Kirim Komentar
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Article Footer -->
                         <div class="mt-20 pt-12 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-8">
                             <div class="flex items-center gap-5">
