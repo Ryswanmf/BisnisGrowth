@@ -17,6 +17,40 @@
     {{ $seo ?? '' }}
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <style>
+        /* Modern Minimalist Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e2e8f0; /* slate-200 */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f59e0b; /* amber-500 */
+        }
+        
+        /* For Firefox */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #e2e8f0 transparent;
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera (utility for specific containers) */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    </style>
 </head>
 <body class="font-sans antialiased text-gray-900 min-h-full flex flex-col">
     <!-- Page Loader -->

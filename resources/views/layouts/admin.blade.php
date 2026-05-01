@@ -86,7 +86,57 @@
                     <div class="flex items-center">
                         <div class="hidden md:flex flex-col items-end mr-6"><span class="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Server Time</span><span class="text-xs font-bold text-slate-900 leading-none">{{ now()->translatedFormat('d F Y') }}</span></div>
                         <div class="h-8 w-px bg-gray-100 mr-6 hidden md:block"></div>
-                        <button class="bg-gray-50 p-2 rounded-lg text-gray-400 hover:text-amber-500 transition-all relative border border-gray-100"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg><span class="absolute top-2 right-2 block h-2 w-2 rounded-full bg-amber-500 ring-2 ring-white"></span></button>
+                        
+                        <!-- Notifications Dropdown -->
+                        <div class="relative" x-data="{ open: false }">
+                            <button @click="open = !open" class="bg-gray-50 p-2 rounded-md text-gray-400 hover:text-amber-500 transition-all relative border border-gray-100">
+                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                </svg>
+                                @if($unreadCount > 0)
+                                    <span class="absolute top-2 right-2 block h-2 w-2 rounded-full bg-amber-500 ring-2 ring-white"></span>
+                                @endif
+                            </button>
+
+                            <div x-show="open" 
+                                 @click.outside="open = false"
+                                 x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="opacity-0 scale-95"
+                                 x-transition:enter-end="opacity-100 scale-100"
+                                 x-transition:leave="transition ease-in duration-75"
+                                 x-transition:leave-start="opacity-100 scale-100"
+                                 x-transition:leave-end="opacity-0 scale-95"
+                                 class="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-50"
+                                 style="display: none;">
+                                <div class="px-4 py-3 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
+                                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-900">Pesan Masuk</span>
+                                    <span class="bg-amber-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full">{{ $unreadCount }}</span>
+                                </div>
+                                <div class="max-h-96 overflow-y-auto custom-scrollbar">
+                                    @forelse($unreadMessages as $msg)
+                                        <a href="{{ route('admin.messages.index') }}" class="block px-4 py-4 hover:bg-amber-50 transition-colors border-b border-gray-50 last:border-0">
+                                            <div class="flex gap-3">
+                                                <div class="h-8 w-8 bg-slate-100 rounded-md flex items-center justify-center text-slate-400 shrink-0 text-xs font-bold uppercase">
+                                                    {{ substr($msg->name, 0, 1) }}
+                                                </div>
+                                                <div class="min-w-0">
+                                                    <p class="text-xs font-black text-slate-900 truncate mb-0.5">{{ $msg->name }}</p>
+                                                    <p class="text-[10px] text-gray-500 line-clamp-1 mb-1">{{ $msg->message }}</p>
+                                                    <p class="text-[8px] font-bold text-amber-600 uppercase tracking-tighter">{{ $msg->created_at->diffForHumans() }}</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    @empty
+                                        <div class="px-4 py-12 text-center">
+                                            <p class="text-xs font-bold text-gray-400">Tidak ada pesan baru.</p>
+                                        </div>
+                                    @endforelse
+                                </div>
+                                <a href="{{ route('admin.messages.index') }}" class="block py-3 text-center text-[10px] font-black uppercase tracking-widest bg-slate-900 text-white hover:bg-amber-500 hover:text-slate-900 transition-all">
+                                    Lihat Semua Pesan
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </header>

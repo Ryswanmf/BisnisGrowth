@@ -62,7 +62,9 @@ class AppServiceProvider extends ServiceProvider
             $view->with([
                 'siteSettings' => $siteSettings,
                 'footerSetting' => $footerSetting,
-                'globalFooterPages' => $globalFooterPages ?? collect()
+                'globalFooterPages' => $globalFooterPages ?? collect(),
+                'unreadMessages' => request()->is('admin*') ? \App\Models\ContactMessage::where('is_read', false)->latest()->take(5)->get() : collect(),
+                'unreadCount' => request()->is('admin*') ? \App\Models\ContactMessage::where('is_read', false)->count() : 0
             ]);
         });
     }
