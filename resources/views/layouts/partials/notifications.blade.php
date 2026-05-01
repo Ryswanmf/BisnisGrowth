@@ -9,8 +9,8 @@
      x-transition:leave-start="opacity-100 transform translate-y-0"
      x-transition:leave-end="opacity-0 transform translate-y-4"
      class="fixed bottom-10 right-10 z-[100] max-w-md w-full">
-    <div class="bg-slate-900 border border-white/10 rounded-3xl p-6 shadow-2xl shadow-slate-900/50 flex items-center gap-5">
-        <div class="h-12 w-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-slate-900 shrink-0 shadow-lg shadow-emerald-500/20">
+    <div class="bg-slate-900 border border-white/10 rounded-2xl p-6 shadow-2xl shadow-slate-900/50 flex items-center gap-5">
+        <div class="h-12 w-12 bg-emerald-500 rounded-xl flex items-center justify-center text-slate-900 shrink-0 shadow-lg shadow-emerald-500/20">
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
             </svg>
@@ -39,8 +39,8 @@
      x-transition:leave-start="opacity-100 transform translate-y-0"
      x-transition:leave-end="opacity-0 transform translate-y-4"
      class="fixed bottom-10 right-10 z-[100] max-w-md w-full">
-    <div class="bg-slate-900 border border-white/10 rounded-3xl p-6 shadow-2xl shadow-slate-900/50 flex items-center gap-5">
-        <div class="h-12 w-12 bg-red-500 rounded-2xl flex items-center justify-center text-white shrink-0 shadow-lg shadow-red-500/20">
+    <div class="bg-slate-900 border border-white/10 rounded-2xl p-6 shadow-2xl shadow-slate-900/50 flex items-center gap-5">
+        <div class="h-12 w-12 bg-red-500 rounded-xl flex items-center justify-center text-white shrink-0 shadow-lg shadow-red-500/20">
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
             </svg>

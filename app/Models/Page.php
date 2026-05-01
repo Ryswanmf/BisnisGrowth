@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Helpers\ContentHelper;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Page extends Model
@@ -16,5 +18,21 @@ class Page extends Model
     public function getRouteKeyName(): string
     {
         return 'slug';
+    }
+
+    /**
+     * Accessor: Title with Content Support
+     */
+    protected function title(): Attribute
+    {
+        return Attribute::get(fn ($value) => ContentHelper::process($value));
+    }
+
+    /**
+     * Accessor: Content with Content Support
+     */
+    protected function content(): Attribute
+    {
+        return Attribute::get(fn ($value) => ContentHelper::process($value));
     }
 }

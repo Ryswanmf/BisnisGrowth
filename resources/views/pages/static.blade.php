@@ -26,10 +26,10 @@
             <div class="mt-20 pt-10 border-t border-gray-100 text-center">
                 <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-10">Terakhir diperbarui pada {{ $page->updated_at->translatedFormat('d F Y') }}</p>
                 <div class="flex flex-col md:flex-row justify-center gap-4">
-                    <a href="{{ route('home') }}" class="px-10 py-4 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-slate-800 transition-all">
+                    <a href="{{ route('home') }}" class="px-10 py-4 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-slate-800 transition-all">
                         Beranda
                     </a>
-                    <a href="{{ route('contact') }}" class="px-10 py-4 bg-amber-500 text-slate-900 text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-amber-400 transition-all">
+                    <a href="{{ route('contact') }}" class="px-10 py-4 bg-amber-500 text-slate-900 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-amber-400 transition-all">
                         Hubungi Kami
                     </a>
                 </div>

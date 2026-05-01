@@ -17,14 +17,14 @@
                     <div class="sticky top-24 space-y-8">
                         
                         <!-- Search Box -->
-                        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100">
+                        <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
                             <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">Cari Artikel</h4>
                             <form action="{{ route('article.index') }}" method="GET" class="relative">
                                 @if(request('category')) <input type="hidden" name="category" value="{{ request('category') }}"> @endif
                                 @if(request('sort')) <input type="hidden" name="sort" value="{{ request('sort') }}"> @endif
                                 
                                 <input type="text" name="q" value="{{ request('q') }}" placeholder="Ketik kata kunci..." 
-                                       class="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-amber-500 font-medium">
+                                       class="w-full bg-gray-50 border-none rounded px-5 py-4 text-sm focus:ring-2 focus:ring-amber-500 font-medium">
                                 <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-amber-600">
                                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                                 </button>
@@ -32,11 +32,11 @@
                         </div>
 
                         <!-- Category Dropdown -->
-                        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100">
+                        <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
                             <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">Kategori Bisnis</h4>
                             <div class="relative group">
                                 <select onchange="window.location.href = this.value" 
-                                        class="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-amber-500 appearance-none cursor-pointer">
+                                        class="w-full bg-gray-50 border-none rounded px-5 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-amber-500 appearance-none cursor-pointer">
                                     <option value="{{ request()->fullUrlWithQuery(['category' => null, 'page' => null]) }}">Semua Kategori</option>
                                     @foreach($categoriesWithCount as $cat)
                                         <option value="{{ request()->fullUrlWithQuery(['category' => $cat['category_name'], 'page' => null]) }}" 
@@ -52,11 +52,11 @@
                         </div>
 
                         <!-- Sort Dropdown -->
-                        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100">
+                        <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
                             <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">Urutkan Berdasarkan</h4>
                             <div class="relative group">
                                 <select onchange="window.location.href = this.value" 
-                                        class="w-full bg-slate-900 text-white border-none rounded-2xl px-5 py-4 text-xs font-black uppercase tracking-widest focus:ring-2 focus:ring-amber-500 appearance-none cursor-pointer">
+                                        class="w-full bg-slate-900 text-white border-none rounded px-5 py-4 text-xs font-black uppercase tracking-widest focus:ring-2 focus:ring-amber-500 appearance-none cursor-pointer">
                                     <option value="{{ request()->fullUrlWithQuery(['sort' => 'latest', 'page' => null]) }}" {{ request('sort') == 'latest' ? 'selected' : '' }}>Terbaru</option>
                                     <option value="{{ request()->fullUrlWithQuery(['sort' => 'popular', 'page' => null]) }}" {{ request('sort') == 'popular' ? 'selected' : '' }}>Terpopuler</option>
                                     <option value="{{ request()->fullUrlWithQuery(['sort' => 'oldest', 'page' => null]) }}" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Terlama</option>
@@ -68,7 +68,7 @@
                         </div>
 
                         @if(request('q') || request('category'))
-                            <a href="{{ route('article.index') }}" class="flex items-center justify-center gap-2 w-full py-4 text-[10px] font-black uppercase tracking-widest text-red-500 bg-red-50 rounded-2xl hover:bg-red-100 transition-all">
+                            <a href="{{ route('article.index') }}" class="flex items-center justify-center gap-2 w-full py-4 text-[10px] font-black uppercase tracking-widest text-red-500 bg-red-50 rounded hover:bg-red-100 transition-all">
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
                                 Bersihkan Filter
                             </a>
@@ -83,17 +83,17 @@
                         <div class="mb-8 flex items-center gap-2">
                             <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Hasil Filter:</span>
                             @if(request('category'))
-                                <span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest">{{ request('category') }}</span>
+                                <span class="bg-amber-100 text-amber-700 px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest">{{ request('category') }}</span>
                             @endif
                             @if(request('q'))
-                                <span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest">"{{ request('q') }}"</span>
+                                <span class="bg-slate-100 text-slate-700 px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest">"{{ request('q') }}"</span>
                             @endif
                         </div>
                     @endif
 
                     <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
                         @forelse($articles as $article)
-                            <article class="group bg-white rounded-xl md:rounded-[2rem] overflow-hidden border border-gray-100 hover:shadow-2xl hover:shadow-slate-200 transition-all duration-500 flex flex-col h-full">
+                            <article class="group bg-white rounded md:rounded-lg overflow-hidden border border-gray-100 hover:shadow-2xl hover:shadow-slate-200 transition-all duration-500 flex flex-col h-full">
                                 <div class="relative aspect-[4/3] md:aspect-video overflow-hidden">
                                     @if($article->image)
                                         <img src="{{ asset($article->image) }}" alt="{{ $article->image_alt ?: $article->title }}" 
@@ -105,7 +105,7 @@
                                     
                                     @if($article->category_name)
                                     <div class="absolute top-2 left-2 md:top-4 md:left-4">
-                                        <span class="bg-white/90 backdrop-blur-md text-slate-900 text-[7px] md:text-[9px] font-black uppercase tracking-widest px-2 py-1 md:px-3 md:py-1.5 rounded-md md:rounded-lg shadow-sm border border-white/20">
+                                        <span class="bg-white/90 backdrop-blur-md text-slate-900 text-[7px] md:text-[9px] font-black uppercase tracking-widest px-2 py-1 md:px-3 md:py-1.5 rounded md:rounded shadow-sm border border-white/20">
                                             {{ $article->category_name }}
                                         </span>
                                     </div>
@@ -134,7 +134,7 @@
                                 </div>
                             </article>
                         @empty
-                            <div class="col-span-full py-24 text-center bg-white rounded-[3rem] border border-dashed border-gray-200">
+                            <div class="col-span-full py-24 text-center bg-white rounded-lg border border-dashed border-gray-200">
                                 <div class="h-20 w-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-300">
                                     <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l4 4v10a2 2 0 01-2 2zM14 4v4h4m-4 7h.01M9 15h.01M9 11h.01M12 11h.01M12 15h.01M15 11h.01M15 15h.01"/></svg>
                                 </div>
@@ -146,7 +146,7 @@
 
                     <!-- Premium Pagination -->
                     <div class="mt-20 flex justify-center">
-                        <div class="pagination-amber-theme bg-slate-900 p-2 rounded-2xl shadow-2xl shadow-slate-900/40 border border-slate-800">
+                        <div class="pagination-amber-theme bg-slate-900 p-2 rounded shadow-2xl shadow-slate-900/40 border border-slate-800">
                             {{ $articles->links() }}
                         </div>
                     </div>

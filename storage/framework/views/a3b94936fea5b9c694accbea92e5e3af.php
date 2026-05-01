@@ -45,7 +45,7 @@
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-4">
                                 <?php if($article->image): ?>
-                                    <img src="<?php echo e(asset('storage/' . $article->image)); ?>" class="h-12 w-16 object-cover rounded-xl border border-gray-100">
+                                    <img src="<?php echo e(asset($article->image)); ?>" class="h-12 w-16 object-cover rounded-xl border border-gray-100">
                                 <?php else: ?>
                                     <div class="h-12 w-16 bg-gray-50 rounded-xl flex items-center justify-center text-gray-200 font-black text-xs">BG</div>
                                 <?php endif; ?>

@@ -68,8 +68,14 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         
         // Custom Pages (Hanya Admin)
         Route::resource('/pages', App\Http\Controllers\Admin\PageController::class)->names('admin.pages');
+        Route::resource('/domains', App\Http\Controllers\Admin\DomainController::class)->names('admin.domains');
+        Route::resource('/short-keywords', App\Http\Controllers\Admin\ShortKeywordController::class)->names('admin.short-keywords');
+        Route::resource('/internal-links', App\Http\Controllers\Admin\InternalLinkController::class)->names('admin.internal-links');
     });
 });
+
+// SEO & Assets
+Route::get('/og-image/{type}/{id}.png', [App\Http\Controllers\OgImageController::class, 'generate'])->name('og.image');
 
 // Business Profile (MUST BE AT THE BOTTOM)
 Route::get('/{slug}', [BusinessProfileController::class, 'show'])

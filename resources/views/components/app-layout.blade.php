@@ -9,6 +9,11 @@
 
     <link rel="icon" type="image/png" href="{{ asset('images/Logo_Bisnis_Growth.png') }}">
     
+    <!-- PWA Settings -->
+    <meta name="theme-color" content="#f59e0b">
+    <link rel="apple-touch-icon" href="{{ asset('images/Logo_Bisnis_Growth.png') }}">
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    
     {{ $seo ?? '' }}
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -42,5 +47,13 @@
     </main>
 
     <x-footer />
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js');
+            });
+        }
+    </script>
 </body>
 </html>

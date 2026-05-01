@@ -73,7 +73,9 @@ class ArticleController extends Controller
     public function create()
     {
         $categories = \App\Models\Category::where('is_active', true)->orderBy('name')->get();
-        return view('admin.articles.create', compact('categories'));
+        $domains = \App\Models\Domain::where('is_active', true)->orderBy('name')->get();
+        $shortKeywords = \App\Models\ShortKeyword::where('is_active', true)->orderBy('title')->get();
+        return view('admin.articles.create', compact('categories', 'domains', 'shortKeywords'));
     }
 
     public function store(Request $request)
@@ -99,7 +101,10 @@ class ArticleController extends Controller
             }
         }
 
-        Article::create($data);
+        $article = Article::create($data);
+        if ($request->has('short_keyword_ids')) {
+            $article->shortKeywords()->sync($request->short_keyword_ids);
+        }
         \Illuminate\Support\Facades\Cache::flush();
         return redirect()->route('admin.articles.index')->with('success', 'Artikel berhasil dibuat!');
     }
@@ -107,7 +112,9 @@ class ArticleController extends Controller
     public function edit(Article $article)
     {
         $categories = \App\Models\Category::where('is_active', true)->orderBy('name')->get();
-        return view('admin.articles.edit', compact('article', 'categories'));
+        $domains = \App\Models\Domain::where('is_active', true)->orderBy('name')->get();
+        $shortKeywords = \App\Models\ShortKeyword::where('is_active', true)->orderBy('title')->get();
+        return view('admin.articles.edit', compact('article', 'categories', 'domains', 'shortKeywords'));
     }
 
     public function update(Request $request, Article $article)
@@ -134,6 +141,11 @@ class ArticleController extends Controller
         }
 
         $article->update($data);
+        if ($request->has('short_keyword_ids')) {
+            $article->shortKeywords()->sync($request->short_keyword_ids);
+        } else {
+            $article->shortKeywords()->detach();
+        }
         \Illuminate\Support\Facades\Cache::flush();
         return redirect()->route('admin.articles.index')->with('success', 'Artikel berhasil diperbarui!');
     }

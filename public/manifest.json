@@ -1,0 +1,23 @@
+{
+    "name": "BisnisGrowth",
+    "short_name": "BisnisGrowth",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#f59e0b",
+    "description": "Wawasan Bisnis & Strategi UMKM Indonesia",
+    "icons": [
+        {
+            "src": "/images/Logo_Bisnis_Growth.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/images/Logo_Bisnis_Growth.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}

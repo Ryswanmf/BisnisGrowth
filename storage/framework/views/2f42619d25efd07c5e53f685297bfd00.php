@@ -13,21 +13,20 @@
         <div class="lg:col-span-2 space-y-6">
             <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 space-y-6">
                 <div>
-                    <label class="block text-xs font-black text-slate-900 uppercase tracking-widest mb-2">Judul Artikel (Mendukung Spintax)</label>
-                    <input type="text" name="title" value="<?php echo e(old('title')); ?>" placeholder="Contoh: {Cara|Tips} Sukses Bisnis {Kopi|Cafe}"
+                    <label class="block text-xs font-black text-slate-900 uppercase tracking-widest mb-2">Judul Artikel</label>
+                    <input type="text" name="title" value="<?php echo e(old('title')); ?>" 
                            class="w-full bg-gray-50 border-gray-100 rounded-xl px-5 py-4 focus:ring-amber-500 focus:border-amber-500 font-bold text-lg">
-                    <p class="mt-2 text-[10px] text-gray-400 font-medium">Gunakan {A|B} untuk variasi judul otomatis.</p>
                 </div>
 
                 <div>
                     <div class="flex justify-between items-end mb-2">
-                        <label class="block text-xs font-black text-slate-900 uppercase tracking-widest">Konten Lengkap (Mendukung Spintax)</label>
+                        <label class="block text-xs font-black text-slate-900 uppercase tracking-widest">Konten Lengkap</label>
                         <div id="word-count-wrapper" class="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-lg bg-red-50 text-red-500 border border-red-100 transition-all">
                             <span id="word-count">0</span> Kata
                         </div>
                     </div>
-                    <textarea name="content" id="article-content" rows="15" 
-                              class="w-full bg-gray-50 border-gray-100 rounded-xl px-5 py-4 focus:ring-amber-500 focus:border-amber-500 transition-all"><?php echo e(old('content')); ?></textarea>
+                    <!-- Editor Summernote -->
+                    <textarea name="content" id="summernote"><?php echo e(old('content')); ?></textarea>
                     <p id="word-count-feedback" class="mt-2 text-[10px] text-red-400 font-bold italic">Saran: Tambahkan minimal 300 kata agar tampilan artikel terlihat profesional.</p>
                 </div>
 
@@ -52,13 +51,77 @@
                         <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Meta Description</label>
                         <textarea name="meta_description" rows="3" class="w-full bg-gray-50 border-gray-100 rounded-xl px-4 py-3 focus:ring-amber-500 focus:border-amber-500"><?php echo e(old('meta_description')); ?></textarea>
                     </div>
-                    <div>
-                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Focus Keyword</label>
-                        <input type="text" name="focus_keyword" value="<?php echo e(old('focus_keyword')); ?>" placeholder="e.g. bisnis kopi" class="w-full bg-gray-50 border-gray-100 rounded-xl px-4 py-3 focus:ring-amber-500 focus:border-amber-500">
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Domain Canonical</label>
+                        <select id="domain_selector" class="w-full bg-gray-50 border-gray-100 rounded-xl px-4 py-3 focus:ring-amber-500 focus:border-amber-500 text-sm font-bold mb-2">
+                            <option value="">-- Pilih Domain --</option>
+                            <?php $__currentLoopData = $domains; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $domain): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($domain->url); ?>"><?php echo e($domain->name); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </select>
+                        <input type="text" name="canonical_url" id="canonical_url" value="<?php echo e(old('canonical_url')); ?>" placeholder="URL Lengkap (Otomatis terisi jika domain dipilih)" class="w-full bg-gray-50 border-gray-100 rounded-xl px-4 py-3 focus:ring-amber-500 focus:border-amber-500 text-sm">
                     </div>
-                    <div>
-                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Canonical URL (Opsional)</label>
-                        <input type="text" name="canonical_url" value="<?php echo e(old('canonical_url')); ?>" class="w-full bg-gray-50 border-gray-100 rounded-xl px-4 py-3 focus:ring-amber-500 focus:border-amber-500">
+                    <div class="md:col-span-2" x-data="{ 
+                        open: false, 
+                        search: '',
+                        selected: [],
+                        items: [
+                            <?php $__currentLoopData = $shortKeywords; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sk): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            { id: <?php echo e($sk->id); ?>, title: '<?php echo e($sk->title); ?>', count: <?php echo e(count(explode(',', $sk->description))); ?> },
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        ],
+                        toggle(id) {
+                            if (this.selected.includes(id)) {
+                                this.selected = this.selected.filter(i => i !== id);
+                            } else {
+                                this.selected.push(id);
+                            }
+                        },
+                        get filteredItems() {
+                            return this.items.filter(i => i.title.toLowerCase().includes(this.search.toLowerCase()));
+                        },
+                        get selectedTitles() {
+                            return this.items.filter(i => this.selected.includes(i.id)).map(i => i.title).join(', ');
+                        }
+                    }">
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Short Keyword Pools (Opsional)</label>
+                        
+                        <!-- Dropdown Trigger -->
+                        <div class="relative">
+                            <button type="button" @click="open = !open" 
+                                    class="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 flex items-center justify-between hover:bg-white transition-all focus:ring-2 focus:ring-amber-500">
+                                <span class="text-xs font-bold text-slate-600 truncate" x-text="selected.length ? selectedTitles : '-- Pilih Pool Keyword --'"></span>
+                                <svg class="h-4 w-4 text-gray-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+
+                            <!-- Dropdown Menu (Slider) -->
+                            <div x-show="open" @click.away="open = false" 
+                                 x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="opacity-0 transform -translate-y-2"
+                                 x-transition:enter-end="opacity-100 transform translate-y-0"
+                                 class="absolute z-50 mt-2 w-full bg-white rounded-2xl shadow-xl border border-gray-100 p-4 space-y-4">
+                                
+                                <!-- Search Input -->
+                                <input type="text" x-model="search" placeholder="Cari pool..." 
+                                       class="w-full bg-gray-50 border-gray-100 rounded-xl px-4 py-2 text-xs focus:ring-amber-500 focus:border-amber-500">
+
+                                <!-- Items List -->
+                                <div class="max-h-60 overflow-y-auto custom-scrollbar space-y-1">
+                                    <template x-for="item in filteredItems" :key="item.id">
+                                        <label class="flex items-center p-2 rounded-lg cursor-pointer hover:bg-amber-50 transition-colors group">
+                                            <input type="checkbox" name="short_keyword_ids[]" :value="item.id" 
+                                                   @change="toggle(item.id)" :checked="selected.includes(item.id)"
+                                                   class="w-4 h-4 text-amber-500 border-gray-300 rounded focus:ring-amber-500">
+                                            <div class="ml-3">
+                                                <span class="block text-[10px] font-black text-slate-900 uppercase tracking-widest" x-text="item.title"></span>
+                                                <span class="block text-[8px] text-gray-400 font-bold uppercase" x-text="item.count + ' Keywords'"></span>
+                                            </div>
+                                        </label>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mt-2 text-[10px] text-gray-400 font-medium italic">* Klik untuk memilih satu atau lebih pool keyword.</p>
                     </div>
                 </div>
             </div>
@@ -123,38 +186,87 @@
         </div>
     </div>
 </form>
+</div>
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startPush('scripts'); ?>
 <script>
-    const textarea = document.getElementById('article-content');
-    const wordCountDisplay = document.getElementById('word-count');
-    const wrapper = document.getElementById('word-count-wrapper');
-    const feedback = document.getElementById('word-count-feedback');
+    $(document).ready(function() {
+        $('#summernote').summernote({
+            placeholder: 'Tulis konten artikel Anda di sini...',
+            tabsize: 2,
+            height: 500,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear', 'italic']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ],
+            callbacks: {
+                onChange: function(contents, $editable) {
+                    updateWordCount();
+                }
+            }
+        });
 
-    function updateWordCount() {
-        const text = textarea.value.trim();
-        const words = text ? text.split(/\s+/).length : 0;
-        
-        wordCountDisplay.innerText = words;
+        const wordCountDisplay = document.getElementById('word-count');
+        const wrapper = document.getElementById('word-count-wrapper');
+        const feedback = document.getElementById('word-count-feedback');
 
-        if (words >= 300) {
-            wrapper.classList.remove('bg-red-50', 'text-red-500', 'border-red-100');
-            wrapper.classList.add('bg-emerald-50', 'text-emerald-600', 'border-emerald-100');
-            feedback.innerText = 'Luar biasa! Panjang artikel sudah ideal untuk SEO dan tampilan.';
-            feedback.classList.remove('text-red-400');
-            feedback.classList.add('text-emerald-500');
-        } else {
-            wrapper.classList.add('bg-red-50', 'text-red-500', 'border-red-100');
-            wrapper.classList.remove('bg-emerald-50', 'text-emerald-600', 'border-emerald-100');
-            feedback.innerText = 'Saran: Tambahkan minimal 300 kata agar tampilan artikel terlihat profesional.';
-            feedback.classList.add('text-red-400');
-            feedback.classList.remove('text-emerald-500');
+        function updateWordCount() {
+            const text = $('#summernote').summernote('code').replace(/<[^>]*>/g, ' ').trim();
+            const words = text ? text.split(/\s+/).length : 0;
+            
+            wordCountDisplay.innerText = words;
+
+            if (words >= 300) {
+                wrapper.classList.remove('bg-red-50', 'text-red-500', 'border-red-100');
+                wrapper.classList.add('bg-emerald-50', 'text-emerald-600', 'border-emerald-100');
+                feedback.innerText = 'Luar biasa! Panjang artikel sudah ideal untuk SEO dan tampilan.';
+                feedback.classList.remove('text-red-400');
+                feedback.classList.add('text-emerald-500');
+            } else {
+                wrapper.classList.add('bg-red-50', 'text-red-500', 'border-red-100');
+                wrapper.classList.remove('bg-emerald-50', 'text-emerald-600', 'border-emerald-100');
+                feedback.innerText = 'Saran: Tambahkan minimal 300 kata agar tampilan artikel terlihat profesional.';
+                feedback.classList.add('text-red-400');
+                feedback.classList.remove('text-emerald-500');
+            }
         }
+
+        updateWordCount();
+    });
+
+    // Domain & Slug JS
+    const domainSelector = document.getElementById('domain_selector');
+    const canonicalInput = document.getElementById('canonical_url');
+    const titleInput = document.querySelector('input[name="title"]');
+
+    function slugify(text) {
+        return text.toString().toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(/[^\w\-]+/g, '')
+            .replace(/\-\-+/g, '-')
+            .replace(/^-+/, '')
+            .replace(/-+$/, '');
     }
 
-    textarea.addEventListener('input', updateWordCount);
-    window.addEventListener('load', updateWordCount);
+    domainSelector.addEventListener('change', function() {
+        if (this.value) {
+            const slug = slugify(titleInput.value);
+            canonicalInput.value = this.value.replace(/\/$/, '') + '/artikel/' + slug;
+        }
+    });
+
+    titleInput.addEventListener('input', function() {
+        if (domainSelector.value) {
+            const slug = slugify(this.value);
+            canonicalInput.value = domainSelector.value.replace(/\/$/, '') + '/artikel/' + slug;
+        }
+    });
 </script>
 <?php $__env->stopPush(); ?>
 

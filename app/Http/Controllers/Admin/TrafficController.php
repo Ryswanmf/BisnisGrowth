@@ -60,7 +60,7 @@ class TrafficController extends Controller
         $topPages = PageView::select('url', DB::raw('count(*) as total'))->groupBy('url')->orderBy('total', 'desc')->take(5)->get();
 
         $seoData = Article::published()
-            ->select('title', 'slug', 'focus_keyword', 'canonical_url')
+            ->select('title', 'slug', 'canonical_url')
             ->paginate(10);
 
         return view('admin.traffic.index', compact('stats', 'dailyTrend', 'weeklyTrend', 'monthlyTrend', 'devices', 'topPages', 'seoData'));

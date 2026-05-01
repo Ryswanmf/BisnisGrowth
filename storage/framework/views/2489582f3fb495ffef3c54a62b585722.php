@@ -9,6 +9,11 @@
 
     <link rel="icon" type="image/png" href="<?php echo e(asset('images/Logo_Bisnis_Growth.png')); ?>">
     
+    <!-- PWA Settings -->
+    <meta name="theme-color" content="#f59e0b">
+    <link rel="apple-touch-icon" href="<?php echo e(asset('images/Logo_Bisnis_Growth.png')); ?>">
+    <link rel="manifest" href="<?php echo e(asset('manifest.json')); ?>">
+    
     <?php echo e($seo ?? ''); ?>
 
 
@@ -82,6 +87,14 @@
 <?php $component = $__componentOriginal8a8716efb3c62a45938aca52e78e0322; ?>
 <?php unset($__componentOriginal8a8716efb3c62a45938aca52e78e0322); ?>
 <?php endif; ?>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js');
+            });
+        }
+    </script>
 </body>
 </html>
 <?php /**PATH D:\laragon\www\BisnisGrowth\resources\views/components/app-layout.blade.php ENDPATH**/ ?>

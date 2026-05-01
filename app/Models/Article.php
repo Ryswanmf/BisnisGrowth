@@ -15,8 +15,48 @@ class Article extends Model
         'user_id', 'title', 'slug', 'excerpt', 'content', 'image', 'image_2', 'image_3', 'image_4', 
         'image_alt', 'category_name', 'view_count', 'click_count', 'whatsapp_clicks', 'phone_clicks',
         'is_featured', 'is_published', 'published_at', 'meta_title', 'meta_description', 
-        'focus_keyword', 'canonical_url'
+        'canonical_url'
     ];
+
+    /**
+     * Accessor: Title with Spintax Support
+     */
+    protected function title(): Attribute
+    {
+        return Attribute::get(fn ($value) => ContentHelper::process($value, $this, false));
+    }
+
+    /**
+     * Accessor: Excerpt with Spintax Support
+     */
+    protected function excerpt(): Attribute
+    {
+        return Attribute::get(fn ($value) => ContentHelper::process($value, $this, false));
+    }
+
+    /**
+     * Accessor: Content with SEO Engine Support
+     */
+    protected function content(): Attribute
+    {
+        return Attribute::get(fn ($value) => ContentHelper::process($value, $this));
+    }
+
+    /**
+     * Accessor: Meta Title with Spintax Support
+     */
+    protected function metaTitle(): Attribute
+    {
+        return Attribute::get(fn ($value) => ContentHelper::process($value, $this, false));
+    }
+
+    /**
+     * Accessor: Meta Description with Spintax Support
+     */
+    protected function metaDescription(): Attribute
+    {
+        return Attribute::get(fn ($value) => ContentHelper::process($value, $this, false));
+    }
 
     /**
      * Get the user that owns the article.
@@ -32,27 +72,11 @@ class Article extends Model
     }
 
     /**
-     * Accessor: Title with Content Support
+     * The short keywords that belong to the article.
      */
-    protected function title(): Attribute
+    public function shortKeywords()
     {
-        return Attribute::get(fn ($value) => ContentHelper::process($value));
-    }
-
-    /**
-     * Accessor: Content with Content Support (Spintax + Related)
-     */
-    protected function content(): Attribute
-    {
-        return Attribute::get(fn ($value) => ContentHelper::process($value));
-    }
-
-    /**
-     * Accessor: Excerpt with Content Support
-     */
-    protected function excerpt(): Attribute
-    {
-        return Attribute::get(fn ($value) => ContentHelper::process($value));
+        return $this->belongsToMany(ShortKeyword::class);
     }
 
     /**
@@ -72,7 +96,7 @@ class Article extends Model
      */
     protected function seoTitle(): Attribute
     {
-        return Attribute::get(fn () => ContentHelper::process($this->meta_title ?: $this->getRawOriginal('title')));
+        return Attribute::get(fn () => $this->meta_title ?: $this->title);
     }
 
     /**
@@ -81,18 +105,18 @@ class Article extends Model
     protected function seoDescription(): Attribute
     {
         return Attribute::get(function () {
-            // Ambil meta_description atau excerpt atau content
-            $text = $this->meta_description ?: ($this->excerpt ?: $this->getRawOriginal('content'));
-            
-            // 1. Proses Spintax dulu
-            $processed = ContentHelper::process($text);
-            
-            // 2. Bersihkan HTML tags
-            $clean = strip_tags($processed);
-            
-            // 3. Potong sesuai limit SEO (160 karakter)
+            $text = $this->meta_description ?: ($this->excerpt ?: $this->content);
+            $clean = strip_tags($text);
             return \Illuminate\Support\Str::limit($clean, 160);
         });
+    }
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted()
+    {
+        // Internal Linking or other logic can go here if needed
     }
 
     /**

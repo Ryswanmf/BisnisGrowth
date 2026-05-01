@@ -15,7 +15,7 @@
                 <!-- Main Featured (Left) -->
                 @if($featuredArticle)
                 <div class="lg:col-span-8">
-                    <a href="javascript:void(0)" onclick="trackArticleClick({{ $featuredArticle['id'] }}, '{{ route('article.show', $featuredArticle['slug']) }}')" class="group relative block overflow-hidden rounded-3xl bg-slate-100 h-[300px] md:h-[500px] shadow-xl">
+                    <a href="javascript:void(0)" onclick="trackArticleClick({{ $featuredArticle['id'] }}, '{{ route('article.show', $featuredArticle['slug']) }}')" class="group relative block overflow-hidden rounded bg-slate-100 h-[300px] md:h-[500px] shadow-xl">
                         @if($featuredArticle['image'])
                             <img src="{{ asset('storage/' . $featuredArticle['image']) }}" alt="{{ $featuredArticle['title'] }}" 
                                  class="absolute inset-0 h-full w-full object-cover opacity-80 transition-transform duration-700 group-hover:scale-105"
@@ -24,7 +24,7 @@
                         <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
                         
                         <div class="absolute bottom-0 p-5 md:p-10 lg:p-12 max-w-2xl">
-                            <span class="inline-block px-3 py-1 mb-3 md:mb-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-burgundy-900 bg-amber-400 rounded-md">
+                            <span class="inline-block px-3 py-1 mb-3 md:mb-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-burgundy-900 bg-amber-400 rounded">
                                 UTAMA • {{ $featuredArticle['category_name'] }}
                             </span>
                             <h1 class="text-xl sm:text-2xl md:text-4xl font-black text-white mb-3 md:mb-4 leading-tight group-hover:text-amber-100 transition-colors">
@@ -47,7 +47,7 @@
                     
                     @foreach($sidebarArticles as $sideArticle)
                     <a href="javascript:void(0)" onclick="trackArticleClick({{ $sideArticle['id'] }}, '{{ route('article.show', $sideArticle['slug']) }}')" class="group flex gap-4 items-center">
-                        <div class="shrink-0 w-24 h-24 rounded-2xl overflow-hidden shadow-sm bg-gray-50">
+                        <div class="shrink-0 w-24 h-24 rounded overflow-hidden shadow-sm bg-gray-50">
                             @if($sideArticle['image'])
                                 <img src="{{ asset('storage/' . $sideArticle['image']) }}" alt="{{ $sideArticle['title'] }}" 
                                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
@@ -66,7 +66,7 @@
                     @endforeach
 
                     <div class="mt-auto">
-                        <a href="{{ route('article.index') }}" class="flex items-center justify-center w-full py-4 bg-gray-50 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-900 hover:bg-gray-100 transition-colors">
+                        <a href="{{ route('article.index') }}" class="flex items-center justify-center w-full py-4 bg-gray-50 rounded text-[10px] font-black uppercase tracking-widest text-slate-900 hover:bg-gray-100 transition-colors">
                             Lihat Semua Wawasan
                             <svg class="h-3 w-3 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                         </a>
@@ -88,7 +88,7 @@
 
             <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
                 @foreach($articlesData as $article)
-                <article class="group bg-white rounded-xl overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col h-full">
+                <article class="group bg-white rounded overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col h-full">
                     <a href="javascript:void(0)" onclick="trackArticleClick({{ $article['id'] }}, '{{ route('article.show', $article['slug']) }}')" class="relative aspect-[16/10] overflow-hidden block bg-gray-50">
                         @if($article['image'])
                             <img src="{{ asset('storage/' . $article['image']) }}" alt="{{ $article['title'] }}" 
@@ -130,7 +130,7 @@
 
             <!-- Premium Pagination -->
             <div class="mt-24 flex justify-center">
-                <div class="pagination-amber-theme bg-slate-900 p-2 rounded-2xl shadow-2xl shadow-slate-900/40 border border-slate-800">
+                <div class="pagination-amber-theme bg-slate-900 p-2 rounded shadow-2xl shadow-slate-900/40 border border-slate-800">
                     {!! $links !!}
                 </div>
             </div>
