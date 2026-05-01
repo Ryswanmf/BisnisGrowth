@@ -3,8 +3,11 @@
 ![Laravel](https://img.shields.io/badge/Framework-Laravel_13-FF2D20?style=for-the-badge&logo=laravel)
 ![PHP](https://img.shields.io/badge/Language-PHP_8.3+-777BB4?style=for-the-badge&logo=php)
 ![MySQL](https://img.shields.io/badge/Database-MySQL-4479A1?style=for-the-badge&logo=mysql)
+![Vite](https://img.shields.io/badge/Build-Vite-646CFF?style=for-the-badge&logo=vite)
 ![TailwindCSS](https://img.shields.io/badge/Styling-Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css)
+![CSS](https://img.shields.io/badge/Styling-CSS3-1572B6?style=for-the-badge&logo=css3)
 ![AlpineJS](https://img.shields.io/badge/Interactive-Alpine_JS-8BC0D0?style=for-the-badge&logo=alpine.js)
+![JavaScript](https://img.shields.io/badge/Language-JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 
 ## 1. Visi dan Filosofi Proyek
 **BisnisGrowth** adalah platform ekosistem digital yang dirancang khusus untuk memodernisasi cara UMKM (Usaha Mikro, Kecil, dan Menengah) di Indonesia berinteraksi dengan pasar digital. Platform ini hadir sebagai **Akselerator Pertumbuhan** yang menggabungkan direktori bisnis terorganisir dengan portal edukasi strategi bisnis yang dikelola secara profesional.
