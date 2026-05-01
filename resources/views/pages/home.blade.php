@@ -77,16 +77,16 @@
     </section>
 
     <!-- Latest Articles Section -->
-    <section class="py-16 px-4 bg-gray-50/50 border-t border-gray-100">
+    <section class="py-10 px-4 bg-gray-50/50 border-t border-gray-100">
         <div class="max-w-7xl mx-auto">
-            <div class="flex items-center justify-between mb-12">
+            <div class="flex items-center justify-between mb-8">
                 <div class="flex flex-col">
-                    <span class="text-amber-600 text-[10px] font-black uppercase tracking-[0.3em] mb-2">Teranyar</span>
-                    <h2 class="text-3xl font-black text-slate-900 tracking-tight uppercase">Artikel Terbaru</h2>
+                    <span class="text-amber-600 text-[10px] font-black uppercase tracking-[0.3em] mb-1">Teranyar</span>
+                    <h2 class="text-2xl font-black text-slate-900 tracking-tight uppercase">Artikel Terbaru</h2>
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
+            <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                 @foreach($articlesData as $article)
                 <article class="group bg-white rounded overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col h-full">
                     <a href="javascript:void(0)" onclick="trackArticleClick({{ $article['id'] }}, '{{ route('article.show', $article['slug']) }}')" class="relative aspect-[16/10] overflow-hidden block bg-gray-50">
@@ -103,21 +103,21 @@
                     </a>
                     
                     <div class="p-3 md:p-5 flex-grow flex flex-col">
-                        <div class="flex items-center text-gray-400 text-[7px] md:text-[9px] font-bold uppercase tracking-widest mb-2 md:mb-3">
+                        <div class="flex items-center text-gray-400 text-[7px] md:text-[9px] font-bold uppercase tracking-widest mb-1.5 md:mb-2">
                             <span>{{ \Carbon\Carbon::parse($article['published_at'] ?? $article['created_at'])->format('d M y') }}</span>
                             <span class="mx-1 text-amber-400">•</span>
                             <span>{{ number_format($article['click_count']) }} Klik</span>
                         </div>
                         
-                        <h3 class="text-xs md:text-lg font-bold text-slate-900 mb-1 md:mb-2 leading-snug group-hover:text-amber-600 transition-colors line-clamp-2">
+                        <h3 class="text-xs md:text-lg font-bold text-slate-900 mb-1 md:mb-1.5 leading-snug group-hover:text-amber-600 transition-colors line-clamp-2">
                             <a href="javascript:void(0)" onclick="trackArticleClick({{ $article['id'] }}, '{{ route('article.show', $article['slug']) }}')">{{ $article['title'] }}</a>
                         </h3>
                         
-                        <p class="text-gray-500 text-[10px] md:text-xs leading-relaxed line-clamp-2 mb-3 hidden md:block">
+                        <p class="text-gray-500 text-[10px] md:text-xs leading-relaxed line-clamp-2 mb-2 hidden md:block">
                             {{ $article['excerpt'] }}
                         </p>
 
-                        <div class="mt-auto pt-3 border-t border-gray-50">
+                        <div class="mt-auto pt-2 border-t border-gray-50">
                             <a href="javascript:void(0)" onclick="trackArticleClick({{ $article['id'] }}, '{{ route('article.show', $article['slug']) }}')" class="inline-flex items-center text-[8px] md:text-[10px] font-black text-amber-600 uppercase tracking-widest hover:text-amber-800 transition-colors group">
                                 Baca
                                 <svg class="h-2.5 w-2.5 ml-1 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
@@ -129,7 +129,7 @@
             </div>
 
             <!-- Premium Pagination -->
-            <div class="mt-24 flex justify-center">
+            <div class="mt-12 flex justify-center">
                 <div class="pagination-amber-theme bg-slate-900 p-2 rounded shadow-2xl shadow-slate-900/40 border border-slate-800">
                     {!! $links !!}
                 </div>

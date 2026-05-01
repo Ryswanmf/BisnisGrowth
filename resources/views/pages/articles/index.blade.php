@@ -1,12 +1,12 @@
 <x-app-layout>
     <x-slot name="title">Artikel & Edukasi Bisnis — BisnisGrowth</x-slot>
 
-    <section class="py-16 bg-gray-50">
+    <section class="py-10 bg-gray-50">
         <div class="max-w-[1600px] mx-auto px-6">
             <!-- Header -->
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <span class="text-amber-600 text-[10px] font-black uppercase tracking-[0.3em] mb-4 block text-center">Wawasan Bisnis</span>
-                <h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6 leading-tight">
+            <div class="text-center max-w-3xl mx-auto mb-10">
+                <span class="text-amber-600 text-[10px] font-black uppercase tracking-[0.3em] mb-2 block text-center">Wawasan Bisnis</span>
+                <h1 class="text-3xl md:text-5xl font-black text-slate-900 tracking-tight mb-4 leading-tight">
                     Edukasi & <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-amber-700">Strategi Pertumbuhan</span>
                 </h1>
             </div>
