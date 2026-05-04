@@ -235,6 +235,9 @@
                                     
                                     <form action="{{ route('article.comment.store', $article->id) }}" method="POST" class="space-y-8">
                                         @csrf
+                                        <div style="display:none;">
+                                            <input type="text" name="my_full_name" value="">
+                                        </div>
                                         <div class="grid grid-cols-1 gap-8">
                                             <div class="relative group/input">
                                                 <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-1 group-focus-within/input:text-amber-500 transition-colors">Nama Lengkap</label>

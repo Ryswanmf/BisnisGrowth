@@ -61,6 +61,9 @@
 
                         <form action="{{ route('contact.store') }}" method="POST" class="space-y-6">
                             @csrf
+                            <div style="display:none;">
+                                <input type="text" name="my_full_name" value="">
+                            </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-1">Nama Lengkap</label>
