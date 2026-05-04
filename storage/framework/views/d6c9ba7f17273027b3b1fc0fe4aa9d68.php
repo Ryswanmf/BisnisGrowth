@@ -165,7 +165,12 @@
                 <div class="flex items-center gap-3">
                     <div class="h-8 w-8 bg-amber-500 rounded-md flex items-center justify-center text-slate-900 font-bold text-xs uppercase overflow-hidden shadow-lg shadow-amber-500/20">
                         <?php if(Auth::user()->profile_photo): ?>
-                            <img src="<?php echo e(asset('storage/' . Auth::user()->profile_photo)); ?>" class="h-full w-full object-cover">
+                            <?php
+                                $photoPath = Auth::user()->profile_photo;
+                                // Jika path tidak diawali uploads/, asumsikan dari storage lama
+                                $fullPhotoPath = str_starts_with($photoPath, 'uploads/') ? asset($photoPath) : asset('storage/' . $photoPath);
+                            ?>
+                            <img src="<?php echo e($fullPhotoPath); ?>" class="h-full w-full object-cover">
                         <?php else: ?>
                             <?php echo e(substr(Auth::user()->name, 0, 1)); ?>
 

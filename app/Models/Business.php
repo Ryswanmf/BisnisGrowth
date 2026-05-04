@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'user_id', 'name', 'slug', 'tagline', 'description', 'category_id',
     'logo', 'cover_image', 'phone', 'whatsapp', 'email', 'website',
     'address', 'city', 'province', 'instagram', 'facebook', 'tiktok', 'youtube',
-    'theme_color', 'is_verified', 'is_active', 'view_count', 'click_count',
+    'theme_color', 'is_active', 'view_count', 'click_count',
     'meta_title', 'meta_description'
 ])]
 class Business extends Model

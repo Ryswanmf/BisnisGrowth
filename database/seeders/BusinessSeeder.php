@@ -42,7 +42,6 @@ class BusinessSeeder extends Seeder
                 'category_id' => $category->id,
                 'city' => 'Jakarta',
                 'province' => 'DKI Jakarta',
-                'is_verified' => $i % 2 == 0,
                 'is_active' => true,
                 'view_count' => rand(100, 1000),
                 'click_count' => rand(50, 500),

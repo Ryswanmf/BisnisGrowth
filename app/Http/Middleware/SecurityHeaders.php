@@ -27,8 +27,26 @@ class SecurityHeaders
         // Membatasi informasi referrer yang dikirim
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         
-        // Content Security Policy (Dasar - bisa disesuaikan jika butuh load script luar)
-        $response->headers->set('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:;");
+        // Content Security Policy (CSP)
+        if (app()->environment('local')) {
+            // Di lingkungan lokal, kita buat sangat fleksibel agar tidak memblokir Vite, Alpine, atau Browser DevTools
+            $csp = "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: *; "
+                 . "script-src 'self' 'unsafe-inline' 'unsafe-eval' *; "
+                 . "style-src 'self' 'unsafe-inline' *; "
+                 . "font-src 'self' data: *; "
+                 . "img-src 'self' data: https: http: *; "
+                 . "connect-src 'self' ws: wss: *;";
+        } else {
+            // Kebijakan ketat untuk Produksi (cPanel)
+            $csp = "default-src 'self'; "
+                 . "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com https://code.jquery.com; "
+                 . "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; "
+                 . "font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; "
+                 . "img-src 'self' data: https:; "
+                 . "connect-src 'self' https://cdn.jsdelivr.net;";
+        }
+
+        $response->headers->set('Content-Security-Policy', $csp);
 
         return $response;
     }

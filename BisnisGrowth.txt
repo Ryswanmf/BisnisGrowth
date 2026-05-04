@@ -34,7 +34,7 @@ Palet warna (tambahkan ke tailwind.config.js di bagian extend.colors):
 
 Penggunaan warna:
 - Navbar, hero background, sidebar admin  → burgundy-600 (#7B1F2E)
-- Tombol CTA utama, badge verifikasi      → gold-400 (#D4A017) + teks burgundy-800
+- Tombol CTA utama                      → gold-400 (#D4A017) + teks burgundy-800
 - Hover state tombol CTA                  → gold-600 (#9A7210)
 - Teks di atas bg burgundy               → #FFF8E7 (warm white)
 - Border accent card, garis dekoratif    → burgundy-600
@@ -66,7 +66,7 @@ Tabel: businesses
 - address, city, province
 - instagram, facebook, tiktok, youtube
 - theme_color (default: '#7B1F2E')
-- is_verified (bool default 0), is_active (bool default 1)
+- is_active (bool default 1)
 - view_count (int default 0), click_count (int default 0)
 - meta_title (nullable), meta_description (nullable)
 - timestamps
@@ -93,7 +93,7 @@ a) Hero: bg burgundy-600, judul "Satu Link untuk Semua Bisnismu",
    sub-heading, 2 tombol: "Daftar Gratis" (gold CTA) + "Lihat Contoh"
 b) Stats bar: total bisnis terdaftar, total kategori, total kunjungan
 c) Cara kerja: 3 langkah (Daftar → Isi Profil → Bagikan)
-d) Featured businesses: 6 bisnis terbaru/terverifikasi, card grid 3 kolom
+d) Featured businesses: 6 bisnis terbaru, card grid 3 kolom
 e) Kategori populer: grid icon + nama kategori, link ke /kategori/{slug}
 f) Testimonial: 3 quote dummy
 g) CTA bottom: bg burgundy-600, tombol gold "Mulai Sekarang"
@@ -156,7 +156,7 @@ JSON-LD LocalBusiness:
 - Filter dikirim via GET query string (?kategori=kuliner&kota=bandung&q=kopi)
 - Pagination 15 per halaman (Laravel paginator, retain query string)
 - Card: logo, nama, tagline, kota, badge kategori, tombol "Lihat Profil"
-- Urutan: verified dulu, lalu view_count DESC
+- Urutan: view_count DESC
 
 SEO:
 <title>Direktori Bisnis UMKM Indonesia — BisnisGrowth</title>
@@ -208,7 +208,7 @@ Middleware: role=admin (tambahkan kolom role di users)
 
 Halaman admin:
 - Dashboard: statistik total bisnis, user, kunjungan hari ini
-- Bisnis: tabel semua bisnis, tombol Aktifkan/Nonaktifkan, Verifikasi, Hapus
+- Bisnis: tabel semua bisnis, tombol Aktifkan/Nonaktifkan, Hapus
 - Kategori: CRUD (nama, slug, icon, deskripsi, urutan)
 - Users: list user, ganti role
 
@@ -260,7 +260,6 @@ Tambahkan custom component class di @layer components:
 .btn-primary   { @apply bg-gold-400 text-burgundy-800 font-medium px-5 py-2.5 rounded-lg hover:bg-gold-600 transition-colors; }
 .btn-secondary { @apply bg-burgundy-50 text-burgundy-600 font-medium px-5 py-2.5 rounded-lg hover:bg-burgundy-100 transition-colors; }
 .card          { @apply bg-white border border-gray-100 rounded-xl p-4; }
-.badge-verified{ @apply bg-gold-50 text-gold-800 text-xs font-medium px-2.5 py-1 rounded-full; }
 
 Gambar:
 - Semua <img> gunakan loading="lazy" width="..." height="..."
