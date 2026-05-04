@@ -15,6 +15,7 @@
     <link rel="manifest" href="{{ asset('manifest.json') }}">
     
     {{ $seo ?? '' }}
+    {{ $styles ?? '' }}
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -53,13 +54,16 @@
     </style>
 </head>
 <body class="font-sans antialiased text-gray-900 min-h-full flex flex-col">
-    <!-- Page Loader -->
-    <div id="page-loader" class="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center transition-opacity duration-700">
+    <!-- Light Minimalist Page Loader -->
+    <div id="page-loader" class="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center transition-all duration-700 ease-in-out">
         <div class="relative">
-            <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-2xl relative z-10 animate-bounce">
-                <img src="{{ asset('images/Logo_Bisnis_Growth.png') }}" alt="Loading..." class="w-12 h-12 object-contain">
+            <!-- Pulsing Circle Decoration -->
+            <div class="absolute inset-0 bg-amber-500/10 rounded-full animate-[ping_2.5s_infinite] scale-150"></div>
+            
+            <!-- Logo with Breathing & Fade Effect -->
+            <div class="relative w-20 h-20 md:w-24 md:h-24 animate-[pulse_2s_infinite]">
+                <img src="{{ asset('images/Logo_Bisnis_Growth.png') }}" alt="Loading..." class="w-full h-full object-contain opacity-90">
             </div>
-            <div class="absolute inset-0 bg-red-100 rounded-full animate-ping opacity-25"></div>
         </div>
     </div>
 
@@ -67,9 +71,14 @@
         window.addEventListener('load', function() {
             const loader = document.getElementById('page-loader');
             setTimeout(() => {
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 700);
-            }, 500);
+                if(loader) {
+                    loader.style.opacity = '0';
+                    loader.style.pointerEvents = 'none'; // Pastikan tidak menghalangi klik saat memudar
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                    }, 700);
+                }
+            }, 400);
         });
     </script>
 
@@ -89,5 +98,6 @@
             });
         }
     </script>
+    {{ $scripts ?? '' }}
 </body>
 </html>

@@ -20,7 +20,7 @@
     </div>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
         <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm hover:shadow-xl transition-all">
             <p class="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3">Konten Edukasi</p>
             <div class="flex items-center justify-between">
@@ -42,12 +42,49 @@
                 <span class="text-[10px] font-black text-amber-600 bg-amber-50 px-2 py-1 rounded-md">Traffic</span>
             </div>
         </div>
-        <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm hover:shadow-xl transition-all">
-            <p class="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3">Kategori Bisnis</p>
-            <div class="flex items-center justify-between">
-                <h3 class="text-4xl font-black text-slate-900 tracking-tighter"><?php echo e(number_format($stats['total_categories'])); ?></h3>
-                <span class="text-[10px] font-black text-slate-500 bg-slate-50 px-2 py-1 rounded-md">Topics</span>
+        
+        <!-- Top Domain Card Integrated -->
+        <div class="bg-slate-900 p-8 rounded-lg border border-slate-800 shadow-sm hover:shadow-xl transition-all text-white lg:col-span-1 xl:col-span-2">
+            <div class="flex justify-between items-center mb-5">
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Top Domain</p>
+                <a href="<?php echo e(route('admin.domains.index')); ?>" class="text-[8px] font-black text-amber-500 uppercase tracking-widest hover:underline">Semua</a>
             </div>
+            <div class="space-y-4">
+                <?php $__currentLoopData = $stats['top_domains']->take(2); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $domain): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <div class="flex items-center justify-between gap-4 group">
+                        <div class="min-w-0 flex-1">
+                            <h5 class="text-xs font-bold truncate group-hover:text-amber-500 transition-colors"><?php echo e($domain->name); ?></h5>
+                            <p class="text-[8px] text-slate-500 truncate"><?php echo e(str_replace(['http://', 'https://', 'www.'], '', $domain->url)); ?></p>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-sm font-black text-amber-500"><?php echo e(number_format($domain->hits_count ?? 0)); ?></span>
+                            <p class="text-[7px] font-black text-slate-500 uppercase">Hits</p>
+                        </div>
+                    </div>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                <?php if($stats['top_domains']->isEmpty()): ?>
+                    <p class="text-[10px] text-slate-500 italic">Data belum tersedia</p>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Chart -->
+    <div class="bg-white p-8 md:p-10 rounded-lg border border-gray-100 shadow-sm">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
+            <div>
+                <h4 class="text-xs font-black text-slate-900 uppercase tracking-widest flex items-center gap-3">
+                    <span class="h-1.5 w-1.5 bg-amber-500 rounded-full"></span> Tren Traffic Pengunjung
+                </h4>
+                <p class="text-[10px] text-gray-400 font-medium mt-1 uppercase tracking-widest">Aktivitas 7 Hari Terakhir</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="h-2 w-2 bg-amber-500 rounded-full"></span>
+                <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Total Pageviews</span>
+            </div>
+        </div>
+        <div class="h-[300px] w-full">
+            <canvas id="trafficChart"></canvas>
         </div>
     </div>
 
@@ -56,7 +93,7 @@
         <div class="bg-white p-8 md:p-10 rounded-lg border border-gray-100 shadow-sm">
             <div class="flex justify-between items-center mb-10">
                 <h4 class="text-xs font-black text-slate-900 uppercase tracking-widest flex items-center gap-3">
-                    <span class="h-1.5 w-1.5 bg-blue-500 rounded-full"></span> Artikel Teranyar
+                    <span class="h-1.5 w-1.5 bg-blue-500 rounded-full"></span> Artikel Terbaru
                 </h4>
                 <a href="<?php echo e(route('admin.articles.index')); ?>" class="text-[9px] font-black text-amber-600 uppercase tracking-widest hover:underline">Semua</a>
             </div>
@@ -103,5 +140,78 @@
     </div>
 </div>
 <?php $__env->stopSection(); ?>
+
+<?php $__env->startPush('scripts'); ?>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('trafficChart').getContext('2d');
+        const trafficChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: <?php echo json_encode($stats['chart_labels']); ?>,
+                datasets: [{
+                    label: 'Pageviews',
+                    data: <?php echo json_encode($stats['chart_values']); ?>,
+                    borderColor: '#f59e0b',
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    borderWidth: 4,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#f59e0b',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#0f172a',
+                        titleFont: { size: 10, weight: 'bold' },
+                        bodyFont: { size: 12, weight: 'bold' },
+                        padding: 12,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y + ' Kunjungan';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            display: true,
+                            color: 'rgba(0,0,0,0.03)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            font: { size: 10, weight: 'bold' },
+                            color: '#94a3b8'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: { size: 10, weight: 'bold' },
+                            color: '#94a3b8'
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+<?php $__env->stopPush(); ?>
 
 <?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\laragon\www\BisnisGrowth\resources\views/admin/dashboard.blade.php ENDPATH**/ ?>

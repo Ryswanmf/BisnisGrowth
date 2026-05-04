@@ -5,12 +5,6 @@
 
 @section('content')
 <div class="max-w-5xl" x-data="{ tab: 'identity' }">
-    @if(session('success'))
-        <div class="mb-8 bg-emerald-50 border border-emerald-100 text-emerald-600 px-6 py-4 rounded-lg text-sm font-bold animate-pulse">
-            {{ session('success') }}
-        </div>
-    @endif
-
     <!-- Tab Navigation -->
     <div class="flex gap-2 mb-8 bg-gray-100 p-1.5 rounded-lg w-fit">
         <button @click="tab = 'identity'" :class="tab === 'identity' ? 'bg-white text-slate-900 shadow-sm' : 'text-gray-400 hover:text-gray-600'" class="px-6 py-2.5 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all">Identitas</button>

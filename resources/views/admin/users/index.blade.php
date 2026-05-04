@@ -32,7 +32,20 @@
             <tbody class="divide-y divide-gray-50">
                 @foreach($users as $user)
                 <tr class="hover:bg-gray-50/50 transition-colors">
-                    <td class="px-6 py-4 text-sm font-bold text-slate-900">{{ $user->name }}</td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="h-8 w-8 rounded-full overflow-hidden bg-gray-100 shrink-0">
+                                @if($user->profile_photo)
+                                    <img src="{{ asset('storage/' . $user->profile_photo) }}" class="h-full w-full object-cover">
+                                @else
+                                    <div class="h-full w-full flex items-center justify-center text-[10px] font-black bg-slate-900 text-white">
+                                        {{ substr($user->name, 0, 1) }}
+                                    </div>
+                                @endif
+                            </div>
+                            <span class="text-sm font-bold text-slate-900">{{ $user->name }}</span>
+                        </div>
+                    </td>
                     <td class="px-6 py-4 text-sm text-slate-500 font-medium">{{ $user->email }}</td>
                     <td class="px-6 py-4">
                         @if($user->role === 'admin')

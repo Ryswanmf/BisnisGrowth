@@ -5,12 +5,6 @@
 
 @section('content')
 <div class="max-w-4xl">
-    @if(session('success'))
-        <div class="mb-6 bg-green-100 border border-green-200 text-green-700 px-6 py-4 rounded-lg text-sm font-bold animate-pulse">
-            {{ session('success') }}
-        </div>
-    @endif
-
     <form action="{{ route('admin.footer.update') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
         @csrf
         @method('PUT')

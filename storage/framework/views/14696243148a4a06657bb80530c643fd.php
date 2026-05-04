@@ -101,6 +101,57 @@
             </div>
         </div>
     </div>
+
+    <!-- ROW 4: DOMAIN RANKING -->
+    <div class="bg-white p-8 md:p-10 rounded-lg shadow-sm border border-gray-100">
+        <div class="flex justify-between items-center mb-10">
+            <div>
+                <h4 class="text-sm font-black text-slate-900 uppercase tracking-widest mb-1">Peringkat Domain</h4>
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Berdasarkan akumulasi klik pada seluruh artikel</p>
+            </div>
+            <a href="<?php echo e(route('admin.domains.index')); ?>" class="text-[10px] font-black text-amber-600 uppercase tracking-widest hover:underline">Kelola Domain</a>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-gray-100">
+                        <th class="px-4 py-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Peringkat</th>
+                        <th class="px-4 py-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Domain</th>
+                        <th class="px-4 py-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">URL Dasar</th>
+                        <th class="px-4 py-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] text-right">Total Klik</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    <?php $__currentLoopData = $topDomains; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $domain): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <tr class="hover:bg-slate-50/50 transition-colors group">
+                            <td class="px-4 py-4">
+                                <span class="flex items-center justify-center h-6 w-6 rounded-full <?php echo e($index < 3 ? 'bg-amber-500 text-slate-900' : 'bg-slate-100 text-slate-400'); ?> text-[10px] font-black">
+                                    <?php echo e($index + 1); ?>
+
+                                </span>
+                            </td>
+                            <td class="px-4 py-4 text-sm font-bold text-slate-900 group-hover:text-amber-600 transition-colors">
+                                <?php echo e($domain->name); ?>
+
+                            </td>
+                            <td class="px-4 py-4">
+                                <code class="text-[10px] bg-slate-100 px-2 py-1 rounded text-slate-500 font-bold group-hover:bg-white transition-colors"><?php echo e($domain->url); ?></code>
+                            </td>
+                            <td class="px-4 py-4 text-right">
+                                <span class="text-sm font-black text-slate-900"><?php echo e(number_format($domain->hits_count ?? 0)); ?></span>
+                            </td>
+                        </tr>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    <?php if($topDomains->isEmpty()): ?>
+                        <tr>
+                            <td colspan="4" class="px-4 py-12 text-center text-gray-400 font-bold italic text-xs">Belum ada data domain.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <!-- Scripts Chart.js -->

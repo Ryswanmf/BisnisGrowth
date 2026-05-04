@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Domain extends Model
 {
-    protected $fillable = ['name', 'url', 'is_active'];
+    protected $fillable = ['name', 'url', 'click_count', 'is_active'];
 }

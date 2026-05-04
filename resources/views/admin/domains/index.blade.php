@@ -18,18 +18,13 @@
         </a>
     </div>
 
-    @if(session('success'))
-        <div class="bg-green-100 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm font-bold">
-            {{ session('success') }}
-        </div>
-    @endif
-
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-gray-50/50 border-b border-gray-100">
                     <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Nama Domain</th>
                     <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">URL Dasar</th>
+                    <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Total Hits</th>
                     <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Status</th>
                     <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] text-right">Aksi</th>
                 </tr>
@@ -42,6 +37,9 @@
                     </td>
                     <td class="px-6 py-4">
                         <code class="text-[10px] bg-slate-100 px-2 py-1 rounded text-slate-500 font-bold">{{ $domain->url }}</code>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="text-sm font-black text-slate-900">{{ number_format($domain->hits_count ?? 0) }}</span>
                     </td>
                     <td class="px-6 py-4">
                         @if($domain->is_active)

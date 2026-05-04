@@ -19,12 +19,6 @@
         </a>
     </div>
 
-    @if(session('success'))
-        <div class="bg-green-100 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm font-bold">
-            {{ session('success') }}
-        </div>
-    @endif
-
     <!-- Table Card -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">
@@ -79,10 +73,17 @@
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            @if($article->is_published)
-                                <span class="text-green-600 text-[10px] font-black uppercase tracking-widest bg-green-50 px-3 py-1 rounded-md">Published</span>
+                            @if($article->status === 'publish')
+                                @if($article->published_at && $article->published_at->isFuture())
+                                    <span class="text-amber-600 text-[10px] font-black uppercase tracking-widest bg-amber-50 px-3 py-1 rounded-md border border-amber-100">Scheduled</span>
+                                    <p class="text-[8px] text-amber-500 font-bold mt-1">{{ $article->published_at->format('d M, H:i') }}</p>
+                                @else
+                                    <span class="text-emerald-600 text-[10px] font-black uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-md border border-emerald-100">Published</span>
+                                @endif
+                            @elseif($article->status === 'private')
+                                <span class="text-indigo-600 text-[10px] font-black uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-md border border-indigo-100">Private</span>
                             @else
-                                <span class="text-gray-400 text-[10px] font-black uppercase tracking-widest bg-gray-50 px-3 py-1 rounded-md">Draft</span>
+                                <span class="text-gray-400 text-[10px] font-black uppercase tracking-widest bg-gray-50 px-3 py-1 rounded-md border border-gray-100">Draft</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 text-right">

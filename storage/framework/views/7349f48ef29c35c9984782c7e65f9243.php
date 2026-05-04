@@ -31,39 +31,67 @@
 <?php endif; ?>
      <?php $__env->endSlot(); ?>
 
-    <!-- Hero Section: Featured + Sidebar Grid -->
+     <?php $__env->slot('styles', null, []); ?> 
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+        <style>
+            .hero-swiper {
+                width: 100%;
+                height: 100%;
+            }
+            .swiper-pagination-bullet {
+                background: white !important;
+                opacity: 0.5;
+            }
+            .swiper-pagination-bullet-active {
+                background: #f59e0b !important;
+                opacity: 1;
+                width: 24px;
+                border-radius: 4px;
+            }
+        </style>
+     <?php $__env->endSlot(); ?>
+
+    <!-- Hero Section: Featured Slider + Sidebar Grid -->
     <section class="bg-white py-10 px-4">
         <div class="max-w-7xl mx-auto">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
-                <!-- Main Featured (Left) -->
-                <?php if($featuredArticle): ?>
-                <div class="lg:col-span-8">
-                    <a href="javascript:void(0)" onclick="trackArticleClick(<?php echo e($featuredArticle['id']); ?>, '<?php echo e(route('article.show', $featuredArticle['slug'])); ?>')" class="group relative block overflow-hidden rounded bg-slate-100 h-[300px] md:h-[500px] shadow-xl">
-                        <?php if($featuredArticle['image']): ?>
-                            <img src="<?php echo e(asset('storage/' . $featuredArticle['image'])); ?>" alt="<?php echo e($featuredArticle['title']); ?>" 
-                                 class="absolute inset-0 h-full w-full object-cover opacity-80 transition-transform duration-700 group-hover:scale-105"
-                                 loading="eager" fetchpriority="high" decoding="async">
-                        <?php endif; ?>
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
-                        
-                        <div class="absolute bottom-0 p-5 md:p-10 lg:p-12 max-w-2xl">
-                            <span class="inline-block px-3 py-1 mb-3 md:mb-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-burgundy-900 bg-amber-400 rounded">
-                                UTAMA • <?php echo e($featuredArticle['category_name']); ?>
+                <!-- Main Featured Slider (Left) -->
+                <div class="lg:col-span-8 overflow-hidden rounded shadow-xl">
+                    <div class="swiper hero-swiper">
+                        <div class="swiper-wrapper">
+                            <?php $__currentLoopData = $featuredArticles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fArt): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <div class="swiper-slide">
+                                <a href="javascript:void(0)" onclick="trackArticleClick(<?php echo e($fArt['id']); ?>, '<?php echo e(route('article.show', $fArt['slug'])); ?>')" class="group relative block bg-slate-100 h-[300px] md:h-[500px]">
+                                    <?php if($fArt['image']): ?>
+                                        <img src="<?php echo e(asset('storage/' . $fArt['image'])); ?>" alt="<?php echo e($fArt['title']); ?>" 
+                                             class="absolute inset-0 h-full w-full object-cover opacity-80 transition-transform duration-700 group-hover:scale-105"
+                                             loading="eager" fetchpriority="high" decoding="async">
+                                    <?php endif; ?>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
+                                    
+                                    <div class="absolute bottom-0 p-5 md:p-10 lg:p-12 max-w-2xl">
+                                        <span class="inline-block px-3 py-1 mb-3 md:mb-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-burgundy-900 bg-amber-400 rounded">
+                                            UTAMA • <?php echo e($fArt['category_name']); ?>
 
-                            </span>
-                            <h1 class="text-xl sm:text-2xl md:text-4xl font-black text-white mb-3 md:mb-4 leading-tight group-hover:text-amber-100 transition-colors">
-                                <?php echo e($featuredArticle['title']); ?>
+                                        </span>
+                                        <h2 class="text-xl sm:text-2xl md:text-4xl font-black text-white mb-3 md:mb-4 leading-tight group-hover:text-amber-100 transition-colors">
+                                            <?php echo e($fArt['title']); ?>
 
-                            </h1>
-                            <p class="text-gray-300 text-sm md:text-base line-clamp-2 font-medium opacity-90 hidden sm:block">
-                                <?php echo e($featuredArticle['excerpt']); ?>
+                                        </h2>
+                                        <p class="text-gray-300 text-sm md:text-base line-clamp-2 font-medium opacity-90 hidden sm:block">
+                                            <?php echo e($fArt['excerpt']); ?>
 
-                            </p>
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
-                    </a>
+                        <!-- Add Pagination -->
+                        <div class="swiper-pagination"></div>
+                    </div>
                 </div>
-                <?php endif; ?>
 
                 <!-- Sidebar Grid (Right) -->
                 <div class="lg:col-span-4 flex flex-col gap-6">
@@ -109,7 +137,7 @@
         <div class="max-w-7xl mx-auto">
             <div class="flex items-center justify-between mb-8">
                 <div class="flex flex-col">
-                    <span class="text-amber-600 text-[10px] font-black uppercase tracking-[0.3em] mb-1">Teranyar</span>
+                    <span class="text-amber-600 text-[10px] font-black uppercase tracking-[0.3em] mb-1">Terbaru</span>
                     <h2 class="text-2xl font-black text-slate-900 tracking-tight uppercase">Artikel Terbaru</h2>
                 </div>
             </div>
@@ -187,20 +215,41 @@
         .pagination-amber-theme nav div:last-child { display: flex !important; justify-content: center; }
     </style>
 
-    <script>
-        function trackArticleClick(id, url) {
-            fetch('/artikel/' + id + '/track-click', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
-                },
-                body: JSON.stringify({ type: 'article' })
-            }).finally(() => {
-                window.location.href = url;
+     <?php $__env->slot('scripts', null, []); ?> 
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const swiper = new Swiper('.hero-swiper', {
+                    loop: true,
+                    autoplay: {
+                        delay: 5000,
+                        disableOnInteraction: false,
+                    },
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    effect: 'fade',
+                    fadeEffect: {
+                        crossFade: true
+                    },
+                });
             });
-        }
-    </script>
+
+            function trackArticleClick(id, url) {
+                fetch('/artikel/' + id + '/track-click', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
+                    },
+                    body: JSON.stringify({ type: 'article' })
+                }).finally(() => {
+                    window.location.href = url;
+                });
+            }
+        </script>
+     <?php $__env->endSlot(); ?>
  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal4619374cef299e94fd7263111d0abc69)): ?>

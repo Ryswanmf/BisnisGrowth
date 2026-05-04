@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\PageView;
 use App\Models\Article;
 use App\Models\Comment;
+use App\Models\Domain;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -58,12 +59,18 @@ class TrafficController extends Controller
 
         $devices = PageView::select('device', DB::raw('count(*) as total'))->groupBy('device')->get();
         $topPages = PageView::select('url', DB::raw('count(*) as total'))->groupBy('url')->orderBy('total', 'desc')->take(5)->get();
+        $topDomains = Domain::leftJoin('domain_traffic_logs', 'domains.id', '=', 'domain_traffic_logs.domain_id')
+            ->select('domains.*', DB::raw('SUM(domain_traffic_logs.hits) as hits_count'))
+            ->groupBy('domains.id', 'domains.name', 'domains.url', 'domains.is_active', 'domains.click_count', 'domains.created_at', 'domains.updated_at')
+            ->orderBy('hits_count', 'desc')
+            ->take(10)
+            ->get();
 
         $seoData = Article::published()
             ->select('title', 'slug', 'canonical_url')
             ->paginate(10);
 
-        return view('admin.traffic.index', compact('stats', 'dailyTrend', 'weeklyTrend', 'monthlyTrend', 'devices', 'topPages', 'seoData'));
+        return view('admin.traffic.index', compact('stats', 'dailyTrend', 'weeklyTrend', 'monthlyTrend', 'devices', 'topPages', 'topDomains', 'seoData'));
     }
 
     private function getMetricsForDateRange($start, $end, $label)

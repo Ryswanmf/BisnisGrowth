@@ -6,6 +6,15 @@
     <title><?php echo $__env->yieldContent('title', 'Admin Dashboard'); ?> — BisnisGrowth</title>
     <link rel="icon" type="image/png" href="<?php echo e(asset('images/Logo_Bisnis_Growth.png')); ?>">
     
+    <script>
+        // Inisialisasi Dark Mode secepat mungkin untuk mencegah FOUC
+        if (localStorage.getItem('admin-dark-mode') === 'true' || (!('admin-dark-mode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
     <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
@@ -18,8 +27,128 @@
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
     
     <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
+
+    <style>
+        /* Smooth Theme Transition */
+        *, *::before, *::after {
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease !important;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.05); border-radius: 10px; }
+        .custom-scrollbar:hover::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); }
+        aside .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); }
+        aside .custom-scrollbar:hover::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+
+        /* SweetAlert2 Base Styles */
+        .swal2-popup { border-radius: 1rem !important; padding: 1.5rem !important; border: 1px solid rgba(0,0,0,0.05) !important; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.1) !important; }
+        .swal2-title { font-weight: 900 !important; font-family: 'Inter', sans-serif !important; letter-spacing: -0.025em !important; color: #0f172a !important; font-size: 1.25rem !important; }
+        .swal2-html-container { color: #64748b !important; font-weight: 500 !important; font-size: 0.875rem !important; }
+        .swal2-confirm { background: #f59e0b !important; color: #0f172a !important; border-radius: 0.5rem !important; font-weight: 900 !important; text-transform: uppercase !important; font-size: 10px !important; letter-spacing: 0.1em !important; padding: 0.8rem 1.5rem !important; border: none !important; }
+        .swal2-cancel { background: #f1f5f9 !important; color: #64748b !important; border-radius: 0.5rem !important; font-weight: 900 !important; text-transform: uppercase !important; font-size: 10px !important; letter-spacing: 0.1em !important; padding: 0.8rem 1.5rem !important; }
+        .swal2-icon { border-width: 2px !important; }
+        
+        /* Sleek Toast Style */
+        .swal2-toast { 
+            padding: 0.75rem 1rem !important; 
+            border-radius: 0.75rem !important; 
+            background: #ffffff !important; 
+            border: 1px solid rgba(245, 158, 11, 0.2) !important;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1) !important;
+        }
+        .swal2-toast .swal2-title { color: #0f172a !important; font-size: 0.875rem !important; margin-left: 0.5rem !important; }
+
+        /* DARK MODE - COMPREHENSIVE OVERRIDES */
+        .dark { color-scheme: dark; }
+        .dark .bg-gray-50, .dark .bg-slate-50 { background-color: #020617 !important; }
+        .dark .bg-white { background-color: #0f172a !important; }
+        .dark .bg-gray-50\/50 { background-color: rgba(15, 23, 42, 0.5) !important; }
+        
+        .dark .text-slate-900 { color: #f1f5f9 !important; }
+        .dark .text-gray-900 { color: #f8fafc !important; }
+        .dark .text-gray-600 { color: #94a3b8 !important; }
+        .dark .text-gray-500 { color: #64748b !important; }
+        .dark .text-gray-400 { color: #475569 !important; }
+        
+        .dark .border-gray-100, .dark .border-gray-200, .dark .border-gray-50 { border-color: rgba(255,255,255,0.05) !important; }
+        .dark header { background-color: #0f172a !important; border-bottom-color: rgba(255,255,255,0.05) !important; }
+        .dark .shadow-sm { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2) !important; }
+        
+        /* Table Dark Mode */
+        .dark table thead th { background-color: #1e293b !important; color: #94a3b8 !important; border-bottom: 1px solid rgba(255,255,255,0.05) !important; }
+        .dark table tbody tr { border-bottom: 1px solid rgba(255,255,255,0.05) !important; }
+        .dark table tbody tr:hover { background-color: rgba(255,255,255,0.02) !important; }
+        
+        /* Input Dark Mode */
+        .dark input, .dark select, .dark textarea { 
+            background-color: #1e293b !important; 
+            border: 1px solid rgba(255,255,255,0.1) !important; 
+            color: #f1f5f9 !important; 
+        }
+        .dark input::placeholder { color: #475569 !important; }
+        .dark input:focus, .dark select:focus, .dark textarea:focus { 
+            border-color: #f59e0b !important; 
+            outline: none !important;
+        }
+
+        /* Pagination & Buttons Dark Mode */
+        .dark .pagination nav span, .dark .pagination nav a { background-color: #1e293b !important; border-color: rgba(255,255,255,0.05) !important; color: #94a3b8 !important; }
+        .dark .pagination nav .active span { background-color: #f59e0b !important; color: #020617 !important; border-color: #f59e0b !important; }
+        
+        /* SweetAlert2 Dark Mode Override */
+        .dark .swal2-popup { background-color: #1e293b !important; color: #f1f5f9 !important; border: 1px solid rgba(255,255,255,0.1) !important; }
+        .dark .swal2-title { color: #f1f5f9 !important; }
+        .dark .swal2-html-container { color: #94a3b8 !important; }
+        .dark .swal2-toast { background-color: #0f172a !important; border: 1px solid rgba(245, 158, 11, 0.3) !important; }
+        .dark .swal2-toast .swal2-title { color: #f1f5f9 !important; }
+        .dark .swal2-cancel { background-color: #334155 !important; color: #cbd5e1 !important; }
+
+        /* Summernote Dark Mode */
+        .dark .note-editor { border-color: rgba(255,255,255,0.1) !important; background-color: #1e293b !important; }
+        .dark .note-toolbar { background-color: #1e293b !important; border-bottom-color: rgba(255,255,255,0.05) !important; }
+        .dark .note-btn { background-color: #334155 !important; border-color: rgba(255,255,255,0.05) !important; color: #f1f5f9 !important; }
+        .dark .note-editable { background-color: #1e293b !important; color: #f1f5f9 !important; }
+        .dark .note-statusbar { display: none !important; }
+
+        /* Prose / Content Dark Mode */
+        .dark .prose { color: #94a3b8 !important; max-width: none !important; }
+        .dark .prose h1, .dark .prose h2, .dark .prose h3, .dark .prose h4, .dark .prose strong { color: #f1f5f9 !important; }
+        .dark .prose a { color: #f59e0b !important; }
+
+        /* Misc */
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+        .dark .bg-gray-100 { background-color: rgba(255,255,255,0.05) !important; }
+    </style>
 </head>
 <body class="h-full font-sans antialiased text-gray-900 overflow-hidden" x-data="{ sidebarOpen: false }">
+    <!-- Light Minimalist Page Loader -->
+    <div id="page-loader" class="fixed inset-0 z-[9999] bg-white dark:bg-slate-900 flex flex-col items-center justify-center transition-all duration-700 ease-in-out">
+        <div class="relative">
+            <!-- Pulsing Circle Decoration -->
+            <div class="absolute inset-0 bg-amber-500/10 rounded-full animate-[ping_2.5s_infinite] scale-150"></div>
+            
+            <!-- Logo with Breathing & Fade Effect -->
+            <div class="relative w-20 h-20 animate-[pulse_2s_infinite]">
+                <img src="<?php echo e(asset('images/Logo_Bisnis_Growth.png')); ?>" alt="Loading..." class="w-full h-full object-contain opacity-90">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('page-loader');
+            setTimeout(() => {
+                if(loader) {
+                    loader.style.opacity = '0';
+                    loader.style.pointerEvents = 'none';
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                    }, 700);
+                }
+            }, 300);
+        });
+    </script>
 
     <div class="flex h-screen bg-gray-50 overflow-hidden">
         
@@ -34,14 +163,21 @@
             </div>
             <div class="p-4 bg-slate-950/30 border-t border-white/5 shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="h-8 w-8 bg-amber-500 rounded-md flex items-center justify-center text-slate-900 font-bold text-xs uppercase"><?php echo e(substr(Auth::user()->name, 0, 1)); ?></div>
+                    <div class="h-8 w-8 bg-amber-500 rounded-md flex items-center justify-center text-slate-900 font-bold text-xs uppercase overflow-hidden shadow-lg shadow-amber-500/20">
+                        <?php if(Auth::user()->profile_photo): ?>
+                            <img src="<?php echo e(asset('storage/' . Auth::user()->profile_photo)); ?>" class="h-full w-full object-cover">
+                        <?php else: ?>
+                            <?php echo e(substr(Auth::user()->name, 0, 1)); ?>
+
+                        <?php endif; ?>
+                    </div>
                     <div class="flex-1 min-w-0">
                         <p class="text-[10px] font-black uppercase tracking-widest text-white/40 mb-0.5">Admin Server</p>
                         <p class="text-xs font-bold truncate text-white"><?php echo e(Auth::user()->name); ?></p>
                     </div>
-                    <form action="<?php echo e(route('logout')); ?>" method="POST">
+                    <form id="logout-form-desktop" action="<?php echo e(route('logout')); ?>" method="POST">
                         <?php echo csrf_field(); ?>
-                        <button type="submit" class="text-white/40 hover:text-red-400 transition-colors p-1.5 hover:bg-white/5 rounded-md">
+                        <button type="button" onclick="logoutConfirm('logout-form-desktop')" class="text-white/40 hover:text-red-400 transition-colors p-1.5 hover:bg-white/5 rounded-md">
                             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                         </button>
                     </form>
@@ -67,10 +203,17 @@
                     <div class="p-4 bg-slate-950/30 border-t border-white/5 mt-auto">
                         <div class="flex items-center justify-between gap-3">
                             <div class="flex items-center gap-3">
-                                <div class="h-10 w-10 bg-amber-500 rounded-lg flex items-center justify-center text-slate-900 font-bold text-sm uppercase shadow-lg shadow-amber-500/20"><?php echo e(substr(Auth::user()->name, 0, 1)); ?></div>
+                                <div class="h-10 w-10 bg-amber-500 rounded-lg flex items-center justify-center text-slate-900 font-bold text-sm uppercase shadow-lg shadow-amber-500/20 overflow-hidden">
+                                    <?php if(Auth::user()->profile_photo): ?>
+                                        <img src="<?php echo e(asset('storage/' . Auth::user()->profile_photo)); ?>" class="h-full w-full object-cover">
+                                    <?php else: ?>
+                                        <?php echo e(substr(Auth::user()->name, 0, 1)); ?>
+
+                                    <?php endif; ?>
+                                </div>
                                 <div class="min-w-0"><p class="text-xs font-bold truncate text-white"><?php echo e(Auth::user()->name); ?></p><p class="text-[9px] font-black uppercase tracking-widest text-white/30">Administrator</p></div>
                             </div>
-                            <form action="<?php echo e(route('logout')); ?>" method="POST"><?php echo csrf_field(); ?><button type="submit" class="bg-red-500/10 text-red-500 p-2.5 rounded-lg hover:bg-red-500 hover:text-white transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg></button></form>
+                            <form id="logout-form-mobile" action="<?php echo e(route('logout')); ?>" method="POST"><?php echo csrf_field(); ?><button type="button" onclick="logoutConfirm('logout-form-mobile')" class="bg-red-500/10 text-red-500 p-2.5 rounded-lg hover:bg-red-500 hover:text-white transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg></button></form>
                         </div>
                     </div>
                 </div>
@@ -84,9 +227,22 @@
                 <div class="flex-1 px-6 flex justify-between items-center">
                     <h1 class="text-lg font-black text-slate-900 uppercase tracking-tight"><?php echo $__env->yieldContent('header', 'Dashboard'); ?></h1>
                     <div class="flex items-center">
-                        <div class="hidden md:flex flex-col items-end mr-6"><span class="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Server Time</span><span class="text-xs font-bold text-slate-900 leading-none"><?php echo e(now()->translatedFormat('d F Y')); ?></span></div>
-                        <div class="h-8 w-px bg-gray-100 mr-6 hidden md:block"></div>
+                        <div class="hidden md:flex flex-col items-end mr-6"><span class="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Server Time</span><span class="text-xs font-bold text-slate-900 dark:text-gray-300 leading-none"><?php echo e(now()->translatedFormat('d F Y')); ?></span></div>
+                        <div class="h-8 w-px bg-gray-100 dark:bg-white/5 mr-6 hidden md:block"></div>
                         
+                        <!-- Dark Mode Toggle -->
+                        <button @click="document.documentElement.classList.toggle('dark'); localStorage.setItem('admin-dark-mode', document.documentElement.classList.contains('dark'))" 
+                                class="bg-gray-50 dark:bg-slate-800 p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-amber-500 dark:hover:text-amber-400 transition-all border border-gray-100 dark:border-white/5 mr-3">
+                            <!-- Sun (Light Mode Icon) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 9h-1m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.95 16.95l.707.707M7.05 7.05l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                            </svg>
+                            <!-- Moon (Dark Mode Icon) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                            </svg>
+                        </button>
+
                         <!-- Notifications Dropdown -->
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open" class="bg-gray-50 p-2 rounded-md text-gray-400 hover:text-amber-500 transition-all relative border border-gray-100">
@@ -148,53 +304,171 @@
     </div>
 
     <style>
+        /* Smooth Theme Transition */
+        *, *::before, *::after {
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease !important;
+        }
+
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.05); border-radius: 10px; }
         .custom-scrollbar:hover::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); }
         aside .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); }
         aside .custom-scrollbar:hover::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
-        .swal2-popup { border-radius: 1.5rem !important; padding: 2rem !important; }
-        .swal2-title { font-weight: 900 !important; font-family: 'Inter', sans-serif !important; letter-spacing: -0.025em !important; }
-        .swal2-confirm { background-color: #0f172a !important; border-radius: 0.75rem !important; font-weight: 900 !important; text-transform: uppercase !important; font-size: 10px !important; letter-spacing: 0.1em !important; padding: 1rem 2rem !important; }
-        .swal2-cancel { background-color: #f1f5f9 !important; color: #64748b !important; border-radius: 0.75rem !important; font-weight: 900 !important; text-transform: uppercase !important; font-size: 10px !important; letter-spacing: 0.1em !important; padding: 1rem 2rem !important; }
+
+        /* SweetAlert2 Base Styles */
+        .swal2-popup { border-radius: 1rem !important; padding: 1.5rem !important; border: 1px solid rgba(0,0,0,0.05) !important; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.1) !important; }
+        .swal2-title { font-weight: 900 !important; font-family: 'Inter', sans-serif !important; letter-spacing: -0.025em !important; color: #0f172a !important; font-size: 1.25rem !important; }
+        .swal2-html-container { color: #64748b !important; font-weight: 500 !important; font-size: 0.875rem !important; }
+        .swal2-confirm { background: #f59e0b !important; color: #0f172a !important; border-radius: 0.5rem !important; font-weight: 900 !important; text-transform: uppercase !important; font-size: 10px !important; letter-spacing: 0.1em !important; padding: 0.8rem 1.5rem !important; border: none !important; }
+        .swal2-cancel { background: #f1f5f9 !important; color: #64748b !important; border-radius: 0.5rem !important; font-weight: 900 !important; text-transform: uppercase !important; font-size: 10px !important; letter-spacing: 0.1em !important; padding: 0.8rem 1.5rem !important; }
+        .swal2-icon { border-width: 2px !important; }
+        
+        /* Sleek Toast Style */
+        .swal2-toast { 
+            padding: 0.75rem 1rem !important; 
+            border-radius: 0.75rem !important; 
+            background: #ffffff !important; 
+            border: 1px solid rgba(245, 158, 11, 0.2) !important;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1) !important;
+        }
+        .swal2-toast .swal2-title { color: #0f172a !important; font-size: 0.875rem !important; margin-left: 0.5rem !important; }
+
+        /* DARK MODE - COMPREHENSIVE OVERRIDES */
+        .dark { color-scheme: dark; }
+        .dark .bg-gray-50, .dark .bg-slate-50 { background-color: #020617 !important; }
+        .dark .bg-white { background-color: #0f172a !important; }
+        .dark .bg-gray-50\/50 { background-color: rgba(15, 23, 42, 0.5) !important; }
+        
+        .dark .text-slate-900 { color: #f1f5f9 !important; }
+        .dark .text-gray-900 { color: #f8fafc !important; }
+        .dark .text-gray-600 { color: #94a3b8 !important; }
+        .dark .text-gray-500 { color: #64748b !important; }
+        .dark .text-gray-400 { color: #475569 !important; }
+        
+        .dark .border-gray-100, .dark .border-gray-200, .dark .border-gray-50 { border-color: rgba(255,255,255,0.05) !important; }
+        .dark header { background-color: #0f172a !important; border-bottom-color: rgba(255,255,255,0.05) !important; }
+        .dark .shadow-sm { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2) !important; }
+        
+        /* Table Dark Mode */
+        .dark table thead th { background-color: #1e293b !important; color: #94a3b8 !important; border-bottom: 1px solid rgba(255,255,255,0.05) !important; }
+        .dark table tbody tr { border-bottom: 1px solid rgba(255,255,255,0.05) !important; }
+        .dark table tbody tr:hover { background-color: rgba(255,255,255,0.02) !important; }
+        
+        /* Input Dark Mode */
+        .dark input, .dark select, .dark textarea { 
+            background-color: #1e293b !important; 
+            border: 1px solid rgba(255,255,255,0.1) !important; 
+            color: #f1f5f9 !important; 
+        }
+        .dark input::placeholder { color: #475569 !important; }
+        .dark input:focus, .dark select:focus, .dark textarea:focus { 
+            border-color: #f59e0b !important; 
+            outline: none !important;
+        }
+
+        /* Pagination & Buttons Dark Mode */
+        .dark .pagination nav span, .dark .pagination nav a { background-color: #1e293b !important; border-color: rgba(255,255,255,0.05) !important; color: #94a3b8 !important; }
+        .dark .pagination nav .active span { background-color: #f59e0b !important; color: #020617 !important; border-color: #f59e0b !important; }
+        
+        /* SweetAlert2 Dark Mode */
+        .dark .swal2-popup { background-color: #1e293b !important; color: #f1f5f9 !important; border: 1px solid rgba(255,255,255,0.1) !important; }
+        .dark .swal2-title { color: #f1f5f9 !important; }
+        .dark .swal2-html-container { color: #94a3b8 !important; }
+        .dark .swal2-toast { background-color: #0f172a !important; border: 1px solid rgba(245, 158, 11, 0.3) !important; }
+        .dark .swal2-toast .swal2-title { color: #f1f5f9 !important; }
+        .dark .swal2-cancel { background-color: #334155 !important; color: #cbd5e1 !important; }
+
+        /* Summernote Dark Mode */
+        .dark .note-editor { border-color: rgba(255,255,255,0.1) !important; background-color: #1e293b !important; }
+        .dark .note-toolbar { background-color: #1e293b !important; border-bottom-color: rgba(255,255,255,0.05) !important; }
+        .dark .note-btn { background-color: #334155 !important; border-color: rgba(255,255,255,0.05) !important; color: #f1f5f9 !important; }
+        .dark .note-editable { background-color: #1e293b !important; color: #f1f5f9 !important; }
+        .dark .note-statusbar { display: none !important; }
+
+        /* Prose / Content Dark Mode */
+        .dark .prose { color: #94a3b8 !important; max-width: none !important; }
+        .dark .prose h1, .dark .prose h2, .dark .prose h3, .dark .prose h4, .dark .prose strong { color: #f1f5f9 !important; }
+        .dark .prose a { color: #f59e0b !important; }
     </style>
 
     <?php echo $__env->yieldPushContent('scripts'); ?>
 
     <script>
         // SweetAlert2 Configuration
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-        });
+        const getToastConfig = () => {
+            const isDark = document.documentElement.classList.contains('dark');
+            return {
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                background: isDark ? '#0f172a' : '#ffffff',
+                color: isDark ? '#f1f5f9' : '#0f172a',
+                iconColor: '#f59e0b',
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            };
+        };
 
         // Listen for Laravel Flash Messages
         <?php if(session('success')): ?>
-            Toast.fire({ icon: 'success', title: '<?php echo e(session('success')); ?>', background: '#0f172a', color: '#fff', iconColor: '#fbbf24' });
+            Swal.mixin(getToastConfig()).fire({ icon: 'success', title: '<?php echo e(session('success')); ?>' });
         <?php endif; ?>
 
         <?php if(session('error')): ?>
-            Swal.fire({ icon: 'error', title: 'Ups!', text: '<?php echo e(session('error')); ?>', confirmButtonText: 'OKE' });
+            Swal.fire({ 
+                icon: 'error', 
+                title: 'Terjadi Kesalahan', 
+                text: '<?php echo e(session('error')); ?>', 
+                confirmButtonText: 'TUTUP',
+                background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#ffffff',
+                color: document.documentElement.classList.contains('dark') ? '#f1f5f9' : '#0f172a',
+            });
         <?php endif; ?>
 
         // Global Confirm Delete
         window.confirmDelete = function(formId) {
+            const isDark = document.documentElement.classList.contains('dark');
             Swal.fire({
                 title: 'Hapus Data?',
-                text: "Data yang dihapus tidak dapat dipulihkan kembali!",
+                text: "Tindakan ini tidak dapat dibatalkan!",
                 icon: 'warning',
+                iconColor: '#ef4444',
                 showCancelButton: true,
-                confirmButtonText: 'Ya, Hapus Permanen',
+                confirmButtonText: 'Ya, Hapus',
                 cancelButtonText: 'Batal',
-                reverseButtons: true
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: isDark ? '#334155' : '#f1f5f9',
+                reverseButtons: true,
+                background: isDark ? '#1e293b' : '#ffffff',
+                color: isDark ? '#f1f5f9' : '#0f172a',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(formId).submit();
+                }
+            })
+        }
+
+        // Global Confirm Logout
+        window.logoutConfirm = function(formId) {
+            const isDark = document.documentElement.classList.contains('dark');
+            Swal.fire({
+                title: 'Ingin Keluar?',
+                text: "Sesi Anda akan segera berakhir.",
+                icon: 'question',
+                iconColor: '#f59e0b',
+                showCancelButton: true,
+                confirmButtonText: 'YA, KELUAR',
+                cancelButtonText: 'BATAL',
+                confirmButtonColor: '#f59e0b',
+                cancelButtonColor: isDark ? '#334155' : '#f1f5f9',
+                reverseButtons: true,
+                background: isDark ? '#1e293b' : '#ffffff',
+                color: isDark ? '#f1f5f9' : '#0f172a',
             }).then((result) => {
                 if (result.isConfirmed) {
                     document.getElementById(formId).submit();

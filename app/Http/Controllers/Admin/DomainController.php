@@ -10,7 +10,12 @@ class DomainController extends Controller
 {
     public function index()
     {
-        $domains = Domain::latest()->paginate(10);
+        $domains = Domain::leftJoin('domain_traffic_logs', 'domains.id', '=', 'domain_traffic_logs.domain_id')
+            ->select('domains.*', \Illuminate\Support\Facades\DB::raw('SUM(domain_traffic_logs.hits) as hits_count'))
+            ->groupBy('domains.id', 'domains.name', 'domains.url', 'domains.is_active', 'domains.click_count', 'domains.created_at', 'domains.updated_at')
+            ->latest('domains.created_at')
+            ->paginate(10);
+            
         return view('admin.domains.index', compact('domains'));
     }
 

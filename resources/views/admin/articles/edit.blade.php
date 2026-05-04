@@ -128,12 +128,19 @@
             <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100 space-y-6">
                 <button type="submit" class="w-full bg-amber-500 text-slate-900 py-4 rounded-lg font-black text-sm uppercase tracking-widest hover:bg-amber-400 shadow-lg">Perbarui Artikel</button>
 
-                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                    <span class="text-xs font-bold text-slate-900 uppercase tracking-widest">Status Publik</span>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" name="is_published" value="1" class="sr-only peer" {{ $article->is_published ? 'checked' : '' }}>
-                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-amber-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
-                    </label>
+                <div>
+                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Status Artikel</label>
+                    <select name="status" class="w-full bg-gray-50 border-none rounded-lg px-4 py-3 text-xs font-bold focus:ring-2 focus:ring-amber-500">
+                        <option value="publish" {{ $article->status === 'publish' ? 'selected' : '' }}>Terbitkan (Publish)</option>
+                        <option value="draft" {{ $article->status === 'draft' ? 'selected' : '' }}>Draft (Simpan Saja)</option>
+                        <option value="private" {{ $article->status === 'private' ? 'selected' : '' }}>Privat (Hanya Admin)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Jadwal Tayang (Opsional)</label>
+                    <input type="datetime-local" name="published_at" value="{{ $article->published_at ? $article->published_at->format('Y-m-d\TH:i') : '' }}" class="w-full bg-gray-50 border-none rounded-lg px-4 py-3 text-xs font-bold focus:ring-2 focus:ring-amber-500">
+                    <p class="mt-1 text-[8px] text-gray-400 font-medium italic">* Kosongkan untuk terbit instan. Isi waktu masa depan untuk penjadwalan.</p>
                 </div>
 
                 <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">

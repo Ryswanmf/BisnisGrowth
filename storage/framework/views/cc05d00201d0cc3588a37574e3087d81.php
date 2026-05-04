@@ -77,6 +77,13 @@ unset($__defined_vars, $__key, $__value); ?>
 }
 </script>
 
+<?php if($jsonLd): ?>
+<script type="application/ld+json">
+<?php echo json_encode($jsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT); ?>
+
+</script>
+<?php endif; ?>
+
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="<?php echo e(url()->current()); ?>">

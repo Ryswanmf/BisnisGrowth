@@ -18,13 +18,6 @@
         </a>
     </div>
 
-    <?php if(session('success')): ?>
-        <div class="bg-green-100 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm font-bold">
-            <?php echo e(session('success')); ?>
-
-        </div>
-    <?php endif; ?>
-
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
         <table class="w-full text-left border-collapse">
             <thead>

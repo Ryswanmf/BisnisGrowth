@@ -14,9 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\TrafficTracker::class,
             \App\Http\Middleware\ForceHttps::class,
+            \App\Http\Middleware\SecurityHeaders::class,
         ]);
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
+            'honeypot' => \App\Http\Middleware\HoneypotMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

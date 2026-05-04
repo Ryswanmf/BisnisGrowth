@@ -1,7 +1,7 @@
 # BisnisGrowth - Akselerator Pertumbuhan UMKM Digital Indonesia
 
-![Laravel](https://img.shields.io/badge/Framework-Laravel_13-FF2D20?style=for-the-badge&logo=laravel)
-![PHP](https://img.shields.io/badge/Language-PHP_8.3+-777BB4?style=for-the-badge&logo=php)
+![Laravel](https://img.shields.io/badge/Framework-Laravel_12-FF2D20?style=for-the-badge&logo=laravel)
+![PHP](https://img.shields.io/badge/Language-PHP_8.2+-777BB4?style=for-the-badge&logo=php)
 ![MySQL](https://img.shields.io/badge/Database-MySQL-4479A1?style=for-the-badge&logo=mysql)
 ![Vite](https://img.shields.io/badge/Build-Vite-646CFF?style=for-the-badge&logo=vite)
 ![TailwindCSS](https://img.shields.io/badge/Styling-Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css)
@@ -14,50 +14,47 @@
 
 ## 2. Technology Stack
 Proyek ini dibangun menggunakan teknologi modern untuk memastikan performa, keamanan, dan skalabilitas tinggi:
-*   **Backend Framework**: Laravel 13 (Versi Terbaru) dengan arsitektur yang solid.
-*   **Core Language**: PHP 8.3+ untuk eksekusi kode yang cepat dan efisien.
+*   **Backend Framework**: Laravel 12 (Updated) dengan arsitektur yang solid.
+*   **Core Language**: PHP 8.2+ untuk eksekusi kode yang cepat dan efisien.
 *   **Database**: MySQL sebagai sistem penyimpanan data relasional.
 *   **Frontend**: Blade Templates dikombinasikan dengan **Tailwind CSS** untuk desain antarmuka yang modern dan **Alpine JS** untuk komponen interaktif.
-*   **Media Processing**: Intervention Image (Laravel version) untuk manipulasi gambar dinamis.
+*   **Media Processing**: Native PHP GD dengan optimasi otomatis ke format WebP.
 *   **Build Tool**: Vite untuk manajemen aset frontend yang ringan dan cepat.
 
 ## 3. Fitur Unggulan Sistem
 
 ### A. SEO & Konten Dinamis Tingkat Lanjut
 Website ini memiliki "Mesin SEO" mandiri yang bekerja secara otomatis:
-*   **Recursive Spintax Engine**: Mendukung variasi konten kompleks `{A|{B|C}}` pada Judul, Ringkasan, dan Meta Tag untuk memastikan konten tetap unik di mata Search Engine.
-*   **Smart Internal Linking**: Sistem otomatis yang mengubah kata kunci tertentu dalam artikel menjadi tautan aktif ke halaman relevan, meningkatkan struktur tautan internal tanpa input manual berulang.
-*   **Dynamic OG Image**: Generator gambar otomatis yang menciptakan poster profesional (berisi judul & kategori) saat link artikel dibagikan ke WhatsApp, Facebook, atau Twitter.
-*   **Keyword Injection**: Fitur shortcode `[keyword]` untuk menyisipkan variasi kata kunci acak dari pool yang telah ditentukan di dalam isi konten.
+*   **Recursive Spintax Engine**: Mendukung variasi konten kompleks `{A|{B|C}}` pada Judul, Ringkasan, dan Meta Tag.
+*   **Smart Internal Linking**: Sistem otomatis yang mengubah kata kunci menjadi tautan aktif berbasis cache.
+*   **Dynamic OG Image**: Generator gambar otomatis (berisi judul & kategori) untuk media sosial.
+*   **Keyword Injection**: Fitur shortcode `[keyword]` untuk menyisipkan variasi kata kunci acak dari pool yang dinamis.
 
-### B. Progressive Web App (PWA) & Mobile First
-Pengalaman pengguna mobile yang dioptimalkan sepenuhnya:
-*   **Installable**: Pengguna dapat menambahkan BisnisGrowth ke layar utama HP mereka tanpa melalui Play Store.
-*   **Offline-First Cache**: Pemuatan aset statis yang sangat cepat melalui *Service Worker*, menghemat kuota pengunjung.
-*   **Sharp & Minimalist Design**: Estetika desain premium dengan radius sudut yang minimalis (Sharp Look) untuk tampilan profesional tingkat perusahaan (*Enterprise-grade*).
+### B. Analytics & Domain Performance
+Pantau pertumbuhan melalui data traffic riil:
+*   **Domain Ranking System**: Pelacakan peringkat domain berdasarkan akumulasi **Hits/PageViews** secara real-time.
+*   **Top Domain Card**: Ringkasan performa domain teratas langsung di barisan statistik utama Dashboard Admin.
+*   **Conversion Tracking**: Melacak metrik krusial seperti Klik WhatsApp, Klik Telepon, dan Jumlah Pembaca unik per artikel.
+*   **Elegant Activity Charts**: Grafik tren aktivitas dengan efek gradien untuk monitoring harian, mingguan, dan bulanan.
 
 ### C. Portal Wawasan & Direktori Bisnis UMKM
 Manajemen informasi yang terorganisir secara elegan:
-*   **Unique Business Profile**: Halaman profil khusus untuk setiap bisnis UMKM dengan manajemen tautan (*links-in-bio*) dan pelacakan kunjungan.
-*   **Multi-Visual Gallery**: Sistem grid gambar yang sejajar sempurna (*perfectly aligned*) untuk artikel edukasi bisnis.
-*   **Instant Reading Progress**: Progress bar visual pada bagian atas artikel untuk meningkatkan pengalaman membaca pengunjung.
+*   **Unique Business Profile**: Halaman profil khusus dengan manajemen tautan (*links-in-bio*).
+*   **Multi-Visual Gallery**: Sistem grid gambar yang sejajar sempurna untuk artikel edukasi bisnis.
+*   **Instant Reading Progress**: Progress bar visual untuk meningkatkan pengalaman membaca pengunjung.
 
-### D. Analytics & Dashboard Admin Premium
-Pantau pertumbuhan melalui data konversi riil:
-*   **Elegant Activity Charts**: Grafik tren aktivitas dengan efek gradien dan interaksi modern untuk memantau performa konten secara harian, mingguan, dan bulanan.
-*   **Conversion Tracking**: Melacak metrik krusial seperti Klik WhatsApp, Klik Telepon, dan Jumlah Pembaca unik per artikel.
-*   **Unified Admin Panel**: Manajemen terpusat untuk Artikel, Kategori, Domain, Kata Kunci, Pesan Kontak, dan Pengaturan Situs.
-
-## 4. Optimasi Media & Deployment (cPanel Ready)
-Dirancang untuk kemudahan pengelolaan di lingkungan *Shared Hosting*:
-*   **WebP & Auto-Resize**: Konversi otomatis unggahan ke format WebP (ringan) dan penyesuaian dimensi gambar secara otomatis.
-*   **Public Storage Architecture**: Struktur penyimpanan yang menghindari kendala *symbolic link* pada cPanel.
-*   **Security Guard**: Folder unggahan dilindungi `.htaccess` untuk mencegah eksekusi skrip berbahaya.
+## 4. Keamanan & Optimasi cPanel (Deployment Ready)
+Dirancang khusus untuk performa maksimal dan keamanan tinggi di lingkungan *Shared Hosting*:
+*   **Security Headers Engine**: Perlindungan bawaan terhadap *Clickjacking*, *MIME Sniffing*, dan *XSS* melalui header HTTP otomatis.
+*   **Brute Force Protection**: Rate Limiting pada akses login admin (maksimal 5 percobaan per menit).
+*   **Anti-Spam Honeypot**: Proteksi formulir Kontak dan Komentar dari bot spam tanpa mengganggu user asli.
+*   **Native WebP Optimization**: Konversi otomatis unggahan ke WebP dan auto-resize tanpa memerlukan library pihak ketiga yang berat.
+*   **Direct Uploads Architecture**: Menggunakan folder `public/uploads` secara langsung, menghindari kendala *symbolic link* di cPanel.
 
 ## 5. Standar SEO Internasional
 *   **Schema Markup (JSON-LD)**: Struktur data otomatis agar artikel muncul dengan Rich Snippets di Google.
 *   **Sitemap & Robots Control**: File `sitemap.xml` dinamis yang mencakup seluruh Artikel dan Profil Bisnis.
-*   **Automated Metadata**: Jika dikosongkan, sistem akan otomatis menghasilkan Meta Description dari isi artikel yang sudah diproses spintax-nya.
+*   **Automated Metadata**: Generasi otomatis Meta Description dari konten yang diproses spintax.
 
 ---
 Dokumentasi ini mencerminkan dedikasi kami dalam membangun infrastruktur digital yang tangguh dan cerdas bagi masa depan UMKM Indonesia.

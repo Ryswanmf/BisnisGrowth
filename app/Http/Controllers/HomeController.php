@@ -15,20 +15,22 @@ class HomeController extends Controller
 
         // Ambil data mentah (Array) dari cache
         $data = Cache::remember($cacheKey, 900, function() {
-            $featured = Article::published()->where('is_featured', true)->latest('published_at')->first();
+            $featuredArticles = Article::published()->where('is_featured', true)->latest('published_at')->take(5)->get();
+            $featuredIds = $featuredArticles->pluck('id');
             
             $sidebar = Article::published()
-                ->when($featured, fn($q) => $q->where('id', '!=', $featured->id))
+                ->whereNotIn('id', $featuredIds)
                 ->latest('published_at')->take(3)->get();
+            $sidebarIds = $sidebar->pluck('id');
 
             $latestPaginator = Article::published()
-                ->when($featured, fn($q) => $q->where('id', '!=', $featured->id))
-                ->whereNotIn('id', $sidebar->pluck('id'))
+                ->whereNotIn('id', $featuredIds)
+                ->whereNotIn('id', $sidebarIds)
                 ->latest('published_at')->paginate(8);
 
             // Ubah semua objek menjadi array mentah agar aman di cache
             return [
-                'featuredArticle' => $featured ? $featured->toArray() : null,
+                'featuredArticles' => $featuredArticles->toArray(),
                 'sidebarArticles' => $sidebar->toArray(),
                 'articlesData' => $latestPaginator->items() ? json_decode(json_encode($latestPaginator->items()), true) : [], 
                 'links' => $latestPaginator->links()->toHtml()
@@ -36,7 +38,7 @@ class HomeController extends Controller
         });
 
         // Validasi Ekstra: Jika data rusak, paksa hapus
-        if (!is_array($data) || (isset($data['featuredArticle']) && !is_array($data['featuredArticle']) && !is_null($data['featuredArticle']))) {
+        if (!is_array($data) || !isset($data['featuredArticles']) || !is_array($data['featuredArticles'])) {
             Cache::forget($cacheKey);
             return redirect()->refresh();
         }

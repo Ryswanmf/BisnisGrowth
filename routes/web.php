@@ -31,13 +31,14 @@ Route::get('/p/{page:slug}', function (\App\Models\Page $page) {
 
 // Articles
 Route::get('/artikel', [App\Http\Controllers\ArticleController::class, 'index'])->name('article.index');
+Route::get('/artikel-live-search', [App\Http\Controllers\ArticleController::class, 'liveSearch'])->name('article.live-search');
 Route::get('/artikel/{article:slug}', [App\Http\Controllers\ArticleController::class, 'show'])->name('article.show');
 Route::post('/artikel/{article}/track-click', [App\Http\Controllers\ArticleController::class, 'trackClick'])->name('article.track-click');
 Route::post('/artikel/{article}/comment', [App\Http\Controllers\ArticleController::class, 'storeComment'])->name('article.comment.store');
 
 // Contact
 Route::get('/kontak', [App\Http\Controllers\ContactController::class, 'index'])->name('contact');
-Route::post('/kontak', [App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');
+Route::post('/kontak', [App\Http\Controllers\ContactController::class, 'store'])->name('contact.store')->middleware('honeypot');
 
 // Auth
 Route::get('/login', [App\Http\Controllers\AuthController::class, 'showLogin'])->name('login');

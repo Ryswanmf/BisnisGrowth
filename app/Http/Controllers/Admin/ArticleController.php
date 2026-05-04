@@ -35,8 +35,7 @@ class ArticleController extends Controller
             case 'image/png':  $image = imagecreatefrompng($file->getRealPath()); break;
             case 'image/webp': $image = imagecreatefromwebp($file->getRealPath()); break;
             default: 
-                $file->move($directory, $filename);
-                return 'uploads/articles/' . $filename;
+                return null; // Tolak jika bukan format yang didukung
         }
 
         // Resize jika lebar > 1200px
@@ -85,15 +84,21 @@ class ArticleController extends Controller
             'content' => 'required',
             'category_name' => 'required|string|max:100',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'status' => 'required|in:publish,draft,private',
+            'published_at' => 'nullable|date',
         ]);
 
         $data = $request->all();
         $data['user_id'] = auth()->id();
         $data['slug'] = Str::slug($request->title);
-        $data['is_published'] = $request->has('is_published');
+        $data['status'] = $request->status;
+        $data['is_published'] = ($request->status === 'publish'); // Sinkronisasi lama
         $data['is_featured'] = $request->has('is_featured');
         
-        if ($data['is_published'] && !$request->published_at) $data['published_at'] = now();
+        // Handle publishing date
+        if ($request->status === 'publish' && !$request->published_at) {
+            $data['published_at'] = now();
+        }
 
         foreach(['image', 'image_2', 'image_3', 'image_4'] as $imgField) {
             if ($request->hasFile($imgField)) {
@@ -124,12 +129,20 @@ class ArticleController extends Controller
             'content' => 'required',
             'category_name' => 'required|string|max:100',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'status' => 'required|in:publish,draft,private',
+            'published_at' => 'nullable|date',
         ]);
 
         $data = $request->all();
         if ($article->title !== $request->title) $data['slug'] = Str::slug($request->title);
-        $data['is_published'] = $request->has('is_published');
+        $data['status'] = $request->status;
+        $data['is_published'] = ($request->status === 'publish'); // Sinkronisasi lama
         $data['is_featured'] = $request->has('is_featured');
+
+        // Handle publishing date
+        if ($request->status === 'publish' && !$request->published_at && !$article->published_at) {
+            $data['published_at'] = now();
+        }
 
         foreach(['image', 'image_2', 'image_3', 'image_4'] as $imgField) {
             if ($request->hasFile($imgField)) {

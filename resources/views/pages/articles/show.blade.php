@@ -1,16 +1,38 @@
 <x-app-layout>
     <x-slot name="seo">
+        @php
+            $currentHost = request()->getHost();
+            $activeDomain = \App\Models\Domain::where('url', 'LIKE', "%{$currentHost}%")->where('is_active', true)->first();
+            $canonicalUrl = $activeDomain 
+                ? rtrim($activeDomain->url, '/') . '/artikel/' . $article->slug 
+                : route('article.show', $article->slug);
+        @endphp
         <x-seo-head 
             :title="$article->seo_title"
             :description="$article->seo_description"
+            :canonical="$canonicalUrl"
             :ogImage="route('og.image', ['type' => 'article', 'id' => $article->id])"
             :jsonLd="[
                 '@context' => 'https://schema.org',
                 '@type' => 'NewsArticle',
                 'headline' => $article->title,
+                'description' => $article->seo_description,
                 'image' => [$article->image ? asset($article->image) : asset('images/Logo_Bisnis_Growth.png')],
                 'datePublished' => ($article->published_at ?: $article->created_at)->toIso8601String(),
-                'author' => ['@type' => 'Organization', 'name' => 'BisnisGrowth Team']
+                'dateModified' => $article->updated_at->toIso8601String(),
+                'author' => [
+                    '@type' => 'Person',
+                    'name' => $article->user ? $article->user->name : 'Redaksi BisnisGrowth',
+                    'url' => url('/')
+                ],
+                'publisher' => [
+                    '@type' => 'Organization',
+                    'name' => 'BisnisGrowth',
+                    'logo' => [
+                        '@type' => 'ImageObject',
+                        'url' => asset('images/Logo_Bisnis_Growth.png')
+                    ]
+                ]
             ]"
         />
         <meta name="keywords" content="{{ $article->shortKeywords->flatMap(fn($p) => preg_split('/[,\n\r]+/', $p->description))->filter()->take(20)->implode(', ') }}">
@@ -47,8 +69,12 @@
 
                             <div class="flex flex-wrap items-center gap-x-8 gap-y-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] border-t border-gray-100 pt-8">
                                 <div class="flex items-center gap-3">
-                                    <div class="h-10 w-10 bg-slate-900 rounded flex items-center justify-center text-white text-xs font-black shadow-xl">
-                                        {{ $article->user ? substr($article->user->name, 0, 1) : 'B' }}
+                                    <div class="h-10 w-10 bg-slate-900 rounded overflow-hidden flex items-center justify-center text-white text-xs font-black shadow-xl">
+                                        @if($article->user && $article->user->profile_photo)
+                                            <img src="{{ asset('storage/' . $article->user->profile_photo) }}" class="h-full w-full object-cover">
+                                        @else
+                                            {{ $article->user ? substr($article->user->name, 0, 1) : 'B' }}
+                                        @endif
                                     </div>
                                     <div class="flex flex-col gap-0.5">
                                         <span class="text-slate-900">{{ $article->user ? $article->user->name : 'Redaksi BisnisGrowth' }}</span>
@@ -115,6 +141,34 @@
 
                             <div class="article-content-wrapper">
                                 {!! $article->content !!}
+                            </div>
+                        </div>
+
+                        <!-- Author Bio Box -->
+                        <div class="mt-20 p-8 md:p-12 bg-slate-900 rounded-2xl text-white relative overflow-hidden group">
+                            <div class="absolute -right-10 -bottom-10 h-40 w-40 bg-amber-500/10 rounded-full blur-3xl group-hover:bg-amber-500/20 transition-all duration-700"></div>
+                            <div class="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-12 text-center md:text-left">
+                                <div class="h-24 w-24 md:h-32 md:w-32 bg-amber-500 rounded-2xl overflow-hidden shrink-0 shadow-2xl shadow-amber-500/20 rotate-3 group-hover:rotate-0 transition-transform duration-500">
+                                    @if($article->user && $article->user->profile_photo)
+                                        <img src="{{ asset('storage/' . $article->user->profile_photo) }}" class="h-full w-full object-cover">
+                                    @else
+                                        <div class="h-full w-full flex items-center justify-center text-3xl font-black text-slate-900">
+                                            {{ $article->user ? substr($article->user->name, 0, 1) : 'B' }}
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="flex-1">
+                                    <span class="inline-block px-3 py-1 bg-amber-500 text-slate-900 text-[10px] font-black uppercase tracking-widest rounded mb-4">Penulis Terverifikasi</span>
+                                    <h3 class="text-2xl font-black mb-3">{{ $article->user ? $article->user->name : 'Redaksi BisnisGrowth' }}</h3>
+                                    <p class="text-slate-400 text-sm md:text-base leading-relaxed mb-6 font-medium">
+                                        {{ $article->user && $article->user->role === 'admin' ? 'Administrator utama dan pakar strategi bisnis di BisnisGrowth. Fokus dalam membantu UMKM Indonesia naik kelas melalui literasi digital dan keuangan.' : 'Kontributor ahli di BisnisGrowth yang berdedikasi memberikan wawasan praktis bagi para pelaku usaha lokal.' }}
+                                    </p>
+                                    <div class="flex flex-wrap justify-center md:justify-start gap-4">
+                                        <a href="#" class="text-[10px] font-black uppercase tracking-widest text-amber-500 hover:text-white transition-colors">Lihat Semua Artikel</a>
+                                        <span class="text-slate-800">•</span>
+                                        <a href="#" class="text-[10px] font-black uppercase tracking-widest text-amber-500 hover:text-white transition-colors">Ikuti Penulis</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

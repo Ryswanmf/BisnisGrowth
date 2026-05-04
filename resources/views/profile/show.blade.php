@@ -48,6 +48,33 @@
     </style>
 </head>
 <body class="font-sans antialiased text-gray-900 min-h-full">
+    <!-- Light Minimalist Page Loader -->
+    <div id="page-loader" class="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center transition-all duration-700 ease-in-out">
+        <div class="relative">
+            <!-- Pulsing Circle Decoration -->
+            <div class="absolute inset-0 bg-amber-500/10 rounded-full animate-[ping_2.5s_infinite] scale-150"></div>
+            
+            <!-- Logo with Breathing & Fade Effect -->
+            <div class="relative w-20 h-20 animate-[pulse_2s_infinite]">
+                <img src="{{ asset('images/Logo_Bisnis_Growth.png') }}" alt="Loading..." class="w-full h-full object-contain opacity-90">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('page-loader');
+            setTimeout(() => {
+                if(loader) {
+                    loader.style.opacity = '0';
+                    loader.style.pointerEvents = 'none';
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                    }, 700);
+                }
+            }, 300);
+        });
+    </script>
     <div class="max-w-md mx-auto min-h-screen bg-white shadow-2xl flex flex-col relative">
         <!-- Cover Image -->
         <div class="h-40 bg-gray-200 overflow-hidden relative">

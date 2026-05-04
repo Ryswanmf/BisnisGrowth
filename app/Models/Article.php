@@ -14,7 +14,7 @@ class Article extends Model
     protected $fillable = [
         'user_id', 'title', 'slug', 'excerpt', 'content', 'image', 'image_2', 'image_3', 'image_4', 
         'image_alt', 'category_name', 'view_count', 'click_count', 'whatsapp_clicks', 'phone_clicks',
-        'is_featured', 'is_published', 'published_at', 'meta_title', 'meta_description', 
+        'is_featured', 'is_published', 'status', 'published_at', 'meta_title', 'meta_description', 
         'canonical_url'
     ];
 
@@ -121,12 +121,23 @@ class Article extends Model
 
     /**
      * Scope a query to only include published articles.
+     * WordPress style: publish, schedule (publish with future date).
      */
     public function scopePublished($query)
     {
-        return $query->where('is_published', true)
+        return $query->where('status', 'publish')
                      ->where(function ($q) {
                         $q->whereNull('published_at')->orWhere('published_at', '<=', now());
                      });
+    }
+
+    public function scopePrivate($query)
+    {
+        return $query->where('status', 'private');
+    }
+
+    public function scopeDrafts($query)
+    {
+        return $query->where('status', 'draft');
     }
 }

@@ -57,16 +57,63 @@ class ArticleController extends Controller
         return view('pages.articles.index', compact('articles', 'categoriesWithCount', 'totalArticles'));
     }
 
+    public function liveSearch(Request $request)
+    {
+        $search = $request->get('q');
+        
+        if (strlen($search) < 2) {
+            return response()->json([]);
+        }
+
+        $articles = Article::published()
+            ->where(function($q) use ($search) {
+                $q->where('title', 'LIKE', "%{$search}%")
+                  ->orWhere('category_name', 'LIKE', "%{$search}%");
+            })
+            ->latest('published_at')
+            ->take(6)
+            ->get();
+
+        $results = $articles->map(function($article) {
+            return [
+                'title' => \App\Helpers\ContentHelper::process($article->title, $article, false),
+                'url' => route('article.show', $article->slug),
+                'category' => $article->category_name,
+                'image' => $article->image ? asset('storage/' . $article->image) : null,
+            ];
+        });
+
+        return response()->json($results);
+    }
+
     /**
      * Display the specified article.
      */
-    public function show(Article $article)
+    public function show($slug)
     {
+        $article = Article::where('slug', $slug)->firstOrFail();
+
+        // Proteksi: Jika tidak publish, hanya admin atau pemilik yang bisa lihat
+        if ($article->status !== 'publish' || ($article->published_at && $article->published_at->isFuture())) {
+            if (!auth()->check() || (auth()->user()->role !== 'admin' && auth()->id() !== $article->user_id)) {
+                abort(404);
+            }
+        }
+
+        // Jika privat, hanya user terdaftar (login) yang bisa lihat
+        if ($article->status === 'private' && !auth()->check()) {
+            return redirect()->route('login')->with('info', 'Silakan login untuk membaca artikel privat ini.');
+        }
+
         // Load author
         $article->load('user');
 
         // Increment view count
         $article->increment('view_count');
+
+        // Process title and content with ContentHelper (Internal Links, Spintax, Keywords)
+        $article->title = \App\Helpers\ContentHelper::process($article->title, $article, false);
+        $article->content = \App\Helpers\ContentHelper::process($article->content, $article);
 
         // Get related articles (same category, excluding current article)
         $relatedArticles = Article::published()

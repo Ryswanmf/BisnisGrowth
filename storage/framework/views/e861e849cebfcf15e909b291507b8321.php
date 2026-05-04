@@ -11,16 +11,83 @@
             </div>
             
             <!-- Tengah: Search Bar (Desktop) -->
-            <div class="flex-grow max-w-lg hidden md:block">
+            <div class="flex-grow max-w-lg hidden md:block" x-data="{ 
+                query: '', 
+                results: [], 
+                open: false,
+                loading: false,
+                search() {
+                    if (this.query.length < 2) {
+                        this.results = [];
+                        this.open = false;
+                        return;
+                    }
+                    this.loading = true;
+                    fetch(`/artikel-live-search?q=${encodeURIComponent(this.query)}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            this.results = data;
+                            this.open = true;
+                        })
+                        .catch(err => {
+                            console.error('Search error:', err);
+                            this.results = [];
+                        })
+                        .finally(() => {
+                            this.loading = false;
+                        });
+                }
+            }" @click.outside="open = false">
                 <form action="<?php echo e(route('directory.index')); ?>" method="GET" class="relative">
-                    <input type="text" name="q" value="<?php echo e(request('q')); ?>" placeholder="Cari wawasan atau kategori bisnis..." 
-                        class="w-full bg-gray-50 border border-gray-200 rounded-full py-2.5 pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-burgundy-600/20 focus:border-burgundy-600 transition-all">
+                    <input 
+                        type="text" 
+                        name="q" 
+                        x-model="query"
+                        @input.debounce.300ms="search()"
+                        @focus="if(results.length > 0) open = true"
+                        placeholder="Cari wawasan atau kategori bisnis..." 
+                        class="w-full bg-gray-50 border border-gray-200 rounded-full py-2.5 pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-burgundy-600/20 focus:border-burgundy-600 transition-all"
+                        autocomplete="off">
                     <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </div>
                 </form>
+
+                <!-- Dropdown Hasil -->
+                <div x-show="open" 
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 translate-y-2"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     class="absolute mt-2 w-full bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-[60]"
+                     style="display: none;">
+                    <div class="p-3 bg-gray-50/50 border-b border-gray-100 text-[10px] font-black uppercase tracking-widest text-gray-400">Hasil Pencarian</div>
+                    <div class="max-h-96 overflow-y-auto">
+                        <template x-for="item in results" :key="item.url">
+                            <a :href="item.url" class="flex items-center gap-4 p-4 hover:bg-amber-50 transition-colors border-b border-gray-50 last:border-0 group">
+                                <div class="h-10 w-10 bg-gray-100 rounded overflow-hidden shrink-0">
+                                    <template x-if="item.image">
+                                        <img :src="item.image" class="h-full w-full object-cover">
+                                    </template>
+                                    <template x-if="!item.image">
+                                        <div class="h-full w-full flex items-center justify-center text-[10px] font-black text-gray-300">BG</div>
+                                    </template>
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="text-xs font-black text-slate-900 line-clamp-1 group-hover:text-amber-600 transition-colors" x-text="item.title"></p>
+                                    <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-0.5" x-text="item.category"></p>
+                                </div>
+                            </a>
+                        </template>
+                        <div x-show="results.length === 0" class="p-8 text-center">
+                            <p class="text-xs font-bold text-gray-400 italic">Tidak menemukan hasil yang cocok.</p>
+                        </div>
+                    </div>
+                    <a :href="'/direktori?q=' + query" class="block py-3 text-center text-[10px] font-black uppercase tracking-widest bg-slate-900 text-white hover:bg-amber-500 hover:text-slate-900 transition-all">
+                        Lihat Semua Hasil
+                    </a>
+                </div>
             </div>
 
             <!-- Kanan: Menu Navigasi (Desktop) -->

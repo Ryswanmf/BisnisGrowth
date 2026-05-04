@@ -7,36 +7,64 @@
         />
     </x-slot>
 
-    <!-- Hero Section: Featured + Sidebar Grid -->
+    <x-slot name="styles">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+        <style>
+            .hero-swiper {
+                width: 100%;
+                height: 100%;
+            }
+            .swiper-pagination-bullet {
+                background: white !important;
+                opacity: 0.5;
+            }
+            .swiper-pagination-bullet-active {
+                background: #f59e0b !important;
+                opacity: 1;
+                width: 24px;
+                border-radius: 4px;
+            }
+        </style>
+    </x-slot>
+
+    <!-- Hero Section: Featured Slider + Sidebar Grid -->
     <section class="bg-white py-10 px-4">
         <div class="max-w-7xl mx-auto">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
-                <!-- Main Featured (Left) -->
-                @if($featuredArticle)
-                <div class="lg:col-span-8">
-                    <a href="javascript:void(0)" onclick="trackArticleClick({{ $featuredArticle['id'] }}, '{{ route('article.show', $featuredArticle['slug']) }}')" class="group relative block overflow-hidden rounded bg-slate-100 h-[300px] md:h-[500px] shadow-xl">
-                        @if($featuredArticle['image'])
-                            <img src="{{ asset('storage/' . $featuredArticle['image']) }}" alt="{{ $featuredArticle['title'] }}" 
-                                 class="absolute inset-0 h-full w-full object-cover opacity-80 transition-transform duration-700 group-hover:scale-105"
-                                 loading="eager" fetchpriority="high" decoding="async">
-                        @endif
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
-                        
-                        <div class="absolute bottom-0 p-5 md:p-10 lg:p-12 max-w-2xl">
-                            <span class="inline-block px-3 py-1 mb-3 md:mb-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-burgundy-900 bg-amber-400 rounded">
-                                UTAMA • {{ $featuredArticle['category_name'] }}
-                            </span>
-                            <h1 class="text-xl sm:text-2xl md:text-4xl font-black text-white mb-3 md:mb-4 leading-tight group-hover:text-amber-100 transition-colors">
-                                {{ $featuredArticle['title'] }}
-                            </h1>
-                            <p class="text-gray-300 text-sm md:text-base line-clamp-2 font-medium opacity-90 hidden sm:block">
-                                {{ $featuredArticle['excerpt'] }}
-                            </p>
+                <!-- Main Featured Slider (Left) -->
+                <div class="lg:col-span-8 overflow-hidden rounded shadow-xl">
+                    <div class="swiper hero-swiper">
+                        <div class="swiper-wrapper">
+                            @foreach($featuredArticles as $fArt)
+                            <div class="swiper-slide">
+                                <a href="javascript:void(0)" onclick="trackArticleClick({{ $fArt['id'] }}, '{{ route('article.show', $fArt['slug']) }}')" class="group relative block bg-slate-100 h-[300px] md:h-[500px]">
+                                    @if($fArt['image'])
+                                        <img src="{{ asset('storage/' . $fArt['image']) }}" alt="{{ $fArt['title'] }}" 
+                                             class="absolute inset-0 h-full w-full object-cover opacity-80 transition-transform duration-700 group-hover:scale-105"
+                                             loading="eager" fetchpriority="high" decoding="async">
+                                    @endif
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
+                                    
+                                    <div class="absolute bottom-0 p-5 md:p-10 lg:p-12 max-w-2xl">
+                                        <span class="inline-block px-3 py-1 mb-3 md:mb-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-burgundy-900 bg-amber-400 rounded">
+                                            UTAMA • {{ $fArt['category_name'] }}
+                                        </span>
+                                        <h2 class="text-xl sm:text-2xl md:text-4xl font-black text-white mb-3 md:mb-4 leading-tight group-hover:text-amber-100 transition-colors">
+                                            {{ $fArt['title'] }}
+                                        </h2>
+                                        <p class="text-gray-300 text-sm md:text-base line-clamp-2 font-medium opacity-90 hidden sm:block">
+                                            {{ $fArt['excerpt'] }}
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                            @endforeach
                         </div>
-                    </a>
+                        <!-- Add Pagination -->
+                        <div class="swiper-pagination"></div>
+                    </div>
                 </div>
-                @endif
 
                 <!-- Sidebar Grid (Right) -->
                 <div class="lg:col-span-4 flex flex-col gap-6">
@@ -81,7 +109,7 @@
         <div class="max-w-7xl mx-auto">
             <div class="flex items-center justify-between mb-8">
                 <div class="flex flex-col">
-                    <span class="text-amber-600 text-[10px] font-black uppercase tracking-[0.3em] mb-1">Teranyar</span>
+                    <span class="text-amber-600 text-[10px] font-black uppercase tracking-[0.3em] mb-1">Terbaru</span>
                     <h2 class="text-2xl font-black text-slate-900 tracking-tight uppercase">Artikel Terbaru</h2>
                 </div>
             </div>
@@ -156,18 +184,39 @@
         .pagination-amber-theme nav div:last-child { display: flex !important; justify-content: center; }
     </style>
 
-    <script>
-        function trackArticleClick(id, url) {
-            fetch('/artikel/' + id + '/track-click', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({ type: 'article' })
-            }).finally(() => {
-                window.location.href = url;
+    <x-slot name="scripts">
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const swiper = new Swiper('.hero-swiper', {
+                    loop: true,
+                    autoplay: {
+                        delay: 5000,
+                        disableOnInteraction: false,
+                    },
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    effect: 'fade',
+                    fadeEffect: {
+                        crossFade: true
+                    },
+                });
             });
-        }
-    </script>
+
+            function trackArticleClick(id, url) {
+                fetch('/artikel/' + id + '/track-click', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ type: 'article' })
+                }).finally(() => {
+                    window.location.href = url;
+                });
+            }
+        </script>
+    </x-slot>
 </x-app-layout>
