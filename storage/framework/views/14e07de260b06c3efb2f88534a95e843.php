@@ -23,7 +23,7 @@
                 '@type' => 'NewsArticle',
                 'headline' => $article->title,
                 'description' => $article->seo_description,
-                'image' => [$article->image ? asset($article->image) : asset('images/Logo_Bisnis_Growth.png')],
+                'image' => [$article->image ? \App\Helpers\ContentHelper::imageUrl($article->image) : asset('images/Logo_Bisnis_Growth.png')],
                 'datePublished' => ($article->published_at ?: $article->created_at)->toIso8601String(),
                 'dateModified' => $article->updated_at->toIso8601String(),
                 'author' => [
@@ -51,7 +51,7 @@
                 '@type' => 'NewsArticle',
                 'headline' => $article->title,
                 'description' => $article->seo_description,
-                'image' => [$article->image ? asset($article->image) : asset('images/Logo_Bisnis_Growth.png')],
+                'image' => [$article->image ? \App\Helpers\ContentHelper::imageUrl($article->image) : asset('images/Logo_Bisnis_Growth.png')],
                 'datePublished' => ($article->published_at ?: $article->created_at)->toIso8601String(),
                 'dateModified' => $article->updated_at->toIso8601String(),
                 'author' => [
@@ -116,7 +116,7 @@
                                 <div class="flex items-center gap-3">
                                     <div class="h-10 w-10 bg-slate-900 rounded overflow-hidden flex items-center justify-center text-white text-xs font-black shadow-xl">
                                         <?php if($article->user && $article->user->profile_photo): ?>
-                                            <img src="<?php echo e(asset('storage/' . $article->user->profile_photo)); ?>" class="h-full w-full object-cover">
+                                            <img src="<?php echo e(\App\Helpers\ContentHelper::imageUrl($article->user->profile_photo)); ?>" class="h-full w-full object-cover">
                                         <?php else: ?>
                                             <?php echo e($article->user ? substr($article->user->name, 0, 1) : 'B'); ?>
 
@@ -143,7 +143,7 @@
                             <!-- Main Hero Image -->
                             <?php if($article->image): ?>
                                 <div class="aspect-[21/9] rounded md:rounded overflow-hidden bg-gray-100 shadow-xl shadow-slate-200/50 border-[6px] md:border-[10px] border-white ring-1 ring-gray-100">
-                                    <img src="<?php echo e(asset($article->image)); ?>" alt="<?php echo e($article->image_alt ?: $article->title); ?>" class="w-full h-full object-cover">
+                                    <img src="<?php echo e(\App\Helpers\ContentHelper::imageUrl($article->image)); ?>" alt="<?php echo e($article->image_alt ?: $article->title); ?>" class="w-full h-full object-cover">
                                 </div>
                             <?php endif; ?>
 
@@ -153,7 +153,7 @@
                                     <?php $__currentLoopData = ['image_2', 'image_3', 'image_4']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $img): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <?php if($article->$img): ?>
                                             <div class="relative group aspect-video rounded md:rounded overflow-hidden shadow-lg border-2 md:border-4 border-white transition-transform hover:scale-[1.03] duration-500">
-                                                <img src="<?php echo e(asset('storage/' . $article->$img)); ?>" class="w-full h-full object-cover">
+                                                <img src="<?php echo e(\App\Helpers\ContentHelper::imageUrl($article->$img)); ?>" class="w-full h-full object-cover">
                                                 <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                             </div>
                                         <?php else: ?>

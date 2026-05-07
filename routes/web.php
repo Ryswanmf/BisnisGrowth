@@ -17,9 +17,7 @@ Route::get('/direktori', function (\Illuminate\Http\Request $request) {
     return redirect()->route('article.index');
 })->name('directory.index');
 
-Route::get('/kategori/{slug}', function ($slug) {
-    return "Halaman Kategori: " . $slug;
-})->name('category.show');
+Route::get('/kategori/{category}', [App\Http\Controllers\CategoryController::class, 'show'])->name('category.show');
 
 Route::get('/go/{link}', [LinkRedirectController::class, 'redirect'])->name('link.redirect');
 

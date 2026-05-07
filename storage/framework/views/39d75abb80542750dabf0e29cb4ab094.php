@@ -31,6 +31,9 @@
                     <li><a href="<?php echo e(route('article.index')); ?>" class="text-burgundy-50 hover:text-gold-400 transition-colors flex items-center gap-3 group">
                         <span class="h-1 w-1 bg-gold-400 rounded-full opacity-0 group-hover:opacity-100 transition-all"></span> Wawasan Bisnis
                     </a></li>
+                    <li><a href="/#kategori-bisnis" class="text-burgundy-50 hover:text-gold-400 transition-colors flex items-center gap-3 group">
+                        <span class="h-1 w-1 bg-gold-400 rounded-full opacity-0 group-hover:opacity-100 transition-all"></span> Direktori Bisnis
+                    </a></li>
                     <li><a href="<?php echo e(route('contact')); ?>" class="text-burgundy-50 hover:text-gold-400 transition-colors flex items-center gap-3 group">
                         <span class="h-1 w-1 bg-gold-400 rounded-full opacity-0 group-hover:opacity-100 transition-all"></span> Hubungi Kami
                     </a></li>
@@ -71,11 +74,25 @@
             </div>
         </div>
 
-        <div class="mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-black uppercase tracking-[0.3em] text-burgundy-200/40">
-            <div><?php echo e($footerSetting->copyright_text ?? '© ' . date('Y') . ' BisnisGrowth. All rights reserved.'); ?></div>
-            <div class="flex gap-8">
-                <a href="#" class="hover:text-white transition-colors">Server Status: Online</a>
-                <a href="#" class="hover:text-white transition-colors">Privacy Protected</a>
+        <div class="mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] font-black uppercase tracking-[0.3em] text-burgundy-200/50">
+            <div class="flex flex-col md:flex-row items-center gap-2 md:gap-4">
+                <span><?php echo e($footerSetting->copyright_text ?? '© ' . date('Y') . ' BisnisGrowth. All rights reserved.'); ?></span>
+                <span class="hidden md:block opacity-20">|</span>
+                <span class="text-burgundy-100/40">Developed by <a href="https://JasaWebsite.Biz" target="_blank" class="hover:text-gold-400 transition-colors">JasaWebsite.Biz</a></span>
+            </div>
+            
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-2">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <span class="text-burgundy-100/60">Server Status: Online</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="h-3 w-3 text-burgundy-100/40" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    <span class="text-burgundy-100/60">Privacy Protected</span>
+                </div>
             </div>
         </div>
     </div>

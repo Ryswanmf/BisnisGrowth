@@ -17,4 +17,12 @@ class Category extends Model
     {
         return 'slug';
     }
+
+    /**
+     * Get the businesses for the category.
+     */
+    public function businesses()
+    {
+        return $this->hasMany(Business::class);
+    }
 }

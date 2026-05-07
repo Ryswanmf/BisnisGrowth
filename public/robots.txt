@@ -4,4 +4,4 @@ Disallow: /admin/
 Disallow: /login
 Disallow: /register
 
-Sitemap: {{ url('/sitemap.xml') }}
+Sitemap: https://bisnisgrowth.sites.id/sitemap.xml

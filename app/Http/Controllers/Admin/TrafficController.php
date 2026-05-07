@@ -81,7 +81,7 @@ class TrafficController extends Controller
             'articles' => PageView::where('type', 'article')->whereBetween('created_at', [$start, $end])->count(),
             'whatsapp' => PageView::where('type', 'whatsapp')->whereBetween('created_at', [$start, $end])->count(),
             'phone' => PageView::where('type', 'phone')->whereBetween('created_at', [$start, $end])->count(),
-            'comments' => Comment::whereBetween('created_at', [$start, $end])->count(),
+            'comments' => Comment::whereBetween('created_at', [$start, $end])->count()
         ];
     }
 }

@@ -7,6 +7,24 @@ use App\Models\Article;
 class ContentHelper
 {
     /**
+     * Get the correct image URL regardless of storage path.
+     */
+    public static function imageUrl($path)
+    {
+        if (empty($path)) return null;
+        
+        if (str_starts_with($path, 'http')) {
+            return $path;
+        }
+
+        if (str_starts_with($path, 'uploads/')) {
+            return asset($path);
+        }
+
+        return asset('storage/' . $path);
+    }
+
+    /**
      * Process all dynamic elements in the text.
      */
     public static function process($text, Article $article = null, $appendKeywords = true)
@@ -78,15 +96,30 @@ class ContentHelper
 
         // 5. Process Automatic Keyword Injection (at the bottom) - Only if appendKeywords is true
         if ($appendKeywords && !empty($keywordPool)) {
-            shuffle($keywordPool);
-            $finalKeywords = [];
-            foreach (array_slice($keywordPool, 0, 30) as $rawKeyword) {
-                $finalKeywords[] = self::processSpintax($rawKeyword);
+            // Cek menggunakan ID khusus agar tidak terjadi duplikasi meskipun class CSS berubah
+            if (!str_contains($text, 'id="article-hashtags"')) {
+                shuffle($keywordPool);
+                $finalKeywords = [];
+                
+                // Ambil maksimal 20-30 variasi
+                foreach (array_slice($keywordPool, 0, 30) as $rawKeyword) {
+                    // Jalankan spintax pada setiap keyword
+                    $spun = self::processSpintax($rawKeyword);
+                    
+                    // Bersihkan spasi agar jadi format tagar yang benar (misal: "Jasa Web" -> "JasaWeb")
+                    $cleanHashtag = str_replace(' ', '', ucwords($spun));
+                    if (!empty($cleanHashtag)) {
+                        $finalKeywords[] = $cleanHashtag;
+                    }
+                }
+                
+                $finalKeywords = array_unique($finalKeywords);
+                if (!empty($finalKeywords)) {
+                    $hashtagString = '#' . implode(' #', $finalKeywords);
+                    $keywordHtml = '<div id="article-hashtags" class="mt-10 pt-6 border-t border-gray-100 text-xs text-gray-400 italic font-medium leading-relaxed">' . $hashtagString . '</div>';
+                    $text .= $keywordHtml;
+                }
             }
-            
-            // Inject random keywords at the end of the content for SEO
-            $keywordHtml = '<div class="mt-10 pt-6 border-t border-gray-100 text-xs text-gray-300 italic">Keywords: ' . implode(', ', $finalKeywords) . '</div>';
-            $text .= $keywordHtml;
         }
 
         return $text;

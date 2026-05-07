@@ -435,6 +435,22 @@
             });
         <?php endif; ?>
 
+        <?php if($errors->any()): ?>
+            Swal.fire({
+                icon: 'error',
+                title: 'Kesalahan Validasi',
+                html: '<div class="text-left"><ul class="list-disc list-inside text-xs font-bold">' + 
+                      <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        '<li><?php echo e($error); ?></li>' +
+                      <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                      '</ul></div>',
+                confirmButtonText: 'PERBAIKI',
+                confirmButtonColor: '#f59e0b',
+                background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#ffffff',
+                color: document.documentElement.classList.contains('dark') ? '#f1f5f9' : '#0f172a',
+            });
+        <?php endif; ?>
+
         // Global Confirm Delete
         window.confirmDelete = function(formId) {
             const isDark = document.documentElement.classList.contains('dark');

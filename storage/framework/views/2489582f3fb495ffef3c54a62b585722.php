@@ -132,13 +132,13 @@
 <?php unset($__componentOriginal8a8716efb3c62a45938aca52e78e0322); ?>
 <?php endif; ?>
 
-    <script>
+    <!-- <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/service-worker.js');
             });
         }
-    </script>
+    </script> -->
     <?php echo e($scripts ?? ''); ?>
 
 </body>

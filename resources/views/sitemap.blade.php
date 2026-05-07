@@ -28,4 +28,20 @@
             <priority>0.5</priority>
         </url>
     @endforeach
+    @foreach ($categories as $category)
+        <url>
+            <loc>{{ route('category.show', $category->slug) }}</loc>
+            <lastmod>{{ $category->updated_at->toAtomString() }}</lastmod>
+            <changefreq>weekly</changefreq>
+            <priority>0.7</priority>
+        </url>
+    @endforeach
+    @foreach ($businesses as $business)
+        <url>
+            <loc>{{ route('business.profile', $business->slug) }}</loc>
+            <lastmod>{{ $business->updated_at->toAtomString() }}</lastmod>
+            <changefreq>weekly</changefreq>
+            <priority>0.8</priority>
+        </url>
+    @endforeach
 </urlset>

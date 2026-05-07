@@ -88,30 +88,41 @@ class ArticleController extends Controller
             'published_at' => 'nullable|date',
         ]);
 
-        $data = $request->all();
-        $data['user_id'] = auth()->id();
-        $data['slug'] = Str::slug($request->title);
-        $data['status'] = $request->status;
-        $data['is_published'] = ($request->status === 'publish'); // Sinkronisasi lama
-        $data['is_featured'] = $request->has('is_featured');
-        
-        // Handle publishing date
-        if ($request->status === 'publish' && !$request->published_at) {
-            $data['published_at'] = now();
-        }
-
-        foreach(['image', 'image_2', 'image_3', 'image_4'] as $imgField) {
-            if ($request->hasFile($imgField)) {
-                $data[$imgField] = $this->optimizeAndStore($request->file($imgField));
+        try {
+            $data = $request->all();
+            $data['user_id'] = auth()->id();
+            $data['slug'] = Str::slug($request->title);
+            $data['status'] = $request->status;
+            $data['is_published'] = ($request->status === 'publish');
+            $data['is_featured'] = $request->has('is_featured');
+            
+            // Handle publishing date
+            if ($request->status === 'publish' && !$request->published_at) {
+                $data['published_at'] = now();
             }
-        }
 
-        $article = Article::create($data);
-        if ($request->has('short_keyword_ids')) {
-            $article->shortKeywords()->sync($request->short_keyword_ids);
+            foreach(['image', 'image_2', 'image_3', 'image_4'] as $imgField) {
+                if ($request->hasFile($imgField)) {
+                    $savedPath = $this->optimizeAndStore($request->file($imgField));
+                    if ($savedPath) {
+                        $data[$imgField] = $savedPath;
+                    }
+                }
+            }
+
+            $article = Article::create($data);
+            if ($request->has('short_keyword_ids')) {
+                $article->shortKeywords()->sync($request->short_keyword_ids);
+            }
+            
+            // Hapus cache halaman utama dan kategori
+            \Illuminate\Support\Facades\Cache::flush();
+            
+            return redirect()->route('admin.articles.index')->with('success', 'Artikel berhasil dibuat!');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Gagal menyimpan artikel: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Gagal menyimpan artikel: ' . $e->getMessage());
         }
-        \Illuminate\Support\Facades\Cache::flush();
-        return redirect()->route('admin.articles.index')->with('success', 'Artikel berhasil dibuat!');
     }
 
     public function edit(Article $article)
@@ -133,34 +144,42 @@ class ArticleController extends Controller
             'published_at' => 'nullable|date',
         ]);
 
-        $data = $request->all();
-        if ($article->title !== $request->title) $data['slug'] = Str::slug($request->title);
-        $data['status'] = $request->status;
-        $data['is_published'] = ($request->status === 'publish'); // Sinkronisasi lama
-        $data['is_featured'] = $request->has('is_featured');
+        try {
+            $data = $request->all();
+            if ($article->title !== $request->title) $data['slug'] = Str::slug($request->title);
+            $data['status'] = $request->status;
+            $data['is_published'] = ($request->status === 'publish');
+            $data['is_featured'] = $request->has('is_featured');
 
-        // Handle publishing date
-        if ($request->status === 'publish' && !$request->published_at && !$article->published_at) {
-            $data['published_at'] = now();
-        }
-
-        foreach(['image', 'image_2', 'image_3', 'image_4'] as $imgField) {
-            if ($request->hasFile($imgField)) {
-                if ($article->$imgField && File::exists(public_path($article->$imgField))) {
-                    File::delete(public_path($article->$imgField));
-                }
-                $data[$imgField] = $this->optimizeAndStore($request->file($imgField));
+            // Handle publishing date
+            if ($request->status === 'publish' && !$request->published_at && !$article->published_at) {
+                $data['published_at'] = now();
             }
-        }
 
-        $article->update($data);
-        if ($request->has('short_keyword_ids')) {
-            $article->shortKeywords()->sync($request->short_keyword_ids);
-        } else {
-            $article->shortKeywords()->detach();
+            foreach(['image', 'image_2', 'image_3', 'image_4'] as $imgField) {
+                if ($request->hasFile($imgField)) {
+                    if ($article->$imgField && File::exists(public_path($article->$imgField))) {
+                        File::delete(public_path($article->$imgField));
+                    }
+                    $savedPath = $this->optimizeAndStore($request->file($imgField));
+                    if ($savedPath) {
+                        $data[$imgField] = $savedPath;
+                    }
+                }
+            }
+
+            $article->update($data);
+            if ($request->has('short_keyword_ids')) {
+                $article->shortKeywords()->sync($request->short_keyword_ids);
+            } else {
+                $article->shortKeywords()->detach();
+            }
+            \Illuminate\Support\Facades\Cache::flush();
+            return redirect()->route('admin.articles.index')->with('success', 'Artikel berhasil diperbarui!');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Gagal memperbarui artikel: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Gagal memperbarui artikel: ' . $e->getMessage());
         }
-        \Illuminate\Support\Facades\Cache::flush();
-        return redirect()->route('admin.articles.index')->with('success', 'Artikel berhasil diperbarui!');
     }
 
     public function destroy(Article $article)
