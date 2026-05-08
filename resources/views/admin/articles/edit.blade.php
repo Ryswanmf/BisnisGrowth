@@ -154,17 +154,14 @@
 
             <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100 space-y-6">
                 <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest">Gambar Utama</h3>
-                @if($article->image)
-                    <div class="relative group">
-                        <img src="{{ asset($article->image) }}" class="w-full h-32 object-cover rounded-lg border border-gray-100 shadow-sm">
-                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center text-white text-[10px] font-black uppercase tracking-widest">Ganti Gambar</div>
-                    </div>
-                @endif
+                <div id="preview-image" class="{{ $article->image ? '' : 'hidden' }}">
+                    <img src="{{ $article->image ? asset($article->image) : '' }}" class="w-full h-32 object-cover rounded-lg border border-gray-100 shadow-sm">
+                </div>
                 <div class="space-y-4">
-                    <input type="file" name="image" class="w-full text-xs text-gray-400 file:bg-amber-50 file:text-amber-600 file:rounded-full file:border-0 file:px-4 file:py-2">
+                    <input type="file" name="image" onchange="previewFile(this, 'preview-image')" class="w-full text-xs text-gray-400 file:bg-amber-50 file:text-amber-600 file:rounded-full file:border-0 file:px-4 file:py-2">
                     <div>
                         <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Alt Gambar</label>
-                        <input type="text" name="image_alt" value="{{ old('image_alt', $article->image_alt) }}" class="w-full bg-gray-50 border-gray-100 rounded-lg px-4 py-2 text-sm">
+                        <input type="text" name="image_alt" value="{{ old('image_alt', $article->image_alt) }}" class="w-full bg-gray-50 border-gray-100 rounded-lg px-4 py-2 text-sm focus:ring-amber-500 focus:border-amber-500">
                     </div>
                 </div>
             </div>
@@ -175,10 +172,10 @@
                     @foreach(['image_2', 'image_3', 'image_4'] as $imgField)
                         <div class="space-y-3">
                             <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest">Gambar {{ substr($imgField, -1) }}</label>
-                            @if($article->$imgField)
-                                <img src="{{ asset('storage/' . $article->$imgField) }}" class="h-20 w-full object-cover rounded-md border border-gray-100">
-                            @endif
-                            <input type="file" name="{{ $imgField }}" class="w-full text-[10px] text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-slate-50 file:text-slate-600">
+                            <div id="preview-{{ $imgField }}" class="{{ $article->$imgField ? '' : 'hidden' }}">
+                                <img src="{{ $article->$imgField ? asset($article->$imgField) : '' }}" class="h-24 w-full object-cover rounded-md border border-gray-100 shadow-sm">
+                            </div>
+                            <input type="file" name="{{ $imgField }}" onchange="previewFile(this, 'preview-{{ $imgField }}')" class="w-full text-[10px] text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-slate-50 file:text-slate-600 hover:file:bg-slate-100">
                         </div>
                     @endforeach
                 </div>
@@ -276,5 +273,27 @@
             canonicalInput.value = domainSelector.value.replace(/\/$/, '') + '/artikel/' + slug;
         }
     });
+
+    function previewFile(input, previewId) {
+        const previewContainer = document.getElementById(previewId);
+        const previewImage = previewContainer.querySelector('img');
+        const file = input.files[0];
+        const reader = new FileReader();
+
+        reader.onloadend = function() {
+            previewImage.src = reader.result;
+            previewContainer.classList.remove('hidden');
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            // If it's edit mode and we clear, we might want to keep original or hide
+            // For simplicity, we hide if no file and no existing src
+            if(!previewImage.getAttribute('src')) {
+                previewContainer.classList.add('hidden');
+            }
+        }
+    }
 </script>
 @endpush

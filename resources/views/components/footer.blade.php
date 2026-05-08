@@ -30,9 +30,6 @@
                     <li><a href="{{ route('article.index') }}" class="text-burgundy-50 hover:text-gold-400 transition-colors flex items-center gap-3 group">
                         <span class="h-1 w-1 bg-gold-400 rounded-full opacity-0 group-hover:opacity-100 transition-all"></span> Wawasan Bisnis
                     </a></li>
-                    <li><a href="/#kategori-bisnis" class="text-burgundy-50 hover:text-gold-400 transition-colors flex items-center gap-3 group">
-                        <span class="h-1 w-1 bg-gold-400 rounded-full opacity-0 group-hover:opacity-100 transition-all"></span> Direktori Bisnis
-                    </a></li>
                     <li><a href="{{ route('contact') }}" class="text-burgundy-50 hover:text-gold-400 transition-colors flex items-center gap-3 group">
                         <span class="h-1 w-1 bg-gold-400 rounded-full opacity-0 group-hover:opacity-100 transition-all"></span> Hubungi Kami
                     </a></li>

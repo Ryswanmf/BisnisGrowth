@@ -1,21 +1,20 @@
-@extends('layouts.admin')
 
-@section('title', 'Tulis Artikel Baru')
-@section('header', 'Tulis Artikel')
 
-@section('content')
-<div class="space-y-6">
-    <form action="{{ route('admin.articles.store') }}" method="POST" enctype="multipart/form-data">
-    @csrf
+<?php $__env->startSection('title', 'Edit Artikel'); ?>
+<?php $__env->startSection('header', 'Edit Artikel'); ?>
+
+<?php $__env->startSection('content'); ?>
+<form action="<?php echo e(route('admin.articles.update', $article->id)); ?>" method="POST" enctype="multipart/form-data">
+    <?php echo csrf_field(); ?>
+    <?php echo method_field('PUT'); ?>
+    
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
         <!-- Left Side: Content Area -->
         <div class="lg:col-span-2 space-y-6">
             <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100 space-y-6">
                 <div>
                     <label class="block text-xs font-black text-slate-900 uppercase tracking-widest mb-2">Judul Artikel</label>
-                    <input type="text" name="title" value="{{ old('title') }}" 
-                           class="w-full bg-gray-50 border-gray-100 rounded-lg px-5 py-4 focus:ring-amber-500 focus:border-amber-500 font-bold text-lg">
+                    <input type="text" name="title" value="<?php echo e(old('title', $article->title)); ?>" class="w-full bg-gray-50 border-gray-100 rounded-lg px-5 py-4 focus:ring-amber-500 font-bold text-lg">
                 </div>
 
                 <div>
@@ -26,49 +25,46 @@
                         </div>
                     </div>
                     <!-- Editor Summernote -->
-                    <textarea name="content" id="summernote">{{ old('content') }}</textarea>
+                    <textarea name="content" id="summernote"><?php echo e(old('content', $article->content)); ?></textarea>
                     <p id="word-count-feedback" class="mt-2 text-[10px] text-red-400 font-bold italic">Saran: Tambahkan minimal 300 kata agar tampilan artikel terlihat profesional.</p>
                 </div>
 
                 <div>
                     <label class="block text-xs font-black text-slate-900 uppercase tracking-widest mb-2">Ringkasan (Excerpt)</label>
-                    <textarea name="excerpt" rows="3" class="w-full bg-gray-50 border-gray-100 rounded-lg px-5 py-3 focus:ring-amber-500 focus:border-amber-500">{{ old('excerpt') }}</textarea>
+                    <textarea name="excerpt" rows="3" class="w-full bg-gray-50 border-gray-100 rounded-lg px-5 py-3 focus:ring-amber-500"><?php echo e(old('excerpt', $article->excerpt)); ?></textarea>
                 </div>
             </div>
 
-            <!-- SEO Settings Card -->
+            <!-- SEO Card -->
             <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
-                <h3 class="text-sm font-black text-slate-900 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
-                    <svg class="h-5 w-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    Optimasi SEO (Search Engine Optimization)
-                </h3>
+                <h3 class="text-sm font-black text-slate-900 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">SEO Settings</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="md:col-span-2">
-                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Meta Title (Google Title)</label>
-                        <input type="text" name="meta_title" value="{{ old('meta_title') }}" class="w-full bg-gray-50 border-gray-100 rounded-lg px-4 py-3 focus:ring-amber-500 focus:border-amber-500">
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Meta Title</label>
+                        <input type="text" name="meta_title" value="<?php echo e(old('meta_title', $article->meta_title)); ?>" class="w-full bg-gray-50 border-gray-100 rounded-lg px-4 py-3">
                     </div>
                     <div class="md:col-span-2">
                         <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Meta Description</label>
-                        <textarea name="meta_description" rows="3" class="w-full bg-gray-50 border-gray-100 rounded-lg px-4 py-3 focus:ring-amber-500 focus:border-amber-500">{{ old('meta_description') }}</textarea>
+                        <textarea name="meta_description" rows="3" class="w-full bg-gray-50 border-gray-100 rounded-lg px-4 py-3"><?php echo e(old('meta_description', $article->meta_description)); ?></textarea>
                     </div>
                     <div class="md:col-span-2">
                         <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Domain Canonical</label>
                         <select id="domain_selector" class="w-full bg-gray-50 border-gray-100 rounded-lg px-4 py-3 focus:ring-amber-500 focus:border-amber-500 text-sm font-bold mb-2">
                             <option value="">-- Pilih Domain --</option>
-                            @foreach($domains as $domain)
-                                <option value="{{ $domain->url }}">{{ $domain->name }}</option>
-                            @endforeach
+                            <?php $__currentLoopData = $domains; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $domain): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($domain->url); ?>" <?php echo e($article->canonical_url && str_contains($article->canonical_url, $domain->url) ? 'selected' : ''); ?>><?php echo e($domain->name); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
-                        <input type="text" name="canonical_url" id="canonical_url" value="{{ old('canonical_url') }}" placeholder="URL Lengkap (Otomatis terisi jika domain dipilih)" class="w-full bg-gray-50 border-gray-100 rounded-lg px-4 py-3 focus:ring-amber-500 focus:border-amber-500 text-sm">
+                        <input type="text" name="canonical_url" id="canonical_url" value="<?php echo e(old('canonical_url', $article->canonical_url)); ?>" placeholder="URL Lengkap" class="w-full bg-gray-50 border-gray-100 rounded-lg px-4 py-3 focus:ring-amber-500 text-sm">
                     </div>
                     <div class="md:col-span-2" x-data="{ 
                         open: false, 
                         search: '',
-                        selected: [],
+                        selected: <?php echo e(json_encode($article->shortKeywords->pluck('id')->toArray())); ?>,
                         items: [
-                            @foreach($shortKeywords as $sk)
-                            { id: {{ $sk->id }}, title: '{{ $sk->title }}', count: {{ count(explode(',', $sk->description)) }} },
-                            @endforeach
+                            <?php $__currentLoopData = $shortKeywords; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sk): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            { id: <?php echo e($sk->id); ?>, title: '<?php echo e($sk->title); ?>', count: <?php echo e(count(explode(',', $sk->description))); ?> },
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         ],
                         toggle(id) {
                             if (this.selected.includes(id)) {
@@ -127,82 +123,82 @@
             </div>
         </div>
 
-        <!-- Right Side: Meta & Sidebar -->
+        <!-- Right Side: Sidebar -->
         <div class="space-y-6">
             <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100 space-y-6">
-                <button type="submit" class="w-full bg-amber-500 text-slate-900 py-4 rounded-lg font-black text-sm uppercase tracking-widest hover:bg-amber-400 transition-all shadow-lg shadow-amber-500/20">
-                    Simpan Artikel
-                </button>
+                <button type="submit" class="w-full bg-amber-500 text-slate-900 py-4 rounded-lg font-black text-sm uppercase tracking-widest hover:bg-amber-400 shadow-lg">Perbarui Artikel</button>
 
                 <div>
                     <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Status Artikel</label>
                     <select name="status" class="w-full bg-gray-50 border-none rounded-lg px-4 py-3 text-xs font-bold focus:ring-2 focus:ring-amber-500">
-                        <option value="publish" selected>Terbitkan (Publish)</option>
-                        <option value="draft">Draft (Simpan Saja)</option>
-                        <option value="private">Privat (Hanya Admin)</option>
+                        <option value="publish" <?php echo e($article->status === 'publish' ? 'selected' : ''); ?>>Terbitkan (Publish)</option>
+                        <option value="draft" <?php echo e($article->status === 'draft' ? 'selected' : ''); ?>>Draft (Simpan Saja)</option>
+                        <option value="private" <?php echo e($article->status === 'private' ? 'selected' : ''); ?>>Privat (Hanya Admin)</option>
                     </select>
                 </div>
 
                 <div>
                     <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Jadwal Tayang (Opsional)</label>
-                    <input type="datetime-local" name="published_at" class="w-full bg-gray-50 border-none rounded-lg px-4 py-3 text-xs font-bold focus:ring-2 focus:ring-amber-500">
+                    <input type="datetime-local" name="published_at" value="<?php echo e($article->published_at ? $article->published_at->format('Y-m-d\TH:i') : ''); ?>" class="w-full bg-gray-50 border-none rounded-lg px-4 py-3 text-xs font-bold focus:ring-2 focus:ring-amber-500">
                     <p class="mt-1 text-[8px] text-gray-400 font-medium italic">* Kosongkan untuk terbit instan. Isi waktu masa depan untuk penjadwalan.</p>
                 </div>
 
                 <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                    <span class="text-xs font-bold text-slate-900 uppercase tracking-widest">Headline / Unggulan</span>
+                    <span class="text-xs font-bold text-slate-900 uppercase tracking-widest">Headline</span>
                     <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" name="is_featured" value="1" class="sr-only peer">
-                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                        <input type="checkbox" name="is_featured" value="1" class="sr-only peer" <?php echo e($article->is_featured ? 'checked' : ''); ?>>
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-amber-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
                     </label>
                 </div>
             </div>
 
             <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100 space-y-6">
                 <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest">Gambar Utama</h3>
-                <div class="space-y-4">
-                    <div id="preview-image" class="hidden">
-                        <img src="" class="w-full h-32 object-cover rounded-lg border border-gray-100 shadow-sm">
+                <?php if($article->image): ?>
+                    <div class="relative group">
+                        <img src="<?php echo e(asset($article->image)); ?>" class="w-full h-32 object-cover rounded-lg border border-gray-100 shadow-sm">
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center text-white text-[10px] font-black uppercase tracking-widest">Ganti Gambar</div>
                     </div>
-                    <input type="file" name="image" onchange="previewFile(this, 'preview-image')" class="w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-amber-50 file:text-amber-600 hover:file:bg-amber-100">
+                <?php endif; ?>
+                <div class="space-y-4">
+                    <input type="file" name="image" class="w-full text-xs text-gray-400 file:bg-amber-50 file:text-amber-600 file:rounded-full file:border-0 file:px-4 file:py-2">
                     <div>
-                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Teks Alt Gambar (SEO Gambar)</label>
-                        <input type="text" name="image_alt" value="{{ old('image_alt') }}" class="w-full bg-gray-50 border-gray-100 rounded-lg px-4 py-2 text-sm focus:ring-amber-500 focus:border-amber-500">
+                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Alt Gambar</label>
+                        <input type="text" name="image_alt" value="<?php echo e(old('image_alt', $article->image_alt)); ?>" class="w-full bg-gray-50 border-gray-100 rounded-lg px-4 py-2 text-sm">
                     </div>
                 </div>
             </div>
 
             <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100 space-y-6">
-                <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest">Gambar Tambahan (Opsional)</h3>
+                <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest">Gambar Tambahan</h3>
                 <div class="grid grid-cols-1 gap-6">
-                    @foreach(['image_2', 'image_3', 'image_4'] as $imgField)
+                    <?php $__currentLoopData = ['image_2', 'image_3', 'image_4']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $imgField): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="space-y-3">
-                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest">Gambar {{ substr($imgField, -1) }}</label>
-                            <div id="preview-{{ $imgField }}" class="hidden">
-                                <img src="" class="h-24 w-full object-cover rounded-md border border-gray-100 shadow-sm">
-                            </div>
-                            <input type="file" name="{{ $imgField }}" onchange="previewFile(this, 'preview-{{ $imgField }}')" class="w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-slate-50 file:text-slate-600 hover:file:bg-slate-100">
+                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest">Gambar <?php echo e(substr($imgField, -1)); ?></label>
+                            <?php if($article->$imgField): ?>
+                                <img src="<?php echo e(asset('storage/' . $article->$imgField)); ?>" class="h-20 w-full object-cover rounded-md border border-gray-100">
+                            <?php endif; ?>
+                            <input type="file" name="<?php echo e($imgField); ?>" class="w-full text-[10px] text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-slate-50 file:text-slate-600">
                         </div>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
             </div>
 
             <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
                 <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest mb-4">Kategori</h3>
-                <select name="category_name" class="w-full bg-gray-50 border-gray-100 rounded-lg px-4 py-3 text-sm focus:ring-amber-500 focus:border-amber-500 font-bold" required>
+                <select name="category_name" class="w-full bg-gray-50 border-gray-100 rounded-lg px-4 py-3 text-sm focus:ring-amber-500 font-bold" required>
                     <option value="">Pilih Kategori</option>
-                    @foreach($categories as $cat)
-                        <option value="{{ $cat->name }}" {{ old('category_name') == $cat->name ? 'selected' : '' }}>{{ $cat->name }}</option>
-                    @endforeach
+                    <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($cat->name); ?>" <?php echo e(old('category_name', $article->category_name) == $cat->name ? 'selected' : ''); ?>><?php echo e($cat->name); ?></option>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </select>
             </div>
         </div>
     </div>
 </form>
-</div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
     $(document).ready(function() {
         $('#summernote').summernote({
@@ -280,24 +276,7 @@
             canonicalInput.value = domainSelector.value.replace(/\/$/, '') + '/artikel/' + slug;
         }
     });
-
-    function previewFile(input, previewId) {
-        const previewContainer = document.getElementById(previewId);
-        const previewImage = previewContainer.querySelector('img');
-        const file = input.files[0];
-        const reader = new FileReader();
-
-        reader.onloadend = function() {
-            previewImage.src = reader.result;
-            previewContainer.classList.remove('hidden');
-        }
-
-        if (file) {
-            reader.readAsDataURL(file);
-        } else {
-            previewImage.src = "";
-            previewContainer.classList.add('hidden');
-        }
-    }
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\laragon\www\BisnisGrowth\resources\views/admin/articles/edit.blade.php ENDPATH**/ ?>
