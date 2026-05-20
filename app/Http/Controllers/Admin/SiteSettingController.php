@@ -10,31 +10,57 @@ use Illuminate\Support\Facades\Cache;
 class SiteSettingController extends Controller
 {
     public function backupDatabase()
-    {
-        $dbName = config('database.connections.mysql.database');
-        $dbUser = config('database.connections.mysql.username');
-        $dbPass = config('database.connections.mysql.password');
-        $dbHost = config('database.connections.mysql.host');
-        
-        $fileName = 'backup-' . $dbName . '-' . date('Y-m-d-H-i-s') . '.sql';
-        $filePath = storage_path('app/' . $fileName);
+{
+    $tables = \DB::select('SHOW TABLES');
 
-        // Perintah mysqldump (Pastikan mysqldump terinstall di server/path)
-        $command = "mysqldump --user=$dbUser --password=$dbPass --host=$dbHost $dbName > $filePath";
-        
-        // Khusus untuk Windows/Laragon, kita bungkus password dengan tanda kutip jika perlu
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $command = "mysqldump --user=$dbUser --password=\"$dbPass\" --host=$dbHost $dbName > \"$filePath\"";
+    $databaseName = config('database.connections.mysql.database');
+
+    $sqlScript = '';
+
+    foreach ($tables as $table) {
+
+        $tableName = array_values((array)$table)[0];
+
+        // Struktur tabel
+        $createTable = \DB::select("SHOW CREATE TABLE `$tableName`");
+
+        $sqlScript .= "\n\n" . $createTable[0]->{'Create Table'} . ";\n\n";
+
+        // Data tabel
+        $rows = \DB::table($tableName)->get();
+
+        foreach ($rows as $row) {
+
+            $row = (array)$row;
+
+            $columns = array_map(function ($value) {
+                return '`' . $value . '`';
+            }, array_keys($row));
+
+            $values = array_map(function ($value) {
+
+                if ($value === null) {
+                    return 'NULL';
+                }
+
+                return "'" . addslashes($value) . "'";
+
+            }, array_values($row));
+
+            $sqlScript .= "INSERT INTO `$tableName` ("
+                . implode(', ', $columns)
+                . ") VALUES ("
+                . implode(', ', $values)
+                . ");\n";
         }
-
-        exec($command);
-
-        if (file_exists($filePath)) {
-            return response()->download($filePath)->deleteFileAfterSend(true);
-        }
-
-        return redirect()->back()->with('error', 'Gagal membuat backup database. Pastikan mysqldump tersedia di server Anda.');
     }
+
+    $fileName = 'backup-' . now()->format('Y-m-d-H-i-s') . '.sql';
+
+    return response($sqlScript)
+        ->header('Content-Type', 'application/sql')
+        ->header('Content-Disposition', 'attachment; filename="'.$fileName.'"');
+}
 
     public function index()
     {

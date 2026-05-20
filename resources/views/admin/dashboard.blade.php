@@ -44,7 +44,7 @@
         </div>
         
         <!-- Top Domain Card Integrated -->
-        <div class="bg-slate-900 p-8 rounded-lg border border-slate-800 shadow-sm hover:shadow-xl transition-all text-white lg:col-span-1 xl:col-span-2">
+        <div class="bg-slate-900 p-8 rounded-lg border border-slate-800 shadow-sm hover:shadow-xl transition-all text-white md:col-span-2 lg:col-span-2 xl:col-span-2">
             <div class="flex justify-between items-center mb-5">
                 <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Top Domain</p>
                 <a href="{{ route('admin.domains.index') }}" class="text-[8px] font-black text-amber-500 uppercase tracking-widest hover:underline">Semua</a>
@@ -130,7 +130,9 @@
                             <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">{{ $top->category_name }}</p>
                         </div>
                         <div class="text-right shrink-0">
-                            <p class="text-sm font-black text-slate-900">{{ number_format($top->click_count) }}</p>
+                            <p class="text-sm font-black text-slate-900">
+                                {{ number_format($top->click_count) }}
+                            </p>
                             <p class="text-[8px] font-black text-gray-400 uppercase tracking-widest">Clicks</p>
                         </div>
                     </div>

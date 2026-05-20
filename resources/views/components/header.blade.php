@@ -38,11 +38,12 @@
                         });
                 }
             }" @click.outside="open = false">
-                <form action="{{ route('directory.index') }}" method="GET" class="relative">
+                <form action="{{ route('article.index') }}" method="GET" class="relative">
                     <input 
                         type="text" 
                         name="q" 
                         x-model="query"
+                        x-init="query = '{{ request('q') }}'"
                         @input.debounce.300ms="search()"
                         @focus="if(results.length > 0) open = true"
                         placeholder="Cari wawasan atau kategori bisnis..." 
@@ -80,11 +81,11 @@
                                 </div>
                             </a>
                         </template>
-                        <div x-show="results.length === 0" class="p-8 text-center">
+                        <div x-show="query.length >= 2 && results.length === 0" class="p-8 text-center">
                             <p class="text-xs font-bold text-gray-400 italic">Tidak menemukan hasil yang cocok.</p>
                         </div>
                     </div>
-                    <a :href="'/direktori?q=' + query" class="block py-3 text-center text-[10px] font-black uppercase tracking-widest bg-slate-900 text-white hover:bg-amber-500 hover:text-slate-900 transition-all">
+                    <a :href="'{{ route('article.index') }}?q=' + query" class="block py-3 text-center text-[10px] font-black uppercase tracking-widest bg-slate-900 text-white hover:bg-amber-500 hover:text-slate-900 transition-all">
                         Lihat Semua Hasil
                     </a>
                 </div>
@@ -119,7 +120,7 @@
     <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full left-0 shadow-lg">
         <div class="px-4 pt-4 pb-6 space-y-3">
             <!-- Mobile Search Bar -->
-            <form action="{{ route('directory.index') }}" method="GET" class="relative mb-6">
+            <form action="{{ route('article.index') }}" method="GET" class="relative mb-6">
                 <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari artikel..." 
                     class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 pl-10 pr-4 text-xs focus:outline-none focus:ring-2 focus:ring-burgundy-600/10 focus:border-burgundy-600 transition-all">
                 <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">

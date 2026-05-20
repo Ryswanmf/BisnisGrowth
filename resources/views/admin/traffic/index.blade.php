@@ -24,13 +24,6 @@
             <h3 class="text-4xl font-black tracking-tighter">{{ number_format($stats['total_wa_clicks']) }}</h3>
         </div>
 
-        <div class="bg-amber-500 p-8 rounded-lg shadow-xl shadow-amber-500/20 text-white relative overflow-hidden group">
-            <div class="absolute -right-4 -top-4 opacity-10 group-hover:scale-110 transition-transform">
-                <svg class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
-            </div>
-            <p class="text-[10px] font-black uppercase tracking-[0.2em] mb-3 opacity-80">Total Komentar</p>
-            <h3 class="text-4xl font-black tracking-tighter">{{ number_format($stats['total_comments']) }}</h3>
-        </div>
 
         <div class="bg-slate-800 p-8 rounded-lg shadow-xl shadow-slate-800/20 text-white relative overflow-hidden group">
             <div class="absolute -right-4 -top-4 opacity-10 group-hover:scale-110 transition-transform">
@@ -96,7 +89,7 @@
             <div class="space-y-4">
                 @foreach($topPages as $page)
                     <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-transparent group hover:border-amber-100 hover:bg-amber-50 transition-all">
-                        <span class="text-xs font-bold text-slate-600 truncate max-w-[200px] group-hover:text-slate-900">{{ $page->url ?: '/' }}</span>
+                        <span class="text-xs font-bold text-slate-600 truncate max-w-[200px] group-hover:text-slate-900">{{ Str::limit($page->url ?: '/', 40) }}</span>
                         <span class="text-xs font-black text-slate-900 bg-white px-4 py-1.5 rounded-lg shadow-sm border border-gray-100">{{ number_format($page->total) }} Hits</span>
                     </div>
                 @endforeach
@@ -234,7 +227,17 @@
                         fill: false, 
                         pointRadius: 0,
                         pointHoverRadius: 4
-                    }
+                    },
+                    { 
+    label: 'Telepon', 
+    data: data.phone, 
+    borderColor: '#64748b', 
+    borderWidth: 2, 
+    tension: 0.45, 
+    fill: false, 
+    pointRadius: 0,
+    pointHoverRadius: 4
+},
                 ]
             },
             options: {

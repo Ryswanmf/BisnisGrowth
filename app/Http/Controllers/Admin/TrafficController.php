@@ -17,15 +17,26 @@ class TrafficController extends Controller
     {
         // 1. Statistik Ringkas
         $stats = [
-            'total_views' => PageView::where('type', 'view')->count(),
-            'today_views' => PageView::where('type', 'view')->whereDate('created_at', Carbon::today())->count(),
-            'unique_visitors' => PageView::distinct('ip_address')->count(),
-            'avg_per_day' => round(PageView::where('type', 'view')->count() / max(PageView::distinct(DB::raw('DATE(created_at)'))->count(), 1), 1),
-            'total_article_clicks' => Article::sum('click_count'),
-            'total_wa_clicks' => Article::sum('whatsapp_clicks'),
-            'total_phone_clicks' => Article::sum('phone_clicks'),
-            'total_comments' => Comment::count(),
-        ];
+    'total_views' => PageView::where('type', 'view')->count(),
+    'today_views' => PageView::where('type', 'view')
+        ->whereDate('created_at', Carbon::today())
+        ->count(),
+
+    'unique_visitors' => PageView::distinct('ip_address')->count(),
+
+    'avg_per_day' => round(
+        PageView::where('type', 'view')->count() /
+        max(PageView::distinct(DB::raw('DATE(created_at)'))->count(), 1),
+        1
+    ),
+
+    // FIX
+    'total_article_clicks' => Article::sum('click_count'),
+
+    'total_wa_clicks' => PageView::where('type', 'whatsapp')->count(),
+    'total_phone_clicks' => PageView::where('type', 'phone')->count(),
+    'total_comments' => Comment::count(),
+];
 
         // 2. Trend Harian (7 Hari Terakhir)
         $dailyTrend = collect(range(6, 0))->map(function ($days) {

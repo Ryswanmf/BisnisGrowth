@@ -3,6 +3,7 @@
 use App\Http\Controllers\BusinessProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LinkRedirectController;
+use App\Http\Controllers\ArticleController;
 use Illuminate\Support\Facades\Route;
 
 // Public
@@ -30,7 +31,8 @@ Route::get('/p/{page:slug}', function (\App\Models\Page $page) {
 // Articles
 Route::get('/artikel', [App\Http\Controllers\ArticleController::class, 'index'])->name('article.index');
 Route::get('/artikel-live-search', [App\Http\Controllers\ArticleController::class, 'liveSearch'])->name('article.live-search');
-Route::get('/artikel/{article:slug}', [App\Http\Controllers\ArticleController::class, 'show'])->name('article.show');
+Route::get('/artikel/{slug}', [App\Http\Controllers\ArticleController::class, 'show'])
+    ->name('article.show');
 Route::post('/artikel/{article}/track-click', [App\Http\Controllers\ArticleController::class, 'trackClick'])->name('article.track-click');
 Route::post('/artikel/{article}/comment', [App\Http\Controllers\ArticleController::class, 'storeComment'])->name('article.comment.store');
 
@@ -48,11 +50,27 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard.index');
 
     // Akses Berdua (Admin & User)
-    Route::middleware(['role:user'])->group(function() {
-        Route::resource('/articles', App\Http\Controllers\Admin\ArticleController::class)->names('admin.articles')->parameters(['articles' => 'article']);
-        Route::resource('/categories', App\Http\Controllers\Admin\CategoryController::class)->names('admin.categories');
-        Route::get('/traffic', [App\Http\Controllers\Admin\TrafficController::class, 'index'])->name('admin.traffic.index');
-    });
+    // Akses Berdua (Admin & User)
+Route::middleware(['role:user'])->group(function() {
+
+    // Bulk Article Generator
+    Route::get('/articles/bulk', [App\Http\Controllers\Admin\BulkArticleController::class, 'index'])
+        ->name('admin.articles.bulk');
+
+    Route::post('/articles/bulk', [App\Http\Controllers\Admin\BulkArticleController::class, 'store'])
+        ->name('admin.articles.bulk.store');
+
+    // Articles Resource
+    Route::resource('/articles', App\Http\Controllers\Admin\ArticleController::class)
+        ->names('admin.articles')
+        ->parameters(['articles' => 'article']);
+
+    Route::resource('/categories', App\Http\Controllers\Admin\CategoryController::class)
+        ->names('admin.categories');
+
+    Route::get('/traffic', [App\Http\Controllers\Admin\TrafficController::class, 'index'])
+        ->name('admin.traffic.index');
+});
 
     // Akses Khusus (Hanya Admin)
     Route::middleware(['role:admin'])->group(function() {
@@ -70,6 +88,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         Route::resource('/domains', App\Http\Controllers\Admin\DomainController::class)->names('admin.domains');
         Route::resource('/short-keywords', App\Http\Controllers\Admin\ShortKeywordController::class)->names('admin.short-keywords');
         Route::resource('/internal-links', App\Http\Controllers\Admin\InternalLinkController::class)->names('admin.internal-links');
+        
     });
 });
 

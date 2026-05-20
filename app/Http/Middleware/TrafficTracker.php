@@ -17,7 +17,11 @@ class TrafficTracker
         $response = $next($request);
 
         // Hanya catat request GET dan bukan rute admin/api/asset
-        if ($request->isMethod('GET') && !$request->is('admin*') && !$request->ajax()) {
+        if (
+    $request->isMethod('GET')
+    && !$request->is('admin*')
+    && !$request->is('article/*/track-click')
+) {
             
             $ip = $request->ip();
             $url = $request->fullUrl();

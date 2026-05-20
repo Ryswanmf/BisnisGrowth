@@ -1,57 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-@import 'tailwindcss';
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
-
-@theme {
-    /* Font family */
-    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
-
-    /* Colors: Refined Burgundy/Red (Adjusted to Logo) */
-    --color-burgundy-50: #FEF2F2;
-    --color-burgundy-100: #FEE2E2;
-    --color-burgundy-200: #FECACA;
-    --color-burgundy-400: #F87171;
-    --color-burgundy-600: #B91C1C; /* Main Logo Red */
-    --color-burgundy-700: #991B1B;
-    --color-burgundy-800: #7F1D1D;
-    --color-burgundy-900: #450A0A; /* Dark Red/Black from Logo background */
-
-    /* Colors: Gold (Kept as accent as per instructions, but refined) */
-    --color-gold-50: #FFFBEB;
-    --color-gold-100: #FEF3C7;
-    --color-gold-200: #FDE68A;
-    --color-gold-400: #F59E0B;
-    --color-gold-600: #D97706;
-    --color-gold-700: #B45309;
-    --color-gold-800: #92400E;
-    --color-gold-900: #78350F;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer components {
     .btn-primary {
-        @apply bg-gold-400 text-burgundy-900 font-bold px-6 py-3 rounded-lg hover:bg-gold-600 transition-all shadow-lg shadow-gold-400/20 active:scale-95;
+        @apply bg-yellow-400 text-red-900 font-bold px-6 py-3 rounded-lg hover:bg-yellow-500 transition-all shadow-lg active:scale-95;
     }
+
     .btn-secondary {
         @apply bg-white/10 text-white border border-white/20 font-medium px-6 py-3 rounded-lg hover:bg-white/20 transition-all backdrop-blur-sm;
     }
+
     .card {
         @apply bg-white border border-gray-100 rounded-xl p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300;
     }
+
     .badge-verified {
-        @apply bg-gold-100 text-gold-800 text-xs font-bold px-3 py-1 rounded-md flex items-center gap-1;
+        @apply bg-yellow-100 text-yellow-800 text-xs font-bold px-3 py-1 rounded-md flex items-center gap-1;
     }
-    
-    /* Custom Logo Gradient Effect */
+
     .bg-logo-gradient {
         background: radial-gradient(circle at center, #B91C1C 0%, #7F1D1D 50%, #450A0A 100%);
     }
-    
+
     .text-logo-red {
-        @apply text-burgundy-600;
+        @apply text-red-700;
     }
 }

@@ -11,12 +11,20 @@
             <h2 class="text-xl font-black text-slate-900 tracking-tight">Daftar Artikel</h2>
             <p class="text-gray-500 text-sm font-medium">Pantau performa konten edukasi bisnis Anda.</p>
         </div>
-        <a href="{{ route('admin.articles.create') }}" class="bg-amber-500 text-slate-900 px-6 py-3 rounded-lg text-sm font-black flex items-center gap-2 hover:bg-amber-400 transition-all shadow-lg shadow-amber-500/20">
-            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
-            </svg>
-            Tulis Artikel Baru
-        </a>
+        <div class="flex gap-2">
+            <a href="{{ route('admin.articles.bulk') }}" class="bg-slate-900 text-white px-6 py-3 rounded-lg text-sm font-black flex items-center gap-2 hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                </svg>
+                Bulk Generator
+            </a>
+            <a href="{{ route('admin.articles.create') }}" class="bg-amber-500 text-slate-900 px-6 py-3 rounded-lg text-sm font-black flex items-center gap-2 hover:bg-amber-400 transition-all shadow-lg shadow-amber-500/20">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+                </svg>
+                Tulis Artikel Baru
+            </a>
+        </div>
     </div>
 
     <!-- Table Card -->

@@ -7,25 +7,64 @@
         />
     </x-slot>
 
-    <x-slot name="styles">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-        <style>
-            .hero-swiper {
+<x-slot name="styles">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <style>
+        .hero-swiper {
+            width: 100%;
+            height: 100%;
+        }
+
+        .swiper-pagination-bullet {
+            background: white !important;
+            opacity: 0.5;
+        }
+
+        .swiper-pagination-bullet-active {
+            background: #f59e0b !important;
+            opacity: 1;
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        /* Pagination */
+        .pagination-amber-theme nav {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .pagination-amber-theme nav a,
+        .pagination-amber-theme nav span {
+            min-width: 36px;
+            text-align: center;
+        }
+
+        @media (max-width: 640px) {
+
+            .pagination-amber-theme {
                 width: 100%;
-                height: 100%;
+                overflow: hidden;
+                padding: 10px;
             }
-            .swiper-pagination-bullet {
-                background: white !important;
-                opacity: 0.5;
+
+            .pagination-amber-theme nav {
+                gap: 4px;
             }
-            .swiper-pagination-bullet-active {
-                background: #f59e0b !important;
-                opacity: 1;
-                width: 24px;
-                border-radius: 4px;
+
+            .pagination-amber-theme nav a,
+            .pagination-amber-theme nav span {
+                min-width: 32px !important;
+                padding: 6px 8px !important;
+                font-size: 11px !important;
+                border-radius: 10px;
             }
-        </style>
-    </x-slot>
+        }
+    </style>
+</x-slot>
 
     <!-- Hero Section: Featured Slider + Sidebar Grid -->
     <section class="bg-white py-10 px-4">
@@ -41,9 +80,15 @@
                             <div class="swiper-slide">
                                 <a href="javascript:void(0)" onclick="trackArticleClick({{ $fArt->id }}, '{{ route('article.show', $fArt->slug) }}')" class="group relative block bg-slate-100 h-[300px] md:h-[500px]">
                                     @if($fArt->image)
-                                        <img src="{{ \App\Helpers\ContentHelper::imageUrl($fArt->image) }}" alt="{{ $fArt->title }}" 
-                                             class="absolute inset-0 h-full w-full object-cover opacity-80 transition-transform duration-700 group-hover:scale-105"
-                                             loading="eager" fetchpriority="high" decoding="async">
+                                        <img 
+                                            src="{{ \App\Helpers\ContentHelper::imageUrl($fArt->image) }}"
+                                            alt="{{ $fArt->title }}"
+                                            onerror="this.onerror=null;this.src='{{ asset('images/no-image.png') }}';"
+                                            class="absolute inset-0 h-full w-full object-cover opacity-80 transition-transform duration-700 group-hover:scale-105"
+                                            loading="eager"
+                                            fetchpriority="high"
+                                            decoding="async"
+                                        >
                                     @endif
                                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
                                     
@@ -81,9 +126,14 @@
                         <a href="javascript:void(0)" onclick="trackArticleClick({{ $sideArticle->id }}, '{{ route('article.show', $sideArticle->slug) }}')" class="group flex gap-4 items-center">
                             <div class="shrink-0 w-24 h-24 rounded overflow-hidden shadow-sm bg-gray-50">
                                 @if($sideArticle->image)
-                                    <img src="{{ \App\Helpers\ContentHelper::imageUrl($sideArticle->image) }}" alt="{{ $sideArticle->title }}" 
-                                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                         loading="lazy" decoding="async">
+                                    <img 
+                                        src="{{ \App\Helpers\ContentHelper::imageUrl($sideArticle->image) }}"
+                                        alt="{{ $sideArticle->title }}"
+                                        onerror="this.onerror=null;this.src='{{ asset('images/no-image.png') }}';"
+                                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                        loading="lazy"
+                                        decoding="async"
+                                    >
                                 @endif
                             </div>
                             <div class="flex flex-col gap-1">
@@ -134,9 +184,14 @@
                 <article class="group bg-white rounded overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col h-full">
                     <a href="javascript:void(0)" onclick="trackArticleClick({{ $article->id }}, '{{ route('article.show', $article->slug) }}')" class="relative aspect-[16/10] overflow-hidden block bg-gray-50">
                         @if($article->image)
-                            <img src="{{ \App\Helpers\ContentHelper::imageUrl($article->image) }}" alt="{{ $article->title }}" 
-                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
-                                 loading="lazy" decoding="async">
+                            <img 
+                                src="{{ \App\Helpers\ContentHelper::imageUrl($article->image) }}"
+                                alt="{{ $article->title }}"
+                                onerror="this.onerror=null;this.src='{{ asset('images/no-image.png') }}';"
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                loading="lazy"
+                                decoding="async"
+                            >
                         @endif
                         <div class="absolute top-2 left-2">
                             <span class="px-2 py-0.5 bg-white/90 backdrop-blur-sm text-[7px] md:text-[9px] font-black uppercase tracking-wider text-slate-900 rounded shadow-sm">
@@ -172,31 +227,31 @@
             </div>
 
             <!-- Premium Pagination -->
-            <div class="mt-12 flex justify-center">
-                <div class="pagination-amber-theme bg-slate-900 p-2 rounded shadow-2xl shadow-slate-900/40 border border-slate-800">
-                    {!! $links !!}
-                </div>
-            </div>
+<div class="pt-10 mt-16 flex justify-center">
+    <div class="pagination-amber-theme bg-slate-900 p-2 rounded shadow-2xl shadow-slate-900/40 border border-slate-800">
+
+        <nav class="flex flex-wrap items-center justify-center gap-2 max-w-full overflow-hidden">
+            {!! $links !!}
+        </nav>
+
+    </div>
+</div>
         </div>
     </section>
 
     <style>
-        .pagination-amber-theme nav div div span.relative.z-0, 
         .pagination-amber-theme nav div div a.relative.z-0 {
             display: flex; gap: 4px; border: none;
         }
         .pagination-amber-theme nav span[aria-current="page"] span {
             background-color: #f59e0b !important; color: #0f172a !important; border-radius: 12px; border: none !important; font-weight: 900; padding: 8px 16px;
         }
-        .pagination-amber-theme nav a, 
         .pagination-amber-theme nav span.relative.inline-flex {
             background-color: transparent !important; color: #94a3b8 !important; border: none !important; border-radius: 12px; padding: 8px 16px; font-weight: 700; transition: all 0.3s;
         }
         .pagination-amber-theme nav a:hover {
             background-color: rgba(255,255,255,0.05) !important; color: #ffffff !important;
         }
-        .pagination-amber-theme nav div:first-child { display: none !important; }
-        .pagination-amber-theme nav div:last-child { display: flex !important; justify-content: center; }
     </style>
 
     <x-slot name="scripts">

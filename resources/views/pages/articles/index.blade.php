@@ -118,16 +118,23 @@
                                     </div>
                                     
                                     <h2 class="text-[10px] md:text-base font-black text-slate-900 leading-tight mb-2 md:mb-3 group-hover:text-amber-600 transition-colors line-clamp-2">
-                                        <a href="javascript:void(0)" onclick="trackArticleClick({{ $article->id }}, '{{ route('article.show', $article->slug) }}')">{{ $article->title }}</a>
-                                    </h2>
+    <a href="{{ route('article.show', $article->slug) }}"
+   onclick="event.preventDefault(); submitTrackClick({{ $article->id }}, '{{ route('article.show', $article->slug) }}')">
+    {{ $article->title }}
+</a>
+</h2>
                                     
                                     <p class="text-gray-500 text-[9px] md:text-xs font-medium line-clamp-2 mb-4 md:mb-6 leading-relaxed hidden sm:block">
                                         {{ $article->excerpt ?: Str::limit(strip_tags($article->content), 100) }}
                                     </p>
 
                                     <div class="mt-auto pt-2 md:pt-4 border-t border-gray-50 flex justify-between items-center">
-                                        <span class="text-[7px] md:text-[9px] font-black text-gray-400 uppercase tracking-widest">{{ number_format($article->click_count) }} Clicks</span>
-                                        <a href="javascript:void(0)" onclick="trackArticleClick({{ $article->id }}, '{{ route('article.show', $article->slug) }}')" class="text-amber-600 hover:text-amber-700 transition-colors">
+                                        <span class="text-[7px] md:text-[9px] font-black text-gray-400 uppercase tracking-widest">
+{{ $article->view_count }} CLICKS
+</span>
+<a href="{{ route('article.show', $article->slug) }}"
+   onclick="event.preventDefault(); submitTrackClick({{ $article->id }}, '{{ route('article.show', $article->slug) }}')"
+   class="text-amber-600 hover:text-amber-700 transition-colors">
                                             <svg class="h-3.5 w-3.5 md:h-5 md:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                                         </a>
                                     </div>
@@ -145,62 +152,106 @@
                     </div>
 
                     <!-- Premium Pagination -->
-                    <div class="mt-20 flex justify-center">
-                        <div class="pagination-amber-theme bg-slate-900 p-2 rounded shadow-2xl shadow-slate-900/40 border border-slate-800">
-                            {{ $articles->links() }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- Premium Pagination -->
+@if ($articles->lastPage() > 1)
+<div class="mt-20 flex justify-center">
+    <div class="pagination-amber-theme bg-slate-900 p-2 rounded shadow-2xl shadow-slate-900/40 border border-slate-800">
 
-    <style>
-        /* Force Amber Theme on Laravel Pagination */
-        .pagination-amber-theme nav div div span.relative.z-0, 
-        .pagination-amber-theme nav div div a.relative.z-0 {
-            display: flex;
-            gap: 4px;
-            border: none;
-        }
-        .pagination-amber-theme nav span[aria-current="page"] span {
-            background-color: #f59e0b !important;
-            color: #0f172a !important;
-            border-radius: 12px;
-            border: none !important;
-            font-weight: 900;
-            padding: 8px 16px;
-        }
-        .pagination-amber-theme nav a, 
-        .pagination-amber-theme nav span.relative.inline-flex {
-            background-color: transparent !important;
-            color: #94a3b8 !important;
-            border: none !important;
-            border-radius: 12px;
-            padding: 8px 16px;
-            font-weight: 700;
-            transition: all 0.3s;
-        }
-        .pagination-amber-theme nav a:hover {
-            background-color: rgba(255,255,255,0.05) !important;
-            color: #ffffff !important;
-        }
-        .pagination-amber-theme nav div:first-child { display: none !important; }
-        .pagination-amber-theme nav div:last-child { display: flex !important; justify-content: center; }
-    </style>
+        <nav class="flex flex-wrap items-center justify-center gap-2">
 
-    <script>
-        function trackArticleClick(id, url) {
-            fetch('/artikel/' + id + '/track-click', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({ type: 'article' })
-            }).finally(() => {
-                window.location.href = url;
-            });
+            {{-- Prev --}}
+            @if ($articles->onFirstPage())
+                <span class="px-3 py-2 rounded-xl bg-slate-800 text-slate-500">
+                    ‹
+                </span>
+            @else
+                <a href="{{ $articles->previousPageUrl() }}"
+                   class="px-3 py-2 rounded-xl bg-slate-800 text-white hover:bg-slate-700 transition">
+                    ‹
+                </a>
+            @endif
+
+            @php
+                $current = $articles->currentPage();
+                $last = $articles->lastPage();
+
+                $start = max($current - 1, 1);
+                $end = min($current + 1, $last);
+            @endphp
+
+            {{-- First --}}
+            @if($start > 1)
+                <a href="{{ $articles->url(1) }}"
+                   class="px-3 py-2 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+                    1
+                </a>
+
+                @if($start > 2)
+                    <span class="text-slate-500 px-1">...</span>
+                @endif
+            @endif
+
+            {{-- Middle --}}
+            @for($i = $start; $i <= $end; $i++)
+                @if($i == $current)
+                    <span class="px-3 py-2 rounded-xl bg-amber-400 text-slate-900 font-black">
+                        {{ $i }}
+                    </span>
+                @else
+                    <a href="{{ $articles->url($i) }}"
+                       class="px-3 py-2 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+                        {{ $i }}
+                    </a>
+                @endif
+            @endfor
+
+            {{-- Last --}}
+            @if($end < $last)
+
+                @if($end < $last - 1)
+                    <span class="text-slate-500 px-1">...</span>
+                @endif
+
+                <a href="{{ $articles->url($last) }}"
+                   class="px-3 py-2 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+                    {{ $last }}
+                </a>
+            @endif
+
+            {{-- Next --}}
+            @if ($articles->hasMorePages())
+                <a href="{{ $articles->nextPageUrl() }}"
+                   class="px-3 py-2 rounded-xl bg-slate-800 text-white hover:bg-slate-700 transition">
+                    ›
+                </a>
+            @else
+                <span class="px-3 py-2 rounded-xl bg-slate-800 text-slate-500">
+                    ›
+                </span>
+            @endif
+
+        </nav>
+
+    </div>
+</div>
+@endif
+
+<script>
+function submitTrackClick(articleId, url)
+{
+    fetch('/artikel/' + articleId + '/track-click', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Accept': 'application/json'
         }
-    </script>
+    })
+    .then(() => {
+        window.location.href = url;
+    })
+    .catch(() => {
+        window.location.href = url;
+    });
+}
+</script>
 </x-app-layout>

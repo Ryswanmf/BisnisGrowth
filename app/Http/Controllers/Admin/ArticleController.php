@@ -15,54 +15,23 @@ class ArticleController extends Controller
      * Langsung ke folder PUBLIC untuk kemudahan di cPanel
      */
     private function optimizeAndStore($file)
-    {
-        $filename = Str::random(30) . '.webp';
-        $directory = public_path('uploads/articles');
-        $fullPath = $directory . '/' . $filename;
+{
+    $extension = $file->getClientOriginalExtension();
 
-        // Pastikan direktori ada
-        if (!File::exists($directory)) {
-            File::makeDirectory($directory, 0755, true);
-        }
+    $filename = time() . '_' . Str::slug(
+        pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)
+    ) . '.' . $extension;
 
-        // Ambil info gambar
-        $info = getimagesize($file->getRealPath());
-        $mime = $info['mime'];
+    $directory = $_SERVER['DOCUMENT_ROOT'] . '/uploads/articles';
 
-        // Buat resource gambar berdasarkan tipe asli
-        switch ($mime) {
-            case 'image/jpeg': $image = imagecreatefromjpeg($file->getRealPath()); break;
-            case 'image/png':  $image = imagecreatefrompng($file->getRealPath()); break;
-            case 'image/webp': $image = imagecreatefromwebp($file->getRealPath()); break;
-            default: 
-                return null; // Tolak jika bukan format yang didukung
-        }
-
-        // Resize jika lebar > 1200px
-        $origWidth = imagesx($image);
-        $origHeight = imagesy($image);
-        if ($origWidth > 1200) {
-            $newWidth = 1200;
-            $newHeight = floor($origHeight * ($newWidth / $origWidth));
-            $tmpImg = imagecreatetruecolor($newWidth, $newHeight);
-            
-            if ($mime == 'image/png') {
-                imagealphablending($tmpImg, false);
-                imagesavealpha($tmpImg, true);
-            }
-            
-            imagecopyresampled($tmpImg, $image, 0, 0, 0, 0, $newWidth, $newHeight, $origWidth, $origHeight);
-            imagedestroy($image);
-            $image = $tmpImg;
-        }
-
-        // Simpan sebagai WebP (Kualitas 80)
-        imagewebp($image, $fullPath, 80);
-        imagedestroy($image);
-
-        return 'uploads/articles/' . $filename;
+    if (!File::exists($directory)) {
+        File::makeDirectory($directory, 0755, true);
     }
 
+    $file->move($directory, $filename);
+
+    return 'uploads/articles/' . $filename;
+}
     public function index()
     {
         $articles = Article::latest()->paginate(10);
@@ -80,7 +49,7 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'required|string',
             'content' => 'required',
             'category_name' => 'required|string|max:100',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
@@ -91,7 +60,7 @@ class ArticleController extends Controller
         try {
             $data = $request->all();
             $data['user_id'] = auth()->id();
-            $data['slug'] = Str::slug($request->title);
+            $data['slug'] = Str::slug(Str::limit($request->title, 80, ''));
             $data['status'] = $request->status;
             $data['is_published'] = ($request->status === 'publish');
             $data['is_featured'] = $request->has('is_featured');
@@ -124,7 +93,10 @@ class ArticleController extends Controller
             return back()->withInput()->with('error', 'Gagal menyimpan artikel: ' . $e->getMessage());
         }
     }
-
+    public function show(Article $article)
+{
+    return view('admin.articles.show', compact('article'));
+}
     public function edit(Article $article)
     {
         $categories = \App\Models\Category::where('is_active', true)->orderBy('name')->get();
@@ -136,7 +108,7 @@ class ArticleController extends Controller
     public function update(Request $request, Article $article)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'required|string',
             'content' => 'required',
             'category_name' => 'required|string|max:100',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
@@ -146,7 +118,8 @@ class ArticleController extends Controller
 
         try {
             $data = $request->all();
-            if ($article->title !== $request->title) $data['slug'] = Str::slug($request->title);
+            if ($article->title !== $request->title)
+    $data['slug'] = Str::slug(Str::limit($request->title, 80, ''));
             $data['status'] = $request->status;
             $data['is_published'] = ($request->status === 'publish');
             $data['is_featured'] = $request->has('is_featured');

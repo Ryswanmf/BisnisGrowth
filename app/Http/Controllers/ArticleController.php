@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use Illuminate\Http\Request;
+use App\Models\PageView;
+
 
 class ArticleController extends Controller
 {
@@ -12,7 +14,15 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Article::published();
+        // Jika user login, mereka bisa melihat artikel publish (yang sudah waktunya) & private
+        $query = Article::query();
+        if (auth()->check()) {
+            $query->where(function($q) {
+                $q->published()->orWhere('status', 'private');
+            });
+        } else {
+            $query->published();
+        }
 
         // Ambil kategori dengan jumlah artikel secara efisien (Cache selama 30 menit)
         $categoriesData = \Illuminate\Support\Facades\Cache::remember('article_categories_count_v2', 1800, function() {
@@ -20,15 +30,15 @@ class ArticleController extends Controller
                 ->select('category_name', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
                 ->groupBy('category_name')
                 ->get()
-                ->toArray(); // Simpan sebagai array agar aman di cache
+                ->toArray();
         });
 
         $categoriesWithCount = collect($categoriesData);
         $totalArticles = $categoriesWithCount->sum('total');
 
         // Filter berdasarkan pencarian...
-        if ($request->has('q')) {
-            $search = $request->get('q');
+        if ($request->filled('q')) {
+            $search = trim($request->get('q'));
             $query->where(function($q) use ($search) {
                 $q->where('title', 'LIKE', "%{$search}%")
                   ->orWhere('content', 'LIKE', "%{$search}%")
@@ -38,7 +48,7 @@ class ArticleController extends Controller
         }
 
         // Filter berdasarkan kategori
-        if ($request->has('category')) {
+        if ($request->filled('category')) {
             $query->where('category_name', $request->get('category'));
         }
 
@@ -53,20 +63,29 @@ class ArticleController extends Controller
         }
 
         $articles = $query->paginate(12)->withQueryString();
-        
+
         return view('pages.articles.index', compact('articles', 'categoriesWithCount', 'totalArticles'));
     }
 
     public function liveSearch(Request $request)
     {
-        $search = $request->get('q');
+        $search = trim($request->get('q'));
         
         if (strlen($search) < 2) {
             return response()->json([]);
         }
 
-        $articles = Article::published()
-            ->where(function($q) use ($search) {
+        // Jika user login, mereka bisa melihat artikel publish & private
+        $query = Article::query();
+        if (auth()->check()) {
+            $query->where(function($q) {
+                $q->published()->orWhere('status', 'private');
+            });
+        } else {
+            $query->published();
+        }
+
+        $articles = $query->where(function($q) use ($search) {
                 $q->where('title', 'LIKE', "%{$search}%")
                   ->orWhere('category_name', 'LIKE', "%{$search}%");
             })
@@ -76,10 +95,12 @@ class ArticleController extends Controller
 
         $results = $articles->map(function($article) {
             return [
-                'title' => \App\Helpers\ContentHelper::process($article->title, $article, false),
+                'title' => $article->title, // Sudah diproses via accessor di Model
                 'url' => route('article.show', $article->slug),
                 'category' => $article->category_name,
-                'image' => $article->image ? asset('storage/' . $article->image) : null,
+                'image' => $article->image 
+                ? \App\Helpers\ContentHelper::imageUrl($article->image) 
+                : null,
             ];
         });
 
@@ -92,7 +113,16 @@ class ArticleController extends Controller
     public function show($slug)
     {
         $article = Article::where('slug', $slug)->firstOrFail();
-
+        
+//        if (
+//    !empty($article->canonical_url) &&
+//    filter_var($article->canonical_url, FILTER_VALIDATE_URL) &&
+//    parse_url($article->canonical_url, PHP_URL_HOST) !== request()->getHost()
+//) {
+//
+//    return redirect()->away($article->canonical_url, 301);
+//}
+//    
         // Proteksi: Jika tidak publish, hanya admin atau pemilik yang bisa lihat
         if ($article->status !== 'publish' || ($article->published_at && $article->published_at->isFuture())) {
             if (!auth()->check() || (auth()->user()->role !== 'admin' && auth()->id() !== $article->user_id)) {
@@ -149,11 +179,42 @@ class ArticleController extends Controller
         return view('pages.articles.show', compact('article', 'relatedArticles', 'popularArticles', 'readingTime'));
     }
 
-    public function trackClick(Request $request, Article $article)
-    {
-        // ... kode yang sudah ada ...
-    }
+   public function trackClick(Request $request, $id)
+{
+    try {
 
+        $type = $request->input('type');
+
+        // Tambahkan ini
+        if ($type === 'article') {
+            Article::where('id', $id)
+                ->increment('click_count');
+        }
+
+        PageView::create([
+            'type' => $type,
+            'url' => $request->header('referer'),
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'device' => 'Desktop',
+            'referrer' => $request->header('referer'),
+            'created_at' => now()
+        ]);
+
+        return response()->json([
+            'success' => true
+        ]);
+
+    } catch (\Exception $e) {
+
+        \Log::error($e->getMessage());
+
+        return response()->json([
+            'success' => false,
+            'error' => $e->getMessage()
+        ], 500);
+    }
+} 
     public function storeComment(Request $request, Article $article)
     {
         $request->validate([

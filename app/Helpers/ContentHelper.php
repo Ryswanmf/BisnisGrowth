@@ -10,19 +10,27 @@ class ContentHelper
      * Get the correct image URL regardless of storage path.
      */
     public static function imageUrl($path)
-    {
-        if (empty($path)) return null;
-        
-        if (str_starts_with($path, 'http')) {
-            return $path;
-        }
-
-        if (str_starts_with($path, 'uploads/')) {
-            return asset($path);
-        }
-
-        return asset('storage/' . $path);
+{
+    if (empty($path)) {
+        return asset('images/no-image.png');
     }
+
+    // Jika sudah URL penuh
+    if (str_starts_with($path, 'http')) {
+        return $path;
+    }
+
+    // Hapus slash depan
+    $path = ltrim($path, '/');
+
+    // Jika sudah mengandung uploads/articles
+    if (str_contains($path, 'uploads/articles')) {
+        return asset($path);
+    }
+
+    // Default lokasi upload artikel
+    return asset('uploads/articles/' . $path);
+}
 
     /**
      * Process all dynamic elements in the text.

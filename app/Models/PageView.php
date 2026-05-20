@@ -8,9 +8,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PageView extends Model
 {
     protected $fillable = [
-        'business_id', 'type', 'url', 'ip_address', 'user_agent', 
-        'device', 'browser', 'os', 'referrer', 'created_at'
-    ];
+    'article_id',
+    'business_id',
+    'type',
+    'url',
+    'ip_address',
+    'user_agent',
+    'device',
+    'browser',
+    'os',
+    'referrer',
+    'created_at'
+];
 
     /**
      * The name of the "updated at" column.

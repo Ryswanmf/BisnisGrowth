@@ -98,6 +98,29 @@
             });
         }
     </script> -->
+    <script>
+window.trackArticleClick = function(articleId, url) {
+
+    fetch('/artikel/' + articleId + '/track-click', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        window.location.href = url;
+    })
+    .catch(error => {
+        console.log(error);
+        window.location.href = url;
+    });
+
+}
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     {{ $scripts ?? '' }}
 </body>
 </html>
